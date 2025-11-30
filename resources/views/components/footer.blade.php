@@ -4,8 +4,14 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Logo dan Nama Sekolah -->
             @php
-                $logoPath = 'img/logo.png';
-                $logoVersion = file_exists(public_path($logoPath)) ? filemtime(public_path($logoPath)) : null;
+                $siteSettings = \App\Models\SiteSetting::first();
+                $logoPath = $siteSettings && $siteSettings->logo_path ? ('storage/' . $siteSettings->logo_path) : 'img/logo.png';
+                // Cache busting: untuk storage gunakan updated_at, untuk file default gunakan filemtime
+                if ($siteSettings && $siteSettings->logo_path) {
+                    $logoVersion = $siteSettings->updated_at ? $siteSettings->updated_at->timestamp : time();
+                } else {
+                    $logoVersion = file_exists(public_path($logoPath)) ? filemtime(public_path($logoPath)) : null;
+                }
             @endphp
             <div>
                 <div class="flex items-center gap-3 mb-4">

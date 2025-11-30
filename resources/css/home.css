@@ -52,6 +52,17 @@
     display: flex;
     align-items: flex-end;
     padding-bottom: 2.5rem;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.banner-content-static {
+    pointer-events: auto;
+}
+
+.banner-content-static a,
+.banner-content-static button {
+    pointer-events: auto;
 }
 
 @media (min-width: 768px) {
@@ -95,7 +106,7 @@
 }
 
 .banner-slider:hover .banner-slider__indicators {
-    opacity: 1;
+        opacity: 1;
     visibility: visible;
 }
 

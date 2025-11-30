@@ -16,7 +16,7 @@
 
         <!-- Foto Gedung Sekolah -->
         <img
-            src="{{ asset('img/sample1.jpg') }}?v={{ filemtime(public_path('img/sample1.jpg')) }}"
+            src="{{ asset('img/default-backgrounds.png') }}@if(file_exists(public_path('img/default-backgrounds.png')))?v={{ filemtime(public_path('img/default-backgrounds.png')) }}@endif"
             alt="Gedung MTs Nurul Falaah Soreang"
             class="w-full h-80 sm:h-96 md:h-[450px] object-cover mb-8"
         >
@@ -37,7 +37,7 @@
                 <!-- Gambar Sejarah (Kiri) -->
                 <div class="w-full md:w-1/2 shrink-0">
                     <img
-                        src="{{ asset('img/sample1.jpg') }}?v={{ filemtime(public_path('img/sample1.jpg')) }}"
+                        src="{{ asset('img/default-backgrounds.png') }}@if(file_exists(public_path('img/default-backgrounds.png')))?v={{ filemtime(public_path('img/default-backgrounds.png')) }}@endif"
                         alt="Sejarah MTs Nurul Falaah Soreang"
                         class="w-full h-64 sm:h-80 md:h-96 object-cover"
                     >

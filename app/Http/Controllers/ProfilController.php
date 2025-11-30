@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PrestasiSiswa;
 use Illuminate\Http\Request;
 
 class ProfilController extends Controller
@@ -38,7 +39,8 @@ class ProfilController extends Controller
 
     public function prestasi()
     {
-        return view('profil.prestasi');
+        $prestasi = PrestasiSiswa::active()->ordered()->paginate(12);
+        return view('profil.prestasi', compact('prestasi'));
     }
 }
 

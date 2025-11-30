@@ -8,24 +8,22 @@
             Info Terkini
         </h3>
         @php
-            $infoTerkini = [
-                ['judul' => 'Pengumuman Libur Semester Genap', 'tanggal' => '2025-01-20'],
-                ['judul' => 'Jadwal Ujian Tengah Semester', 'tanggal' => '2025-01-18'],
-                ['judul' => 'Pendaftaran Ekstrakurikuler Baru', 'tanggal' => '2025-01-16'],
-                ['judul' => 'Workshop Parenting untuk Orang Tua', 'tanggal' => '2025-01-14'],
-                ['judul' => 'Kegiatan Bakti Sosial Siswa', 'tanggal' => '2025-01-12'],
-            ];
+            $infoTerkiniData = isset($infoTerkini) && $infoTerkini->count() > 0 ? $infoTerkini : collect();
         @endphp
         <div class="space-y-2 min-h-[200px]">
-            @if(count($infoTerkini) > 0)
-                @foreach(array_slice($infoTerkini, 0, 4) as $item)
+            @if($infoTerkiniData->count() > 0)
+                @foreach($infoTerkiniData->take(4) as $item)
                 <div class="border-b border-gray-200 pb-2 last:border-b-0 last:pb-0">
-                    <a href="#" class="block hover:text-green-700 transition-colors">
+                    <a href="{{ route('informasi.pengumuman') }}" class="block hover:text-green-700 transition-colors">
                         <h4 class="text-xs sm:text-sm font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-green-700">
-                            {{ $item['judul'] }}
+                            {{ $item->judul }}
                         </h4>
                         <p class="text-xs text-gray-500">
-                            {{ date('d M Y', strtotime($item['tanggal'])) }}
+                            @if($item->tanggal)
+                                {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
+                            @else
+                                {{ $item->created_at->format('d M Y') }}
+                            @endif
                         </p>
                     </a>
                 </div>

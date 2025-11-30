@@ -6,89 +6,26 @@
     <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 max-w-7xl py-8 sm:py-12">
         <x-page-title title="Foto Kegiatan" />
 
-        @php
-            $kegiatan = [
-                [
-                    'nama' => 'Upacara Bendera',
-                    'deskripsi' => 'Kegiatan upacara bendera rutin setiap hari Senin untuk menumbuhkan rasa nasionalisme dan disiplin siswa.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Belajar Mengajar',
-                    'deskripsi' => 'Proses pembelajaran aktif di dalam kelas dengan metode yang menyenangkan dan interaktif.',
-                'gambar' => 'sample2.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Ekstrakurikuler',
-                    'deskripsi' => 'Siswa mengikuti berbagai kegiatan ekstrakurikuler untuk mengembangkan bakat dan minat mereka.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Outbound',
-                    'deskripsi' => 'Kegiatan outbound untuk melatih kerja sama tim dan meningkatkan kebersamaan antar siswa.',
-                'gambar' => 'sample2.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Pramuka',
-                    'deskripsi' => 'Kegiatan pramuka untuk melatih kemandirian, kedisiplinan, dan kepemimpinan siswa.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Olahraga',
-                    'deskripsi' => 'Kegiatan olahraga untuk menjaga kesehatan dan kebugaran fisik siswa.',
-                'gambar' => 'sample2.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Seni',
-                    'deskripsi' => 'Kegiatan seni untuk mengembangkan kreativitas dan bakat seni siswa.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Keagamaan',
-                    'deskripsi' => 'Kegiatan keagamaan untuk memperdalam pemahaman agama dan akhlak siswa.',
-                'gambar' => 'sample2.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Workshop Kreativitas',
-                    'deskripsi' => 'Workshop kreativitas untuk mengasah kemampuan berpikir kreatif dan inovatif siswa dalam menyelesaikan masalah.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Field Trip',
-                    'deskripsi' => 'Kunjungan edukatif ke berbagai tempat untuk memperluas wawasan dan pengalaman belajar siswa di luar kelas.',
-                'gambar' => 'sample2.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Seminar Pendidikan',
-                    'deskripsi' => 'Seminar pendidikan untuk meningkatkan pemahaman siswa tentang pentingnya pendidikan dan pengembangan diri.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'nama' => 'Kegiatan Pentas Seni',
-                    'deskripsi' => 'Pentas seni tahunan untuk menampilkan bakat dan kreativitas siswa dalam berbagai bidang seni dan budaya.',
-                'gambar' => 'sample2.jpg'
-                ],
-            ];
-        @endphp
-
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mt-8 min-h-[400px]">
-            @if(count($kegiatan) > 0)
-                @foreach($kegiatan as $index => $item)
+            @if(isset($fotos) && $fotos->count() > 0)
+                @foreach($fotos as $index => $item)
             <div class="group bg-white border border-gray-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div class="w-full aspect-video overflow-hidden cursor-pointer" onclick="openLightbox({{ $index }})">
                     <img
-                        src="{{ asset('img/' . $item['gambar']) }}?v={{ filemtime(public_path('img/' . $item['gambar'])) }}"
-                        alt="{{ $item['nama'] }}"
+                        src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('img/default-backgrounds.png') }}"
+                        alt="{{ $item->judul ?? 'Foto Kegiatan ' . ($index + 1) }}"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     >
                 </div>
                 <div class="p-4 sm:p-5">
                     <h3 class="text-xs sm:text-sm font-bold text-gray-900 mb-2 group-hover:text-green-700 transition-colors">
-                        {{ $item['nama'] }}
+                        {{ $item->judul ?? 'Foto Kegiatan ' . ($index + 1) }}
                     </h3>
-                    <p class="text-[10px] sm:text-xs text-gray-600 leading-relaxed">
-                        {{ $item['deskripsi'] }}
-                    </p>
+                    @if($item->deskripsi)
+                        <p class="text-[10px] sm:text-xs text-gray-600 leading-relaxed">
+                            {{ $item->deskripsi }}
+                        </p>
+                    @endif
                 </div>
             </div>
                 @endforeach
@@ -165,7 +102,7 @@
             const lightboxImage = document.getElementById('lightbox-image');
 
             const item = kegiatan[index];
-            lightboxImage.src = "{{ asset('img/') }}/" + item.gambar + "?v={{ filemtime(public_path('img/sample1.jpg')) }}";
+            lightboxImage.src = item.gambar ? "{{ asset('storage/') }}/" + item.gambar : "{{ asset('img/default-backgrounds.png') }}";
             lightboxImage.alt = item.nama;
 
             lightbox.classList.remove('hidden');
@@ -199,7 +136,7 @@
             lightboxImage.style.opacity = '0';
             
             setTimeout(() => {
-                lightboxImage.src = "{{ asset('img/') }}/" + item.gambar + "?v={{ filemtime(public_path('img/sample1.jpg')) }}";
+                lightboxImage.src = item.gambar ? "{{ asset('storage/') }}/" + item.gambar : "{{ asset('img/default-backgrounds.png') }}";
                 lightboxImage.alt = item.nama;
                 
                 // Fade in from opposite direction

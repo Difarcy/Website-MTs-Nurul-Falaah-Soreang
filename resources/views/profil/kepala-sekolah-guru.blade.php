@@ -15,10 +15,13 @@
             <div class="w-full md:w-[30%] shrink-0">
                 @php
                     $kepalaMadrasahPath = 'img/kepala-madrasah.jpg';
-                    $kepalaMadrasahVersion = file_exists(public_path($kepalaMadrasahPath)) ? filemtime(public_path($kepalaMadrasahPath)) : null;
+                    $kepalaMadrasahExists = file_exists(public_path($kepalaMadrasahPath));
+                    $kepalaMadrasahImage = $kepalaMadrasahExists 
+                        ? asset($kepalaMadrasahPath) . '?v=' . filemtime(public_path($kepalaMadrasahPath))
+                        : asset('img/default-backgrounds.png');
                 @endphp
-                <img
-                    src="{{ asset($kepalaMadrasahPath) }}@if($kepalaMadrasahVersion)?v={{ $kepalaMadrasahVersion }}@endif"
+                    <img
+                    src="{{ $kepalaMadrasahImage }}"
                     alt="Kepala Madrasah MTs Nurul Falaah Soreang"
                     class="w-full aspect-[3/4] object-cover"
                     style="max-height: 36rem;"

@@ -4,47 +4,27 @@
         <span class="w-px h-6 sm:h-8 bg-green-700"></span>
         Prestasi Siswa
     </h2>
-    @php
-        $prestasi = [
-            [
-                'judul' => 'Juara 1 Olimpiade Matematika Tingkat Kabupaten',
-                'gambar' => 'sample1.jpg'
-            ],
-            [
-                'judul' => 'Juara 2 Lomba Pidato Bahasa Arab',
-                'gambar' => 'sample2.jpg'
-            ],
-            [
-                'judul' => 'Juara 1 Lomba Tahfidz Al-Quran',
-                'gambar' => 'sample1.jpg'
-            ],
-            [
-                'judul' => 'Juara 3 Lomba Cerdas Cermat',
-                'gambar' => 'sample2.jpg'
-            ],
-        ];
-    @endphp
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 min-h-[200px]">
-            @if(count($prestasi) > 0)
-                @foreach($prestasi as $index => $item)
+            @if(isset($prestasiSiswa) && $prestasiSiswa->count() > 0)
+                @foreach($prestasiSiswa as $index => $item)
                 @php $i = $index + 1; @endphp
             <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105">
                 <div class="w-full aspect-[4/5] overflow-hidden relative">
                     <img
-                        src="{{ asset('img/' . $item['gambar']) }}?v={{ filemtime(public_path('img/' . $item['gambar'])) }}"
-                        alt="{{ $item['judul'] }}"
+                        src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('img/default-backgrounds.png') }}"
+                        alt="{{ $item->judul }}"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     >
                     <!-- Overlay dengan badge -->
                     <div class="absolute top-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-                        🏆
+                        Prestasi
                     </div>
                     <!-- Overlay Gradient -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <!-- Judul Prestasi -->
                     <div class="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                         <h3 class="text-sm sm:text-base font-bold text-white line-clamp-2">
-                            {{ $item['judul'] }}
+                            {{ $item->judul }}
                         </h3>
                     </div>
                 </div>

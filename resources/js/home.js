@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (autoPlayTimer) {
             clearInterval(autoPlayTimer);
             autoPlayTimer = null;
-        }
+    }
     };
 
     // Event listeners untuk dots (opsional, untuk manual click)
@@ -104,5 +104,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Start auto-play - akan terus berjalan
     startAutoPlay();
-});
+    });
 

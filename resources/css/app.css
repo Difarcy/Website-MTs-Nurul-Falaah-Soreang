@@ -13,3 +13,145 @@
 body {
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
 }
+
+:root {
+    color-scheme: light;
+    --theme-bg-base: #f8fafc;
+    --theme-bg-surface: #ffffff;
+    --theme-text-primary: #0f172a;
+    --theme-text-secondary: #475569;
+    --theme-border-color: rgba(15, 23, 42, 0.12);
+}
+
+body {
+    background-color: var(--theme-bg-base);
+    color: var(--theme-text-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --theme-bg-base: #020617;
+        --theme-bg-surface: #0f172a;
+        --theme-text-primary: #e2e8f0;
+        --theme-text-secondary: #94a3b8;
+        --theme-border-color: rgba(148, 163, 184, 0.35);
+    }
+
+    body {
+        background-color: var(--theme-bg-base);
+        color: var(--theme-text-primary);
+    }
+
+    .bg-white,
+    .bg-gray-50,
+    .bg-gray-100,
+    .bg-slate-50,
+    .bg-slate-100 {
+        background-color: var(--theme-bg-surface) !important;
+    }
+
+    .text-slate-900,
+    .text-slate-800,
+    .text-slate-700,
+    .text-gray-900,
+    .text-gray-800,
+    .text-gray-700 {
+        color: var(--theme-text-primary) !important;
+    }
+
+    .text-gray-600,
+    .text-gray-500,
+    .text-gray-400,
+    .text-slate-600,
+    .text-slate-500 {
+        color: var(--theme-text-secondary) !important;
+    }
+
+    .border-gray-50,
+    .border-gray-100,
+    .border-gray-200,
+    .border-gray-300 {
+        border-color: var(--theme-border-color) !important;
+    }
+
+    .shadow,
+    .shadow-sm,
+    .shadow-md,
+    .shadow-lg,
+    .shadow-xl {
+        box-shadow: 0 25px 50px -12px rgba(2, 6, 23, 0.55) !important;
+    }
+
+    /* Sidebar hover text putih di dark mode */
+    aside nav a:hover span {
+        color: white !important;
+    }
+}
+
+.admin-main button {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.92rem;
+    border-radius: 0.5rem;
+}
+
+.admin-main a.inline-flex {
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 0.95rem;
+    border-radius: 0.55rem;
+}
+
+/* Hilangkan warna biru/abu dari autofill browser */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #0f172a !important;
+    background-color: white !important;
+    background-clip: content-box !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+input:not(:-webkit-autofill),
+textarea:not(:-webkit-autofill),
+select:not(:-webkit-autofill) {
+    background-color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    textarea:-webkit-autofill:active,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus,
+    select:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #0f172a inset !important;
+        -webkit-text-fill-color: #e2e8f0 !important;
+        background-color: #0f172a !important;
+        background-clip: content-box !important;
+    }
+
+    input:not(:-webkit-autofill),
+    textarea:not(:-webkit-autofill),
+    select:not(:-webkit-autofill) {
+        background-color: #1e293b;
+    }
+}

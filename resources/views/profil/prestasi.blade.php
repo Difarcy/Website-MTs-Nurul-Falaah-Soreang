@@ -7,23 +7,8 @@
         <x-page-title title="Prestasi Siswa" />
 
         @php
-            $prestasi = [
-                [
-                    'judul' => 'Juara 1 Olimpiade Matematika Tingkat Kabupaten',
-                    'deskripsi' => 'Siswa MTs Nurul Falaah Soreang berhasil meraih juara 1 dalam Olimpiade Matematika tingkat Kabupaten Bandung. Prestasi ini menunjukkan dedikasi dan kemampuan siswa dalam bidang matematika.',
-                    'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'judul' => 'Juara 2 Lomba Pidato Bahasa Arab',
-                    'deskripsi' => 'Siswa MTs Nurul Falaah Soreang meraih juara 2 dalam lomba pidato bahasa Arab tingkat kabupaten. Prestasi ini menunjukkan kemampuan siswa dalam berbahasa Arab.',
-                    'gambar' => 'sample2.jpg'
-                ],
-                [
-                    'judul' => 'Juara 1 Lomba Tahfidz Al-Quran',
-                    'deskripsi' => 'Siswa MTs Nurul Falaah Soreang berhasil meraih juara 1 dalam lomba tahfidz Al-Quran tingkat kabupaten. Prestasi ini menunjukkan dedikasi siswa dalam menghafal Al-Quran.',
-                    'gambar' => 'sample1.jpg'
-                ],
-            ];
+            // Data prestasi dari database sudah dikirim dari controller
+            $prestasi = isset($prestasi) ? $prestasi : collect();
             
             $berita = [
                 [
@@ -49,23 +34,28 @@
             <!-- Kiri: Prestasi Siswa (70%) -->
             <div class="w-full lg:w-[70%]">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 min-h-[400px]">
-                    @if(count($prestasi) > 0)
+                    @if($prestasi->count() > 0)
                         @foreach($prestasi as $index => $item)
                         <div class="group bg-white border border-gray-200 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="w-full h-56 sm:h-64 overflow-hidden cursor-pointer" onclick="openLightbox({{ $index }})">
                                 <img
-                                    src="{{ asset('img/' . $item['gambar']) }}?v={{ filemtime(public_path('img/' . $item['gambar'])) }}"
-                                    alt="{{ $item['judul'] }}"
+                                    src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('img/default-backgrounds.png') }}"
+                                    alt="{{ $item->judul }}"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                 >
                             </div>
                             <div class="p-4 sm:p-5">
                                 <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-700 transition-colors">
-                                    {{ $item['judul'] }}
+                                    {{ $item->judul }}
                                 </h3>
-                                <p class="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-3">
-                                    {{ $item['deskripsi'] }}
-                                </p>
+                                @if($item->deskripsi)
+                                    <p class="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-3">
+                                        {{ $item->deskripsi }}
+                                    </p>
+                                @endif
+                                @if($item->kategori)
+                                    <p class="text-xs text-green-700 mt-2 font-semibold">{{ $item->kategori }}</p>
+                                @endif
                             </div>
                         </div>
                         @endforeach
@@ -229,7 +219,7 @@
             const lightboxImage = document.getElementById('lightbox-image');
 
             const item = prestasi[index];
-            lightboxImage.src = "{{ asset('img/') }}/" + item.gambar + "?v={{ filemtime(public_path('img/sample1.jpg')) }}";
+            lightboxImage.src = item.gambar ? "{{ asset('storage/') }}/" + item.gambar : "{{ asset('img/default-backgrounds.png') }}";
             lightboxImage.alt = item.judul;
 
             lightbox.classList.remove('hidden');
@@ -263,7 +253,7 @@
             lightboxImage.style.opacity = '0';
             
             setTimeout(() => {
-                lightboxImage.src = "{{ asset('img/') }}/" + item.gambar + "?v={{ filemtime(public_path('img/sample1.jpg')) }}";
+                lightboxImage.src = item.gambar ? "{{ asset('storage/') }}/" + item.gambar : "{{ asset('img/default-backgrounds.png') }}";
                 lightboxImage.alt = item.judul;
                 
                 // Fade in from opposite direction

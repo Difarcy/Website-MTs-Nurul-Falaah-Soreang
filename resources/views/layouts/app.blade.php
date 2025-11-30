@@ -4,12 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 
     <title>@yield('title', 'MTs Nurul Falaah Soreang')</title>
 
     @php
-        $faviconPath = 'img/logo.png';
-        $faviconVersion = file_exists(public_path($faviconPath)) ? filemtime(public_path($faviconPath)) : null;
+        $siteSettings = \App\Models\SiteSetting::first();
+        $faviconPath = $siteSettings && $siteSettings->logo_path ? ('storage/' . $siteSettings->logo_path) : 'img/logo.png';
+        // Cache busting: untuk storage gunakan updated_at, untuk file default gunakan filemtime
+        if ($siteSettings && $siteSettings->logo_path) {
+            $faviconVersion = $siteSettings->updated_at ? $siteSettings->updated_at->timestamp : time();
+        } else {
+            $faviconVersion = file_exists(public_path($faviconPath)) ? filemtime(public_path($faviconPath)) : null;
+        }
     @endphp
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset($faviconPath) }}@if($faviconVersion)?v={{ $faviconVersion }}@endif">

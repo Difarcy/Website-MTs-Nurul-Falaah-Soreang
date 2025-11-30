@@ -7,7 +7,7 @@
         <x-page-title title="Struktur Organisasi" />
 
         @php
-            $strukturOrganisasi = 'img/sample3.jpg'; // Menggunakan sample3.jpg
+            $strukturOrganisasi = 'img/sample-kosong.png';
             // $strukturOrganisasi = null; // Kosong untuk placeholder
         @endphp
 
@@ -42,11 +42,14 @@
                     <div class="p-4">
                         @php
                             $kepalaMadrasahPath = 'img/kepala-madrasah.jpg';
-                            $kepalaMadrasahVersion = file_exists(public_path($kepalaMadrasahPath)) ? filemtime(public_path($kepalaMadrasahPath)) : null;
+                            $kepalaMadrasahExists = file_exists(public_path($kepalaMadrasahPath));
+                            $kepalaMadrasahImage = $kepalaMadrasahExists 
+                                ? asset($kepalaMadrasahPath) . '?v=' . filemtime(public_path($kepalaMadrasahPath))
+                                : asset('img/default-backgrounds.png');
                         @endphp
                         <div class="mb-3">
                             <img
-                                src="{{ asset($kepalaMadrasahPath) }}@if($kepalaMadrasahVersion)?v={{ $kepalaMadrasahVersion }}@endif"
+                                src="{{ $kepalaMadrasahImage }}"
                                 alt="Kepala Madrasah MTs Nurul Falaah Soreang"
                                 class="w-full aspect-[3/4] object-cover mx-auto"
                                 style="max-height: 28rem;"

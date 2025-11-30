@@ -7,64 +7,6 @@
         <x-page-title title="Agenda" />
         
         @php
-            $agenda = [
-                [
-                    'judul' => 'Rapat Koordinasi Guru dan Staf',
-                    'tanggal' => '2025-01-20',
-                    'waktu' => '08:00 - 12:00',
-                    'lokasi' => 'Aula MTs Nurul Falaah Soreang',
-                    'deskripsi' => 'Rapat koordinasi bulanan untuk membahas program dan kegiatan sekolah bulan depan.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'judul' => 'Kegiatan Outing Class Siswa Kelas 7',
-                    'tanggal' => '2025-01-25',
-                    'waktu' => '07:00 - 15:00',
-                    'lokasi' => 'Taman Wisata Alam',
-                    'deskripsi' => 'Kegiatan pembelajaran di luar kelas untuk meningkatkan pengalaman belajar siswa.',
-                'gambar' => 'sample2.jpg'
-                ],
-                [
-                    'judul' => 'Lomba Tahfidz Al-Qur\'an Tingkat Sekolah',
-                    'tanggal' => '2025-02-01',
-                    'waktu' => '08:00 - 14:00',
-                    'lokasi' => 'Masjid MTs Nurul Falaah Soreang',
-                    'deskripsi' => 'Kompetisi tahfidz Al-Qur\'an antar kelas untuk memotivasi siswa dalam menghafal Al-Qur\'an.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'judul' => 'Workshop Peningkatan Kompetensi Guru',
-                    'tanggal' => '2025-02-05',
-                    'waktu' => '09:00 - 15:00',
-                    'lokasi' => 'Laboratorium Komputer',
-                    'deskripsi' => 'Pelatihan peningkatan kompetensi guru dalam penggunaan teknologi pembelajaran.',
-                'gambar' => 'sample2.jpg'
-                ],
-                [
-                    'judul' => 'Kegiatan Bakti Sosial Siswa',
-                    'tanggal' => '2025-02-10',
-                    'waktu' => '08:00 - 12:00',
-                    'lokasi' => 'Lingkungan Sekitar Sekolah',
-                    'deskripsi' => 'Kegiatan bakti sosial untuk menumbuhkan kepedulian sosial siswa terhadap lingkungan.',
-                'gambar' => 'sample1.jpg'
-                ],
-                [
-                    'judul' => 'Pertemuan Orang Tua dan Wali Murid',
-                    'tanggal' => '2025-02-15',
-                    'waktu' => '13:00 - 16:00',
-                    'lokasi' => 'Aula MTs Nurul Falaah Soreang',
-                    'deskripsi' => 'Pertemuan rutin untuk membahas perkembangan siswa dan program sekolah.',
-                'gambar' => 'sample2.jpg'
-                ]
-            ];
-            
-            // Data untuk testing
-            $infoTerkini = [
-                ['judul' => 'Pengumuman Libur Semester Genap', 'tanggal' => '2025-01-20'],
-                ['judul' => 'Jadwal Ujian Tengah Semester', 'tanggal' => '2025-01-18'],
-                ['judul' => 'Pendaftaran Ekstrakurikuler Baru', 'tanggal' => '2025-01-16'],
-            ];
-            
             $now = \Carbon\Carbon::now();
             $selectedMonth = request()->get('cal_month', $now->month);
             $selectedYear = request()->get('cal_year', $now->year);
@@ -101,62 +43,80 @@
         <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 mt-8">
             <!-- Kiri: Agenda (70%) -->
             <div class="w-full lg:w-[70%]">
-                <div class="space-y-6">
-                    @foreach($agenda as $item)
-                    <div class="bg-white border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer" onclick="window.location.href='#'">
-                        <div class="flex flex-col md:flex-row">
-                            <!-- Foto (Kiri) -->
-                            <div class="w-full md:w-1/3 flex-shrink-0">
-                                <img
-                                    src="{{ asset('img/' . $item['gambar']) }}?v={{ filemtime(public_path('img/' . $item['gambar'])) }}"
-                                    alt="{{ $item['judul'] }}"
-                                    class="w-full h-48 md:h-full object-cover"
-                                >
-                            </div>
-                            <!-- Konten (Kanan) -->
-                            <div class="w-full md:w-2/3 p-5 sm:p-6">
-                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-3">
-                                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 hover:text-green-700 transition-colors">
-                                        {{ $item['judul'] }}
-                                    </h3>
-                                    <div class="flex-shrink-0">
-                                        <span class="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs sm:text-sm font-semibold rounded">
-                                            @php
-                                                $dateObj = \Carbon\Carbon::parse($item['tanggal']);
-                                                $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                                                $monthName = $months[$dateObj->month - 1];
-                                                echo $dateObj->day . ' ' . $monthName . ' ' . $dateObj->year;
-                                            @endphp
-                                        </span>
+                @if($agenda->count() > 0)
+                    <div class="space-y-6">
+                        @foreach($agenda as $item)
+                        <div class="bg-white border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                            <div class="flex flex-col md:flex-row">
+                                <!-- Foto (Kiri) -->
+                                <div class="w-full md:w-1/3 flex-shrink-0">
+                                    <img
+                                        src="{{ asset('img/default-backgrounds.png') }}@if(file_exists(public_path('img/default-backgrounds.png')))?v={{ filemtime(public_path('img/default-backgrounds.png')) }}@endif"
+                                        alt="{{ $item->judul }}"
+                                        class="w-full h-48 md:h-full object-cover"
+                                    >
+                                </div>
+                                <!-- Konten (Kanan) -->
+                                <div class="w-full md:w-2/3 p-5 sm:p-6">
+                                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-3">
+                                        <h3 class="text-lg sm:text-xl font-bold text-gray-900 hover:text-green-700 transition-colors">
+                                            {{ $item->judul }}
+                                        </h3>
+                                        <div class="flex-shrink-0">
+                                            <span class="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs sm:text-sm font-semibold rounded">
+                                                @php
+                                                    $dateObj = $item->tanggal_mulai;
+                                                    $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                                                    $monthName = $months[$dateObj->month - 1];
+                                                    echo $dateObj->day . ' ' . $monthName . ' ' . $dateObj->year;
+                                                @endphp
+                                            </span>
+                                        </div>
                                     </div>
+                                    
+                                    <div class="space-y-2 mb-4">
+                                        @if($item->waktu_mulai || $item->waktu_selesai)
+                                            <div class="flex items-start gap-2 text-sm text-gray-600">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span class="font-medium">Waktu:</span>
+                                                <span>
+                                                    @if($item->waktu_mulai && $item->waktu_selesai)
+                                                        {{ $item->waktu_mulai }} - {{ $item->waktu_selesai }}
+                                                    @elseif($item->waktu_mulai)
+                                                        {{ $item->waktu_mulai }}
+                                                    @endif
+                                                </span>
+                                            </div>
+                                        @endif
+                                        @if($item->lokasi)
+                                            <div class="flex items-start gap-2 text-sm text-gray-600">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                <span class="font-medium">Lokasi:</span>
+                                                <span>{{ $item->lokasi }}</span>
+                                            </div>
+                                        @endif
                                 </div>
                                 
-                                <div class="space-y-2 mb-4">
-                                    <div class="flex items-start gap-2 text-sm text-gray-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span class="font-medium">Waktu:</span>
-                                        <span>{{ $item['waktu'] }}</span>
-                                    </div>
-                                    <div class="flex items-start gap-2 text-sm text-gray-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        <span class="font-medium">Lokasi:</span>
-                                        <span>{{ $item['lokasi'] }}</span>
-                                    </div>
-                                </div>
-                                
-                                <p class="text-sm text-gray-700 leading-relaxed">
-                                    {{ $item['deskripsi'] }}
-                                </p>
+                                @if($item->deskripsi)
+                                    <p class="text-sm text-gray-700 leading-relaxed">
+                                        {{ $item->deskripsi }}
+                                    </p>
+                                @endif
                             </div>
                         </div>
                     </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="bg-white border border-gray-200 rounded-lg p-12 text-center">
+                        <p class="text-gray-500">Belum ada agenda</p>
+                    </div>
+                @endif
             </div>
 
             <!-- Garis Pembatas -->

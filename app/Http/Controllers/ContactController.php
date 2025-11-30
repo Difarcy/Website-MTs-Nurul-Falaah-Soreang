@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Kontak;
 
 class ContactController extends Controller
 {
     public function index()
     {
-        return view('contact');
+        $kontaks = Kontak::active()->ordered()->get();
+        return view('contact', compact('kontaks'));
     }
 }
 

@@ -15,7 +15,7 @@
             <div class="hidden lg:flex lg:w-[60%] relative overflow-hidden">
                 <!-- Background Image -->
                 <img
-                    src="{{ asset('img/sample1.jpg') }}?v={{ filemtime(public_path('img/sample1.jpg')) }}"
+                    src="{{ asset('img/default-backgrounds.png') }}@if(file_exists(public_path('img/default-backgrounds.png')))?v={{ filemtime(public_path('img/default-backgrounds.png')) }}@endif"
                     alt="MTs Nurul Falaah Soreang"
                     class="w-full h-full object-cover"
                 >

@@ -8,33 +8,29 @@
             Agenda Terbaru
         </h3>
         @php
-            $agenda = [
-                ['judul' => 'Upacara Bendera Senin', 'tanggal' => '2025-01-27', 'waktu' => '07:00'],
-                ['judul' => 'Workshop Literasi Digital', 'tanggal' => '2025-01-28', 'waktu' => '09:00'],
-                ['judul' => 'Kegiatan Pramuka', 'tanggal' => '2025-01-29', 'waktu' => '14:00'],
-                ['judul' => 'Seminar Pendidikan Karakter', 'tanggal' => '2025-01-30', 'waktu' => '08:00'],
-                ['judul' => 'Lomba Tahfidz Al-Quran', 'tanggal' => '2025-02-01', 'waktu' => '09:00'],
-            ];
+            $agendaData = isset($agendaTerbaru) && $agendaTerbaru->count() > 0 ? $agendaTerbaru : collect();
         @endphp
         <div class="space-y-3 min-h-[200px]">
-            @if(count($agenda) > 0)
-                @foreach(array_slice($agenda, 0, 5) as $item)
+            @if($agendaData->count() > 0)
+                @foreach($agendaData->take(5) as $item)
                 <div class="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
                     <a href="{{ route('informasi.agenda') }}" class="block hover:text-green-700 transition-colors">
                         <div class="flex items-start gap-3">
                             <div class="flex-shrink-0 bg-green-700 text-white rounded-lg p-2 text-center min-w-[50px]">
-                                <div class="text-xs font-bold">{{ date('d', strtotime($item['tanggal'])) }}</div>
-                                <div class="text-[10px] uppercase">{{ date('M', strtotime($item['tanggal'])) }}</div>
+                                <div class="text-xs font-bold">{{ $item->tanggal_mulai->format('d') }}</div>
+                                <div class="text-[10px] uppercase">{{ $item->tanggal_mulai->format('M') }}</div>
                             </div>
                             <div class="flex-grow">
                                 <h4 class="text-xs sm:text-sm font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-green-700">
-                                    {{ $item['judul'] }}
+                                    {{ $item->judul }}
                                 </h4>
                                 <p class="text-xs text-gray-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    {{ $item['waktu'] }} WIB
+                                    @if($item->waktu)
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        {{ $item->waktu }} WIB
+                                    @endif
                                 </p>
                             </div>
                         </div>

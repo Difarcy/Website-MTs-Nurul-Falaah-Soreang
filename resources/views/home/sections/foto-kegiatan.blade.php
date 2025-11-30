@@ -4,26 +4,15 @@
         <span class="w-px h-6 sm:h-8 bg-green-700"></span>
         Kegiatan Sekolah
     </h2>
-    @php
-        // Data sama persis dengan halaman galeri foto kegiatan
-        $fotoKegiatan = [
-            ['gambar' => 'sample1.jpg'], // Upacara Bendera
-            ['gambar' => 'sample2.jpg'], // Kegiatan Belajar Mengajar
-            ['gambar' => 'sample1.jpg'], // Kegiatan Ekstrakurikuler
-            ['gambar' => 'sample2.jpg'], // Kegiatan Outbound
-            ['gambar' => 'sample1.jpg'], // Kegiatan Pramuka
-            ['gambar' => 'sample2.jpg'], // Kegiatan Olahraga
-        ];
-    @endphp
     <div class="grid grid-cols-3 gap-4 min-h-[320px]">
-            @if(count($fotoKegiatan) > 0)
+            @if(isset($fotoKegiatan) && $fotoKegiatan->count() > 0)
                 @foreach($fotoKegiatan as $index => $item)
                 @php $i = $index + 1; @endphp
             <div class="relative overflow-hidden rounded-lg cursor-pointer" onclick="openHomeLightbox(this)">
                 <div class="w-full aspect-[4/3] overflow-hidden relative">
                     <img
-                        src="{{ asset('img/' . $item['gambar']) }}?v={{ filemtime(public_path('img/' . $item['gambar'])) }}"
-                        alt="Foto Kegiatan {{ $i }}"
+                        src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('img/default-backgrounds.png') }}"
+                        alt="{{ $item->judul ?? 'Foto Kegiatan ' . $i }}"
                         class="w-full h-full object-cover"
                     >
                 </div>

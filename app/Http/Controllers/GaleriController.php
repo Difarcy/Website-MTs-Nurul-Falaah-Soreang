@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\FotoKegiatan;
+use App\Models\PrestasiSiswa;
 
 class GaleriController extends Controller
 {
@@ -13,7 +14,8 @@ class GaleriController extends Controller
 
     public function fotoKegiatan()
     {
-        return view('galeri.foto-kegiatan');
+        $fotos = FotoKegiatan::active()->ordered()->paginate(12);
+        return view('galeri.foto-kegiatan', compact('fotos'));
     }
 
     public function dokumentasi()
@@ -23,7 +25,8 @@ class GaleriController extends Controller
 
     public function prestasiSiswa()
     {
-        return view('galeri.prestasi-siswa');
+        $prestasi = PrestasiSiswa::active()->ordered()->paginate(12);
+        return view('galeri.prestasi-siswa', compact('prestasi'));
     }
 }
 
