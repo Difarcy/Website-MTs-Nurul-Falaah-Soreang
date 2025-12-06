@@ -36,7 +36,8 @@ class PengumumanController extends Controller
         Pengumuman::create($validated);
 
         return redirect()->route('admin.pengumuman.index')
-            ->with('status', 'Pengumuman berhasil ditambahkan.');
+            ->with('status', 'Pengumuman berhasil ditambahkan.')
+            ->with('reload', true);
     }
 
     public function edit(Pengumuman $pengumuman)
@@ -60,13 +61,15 @@ class PengumumanController extends Controller
         $pengumuman->update($validated);
 
         return redirect()->route('admin.pengumuman.index')
-            ->with('status', 'Pengumuman berhasil diperbarui.');
+            ->with('status', 'Pengumuman berhasil diperbarui.')
+            ->with('reload', true);
     }
 
     public function destroy(Pengumuman $pengumuman): RedirectResponse
     {
         $pengumuman->delete();
         return redirect()->route('admin.pengumuman.index')
-            ->with('status', 'Pengumuman berhasil dihapus.');
+            ->with('status', 'Pengumuman berhasil dihapus.')
+            ->with('reload', true);
     }
 }

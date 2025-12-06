@@ -35,8 +35,8 @@
                     </label>
                 </div>
                 <div id="preview-container" class="hidden">
-                    <div class="relative">
-                        <img id="preview-image" src="" alt="Preview" class="w-full rounded-lg border border-gray-200">
+                    <div class="relative group">
+                        <img id="preview-image" src="" alt="Preview" class="w-full rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity" onclick="openImageZoom(this.src)">
                         <button type="button" onclick="resetImage()" class="absolute top-2 right-2 px-3 py-1.5 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors">
                             Ganti Foto
                         </button>
@@ -219,5 +219,45 @@
             updateCharCount('link', 500);
             updateCharCount('button_text', 100);
         });
+
+        // Fungsi untuk zoom gambar
+        function openImageZoom(imageSrc) {
+            const modal = document.getElementById('imageZoomModal');
+            const img = document.getElementById('zoomImage');
+            if (modal && img && imageSrc) {
+                img.src = imageSrc;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeImageZoom() {
+            const modal = document.getElementById('imageZoomModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal dengan ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageZoom();
+            }
+        });
     </script>
+
+    <!-- Modal Zoom Gambar -->
+    <div id="imageZoomModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md" onclick="closeImageZoom()">
+        <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
+            <img id="zoomImage" src="" alt="Preview" class="max-w-full max-h-full object-contain pointer-events-none">
+            <button type="button" onclick="closeImageZoom()" class="close-banner-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
 @endsection

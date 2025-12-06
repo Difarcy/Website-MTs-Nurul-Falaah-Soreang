@@ -14,7 +14,7 @@
         if ($siteSettings && $siteSettings->logo_path) {
             $logoVersion = $siteSettings->updated_at ? $siteSettings->updated_at->timestamp : time();
         } else {
-            $logoVersion = file_exists(public_path($logoPath)) ? filemtime(public_path($logoPath)) : null;
+        $logoVersion = file_exists(public_path($logoPath)) ? filemtime(public_path($logoPath)) : null;
         }
     @endphp
     <!-- Favicon -->

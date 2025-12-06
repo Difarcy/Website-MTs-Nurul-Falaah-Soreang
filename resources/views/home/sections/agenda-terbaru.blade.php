@@ -13,7 +13,7 @@
         <div class="space-y-3 min-h-[200px]">
             @if($agendaData->count() > 0)
                 @foreach($agendaData->take(5) as $item)
-                <div class="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
+                <div class="pb-3 last:pb-0">
                     <a href="{{ route('informasi.agenda') }}" class="block hover:text-green-700 transition-colors">
                         <div class="flex items-start gap-3">
                             <div class="flex-shrink-0 bg-green-700 text-white rounded-lg p-2 text-center min-w-[50px]">

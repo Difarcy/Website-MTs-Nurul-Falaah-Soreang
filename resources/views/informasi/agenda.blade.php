@@ -3,7 +3,11 @@
 @section('title', 'Agenda - MTs Nurul Falaah Soreang')
 
 @section('content')
-    <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 max-w-7xl py-8 sm:py-12">
+    <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl py-8 sm:py-12">
+        <x-breadcrumb :items="[
+            ['label' => 'Beranda', 'url' => route('home')],
+            ['label' => 'Agenda']
+        ]" />
         <x-page-title title="Agenda" />
         
         @php
@@ -136,7 +140,7 @@
                         <div class="space-y-3 min-h-[300px]">
                             @if(count($infoTerkini) > 0)
                                 @foreach($infoTerkini as $item)
-                                <div class="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
+                                <div class="pb-3 last:pb-0">
                                     <a href="#" class="block hover:text-green-700 transition-colors">
                                         <h4 class="text-xs sm:text-sm font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-green-700">
                                             {{ $item['judul'] }}

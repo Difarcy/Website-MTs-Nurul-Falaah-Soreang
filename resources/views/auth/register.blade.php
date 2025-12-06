@@ -23,7 +23,7 @@
                 <div class="absolute inset-0 bg-black/50"></div>
                 <!-- Pattern Overlay (Left Side) -->
                 <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-gray-100/20 to-transparent" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.05) 10px, rgba(255,255,255,.05) 20px);"></div>
-                
+
                 <!-- Text Overlay -->
                 <div class="absolute inset-0 flex items-end p-6 xl:p-8">
                     <div class="text-white text-left w-full">
@@ -41,7 +41,7 @@
             <div class="w-full lg:w-[40%] flex items-center justify-center p-3 sm:p-4 lg:p-5 xl:p-6 bg-gray-50 relative">
                 <!-- Pattern Overlay (Right Side) -->
                 <div class="hidden lg:block absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-100/20 to-transparent" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,.02) 10px, rgba(0,0,0,.02) 20px); pointer-events: none;"></div>
-                
+
                 <div class="w-full max-w-sm relative z-10">
                     <!-- Logo -->
                     <div class="flex justify-center mb-3">
@@ -237,7 +237,7 @@
         function togglePassword(fieldId) {
             const passwordInput = document.getElementById(fieldId);
             const eyeIcon = document.getElementById('eye-icon-' + fieldId);
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 eyeIcon.innerHTML = `

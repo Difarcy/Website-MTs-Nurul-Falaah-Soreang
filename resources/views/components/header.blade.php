@@ -9,8 +9,8 @@
     }
     $logoSrc = asset($logoPath) . ($logoVersion ? '?v=' . $logoVersion : '');
 @endphp
-<header class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
-    <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 max-w-7xl">
+<header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl">
         <!-- Header Normal -->
         <div id="header-normal" class="flex items-center justify-between h-28">
             <!-- Logo dan Nama Sekolah -->
@@ -48,18 +48,18 @@
                         </svg>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div id="profil-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50">
+                    <div id="profil-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50" style="border-radius: 0;">
                         <div class="py-2">
-                            <a href="{{ route('profil') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('profil') && !request()->routeIs('profil.*') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('profil') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('profil') && !request()->routeIs('profil.*') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Tentang Sekolah
                             </a>
-                            <a href="{{ route('profil.visi-misi') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('profil.visi-misi') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('profil.visi-misi') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('profil.visi-misi') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Visi & Misi
                             </a>
-                            <a href="{{ route('profil.struktur-organisasi') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('profil.struktur-organisasi') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('profil.struktur-organisasi') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('profil.struktur-organisasi') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Struktur Organisasi
                             </a>
-                            <a href="{{ route('profil.prestasi') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('profil.prestasi') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('profil.prestasi') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('profil.prestasi') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Prestasi Siswa
                             </a>
                         </div>
@@ -77,18 +77,18 @@
                         </svg>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div id="informasi-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50">
+                    <div id="informasi-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50" style="border-radius: 0;">
                         <div class="py-2">
-                            <a href="{{ route('informasi.berita') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('informasi.berita') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('informasi.berita') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('informasi.berita') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Berita
                             </a>
-                            <a href="{{ route('informasi.artikel') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('informasi.artikel') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('informasi.artikel') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('informasi.artikel') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Artikel
                             </a>
-                            <a href="{{ route('informasi.pengumuman') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('informasi.pengumuman') || request()->routeIs('pengumuman') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('informasi.pengumuman') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('informasi.pengumuman') || request()->routeIs('pengumuman') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Pengumuman
                             </a>
-                            <a href="{{ route('informasi.agenda') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('informasi.agenda') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('informasi.agenda') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('informasi.agenda') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Agenda
                             </a>
                         </div>
@@ -106,12 +106,12 @@
                         </svg>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div id="galeri-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50">
+                    <div id="galeri-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50" style="border-radius: 0;">
                         <div class="py-2">
-                            <a href="{{ route('galeri.foto-kegiatan') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('galeri.foto-kegiatan') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('galeri.foto-kegiatan') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('galeri.foto-kegiatan') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Foto Kegiatan
                             </a>
-                            <a href="{{ route('galeri.prestasi-siswa') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors duration-150 {{ request()->routeIs('galeri.prestasi-siswa') ? 'bg-green-50 text-green-700 font-bold' : '' }}">
+                            <a href="{{ route('galeri.prestasi-siswa') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('galeri.prestasi-siswa') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Prestasi Siswa
                             </a>
                         </div>
@@ -126,7 +126,7 @@
                 <!-- Icon Search -->
                 <button
                     id="search-toggle"
-                    class="text-gray-700 hover:text-green-700 transition-colors duration-200 font-bold p-2 hover:bg-gray-100 rounded-lg"
+                    class="text-gray-700 dark:text-slate-300 hover:text-green-700 dark:hover:text-green-400 transition-colors duration-200 font-bold p-2 rounded-full"
                     aria-label="Cari"
                 >
                     <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -154,37 +154,37 @@
             </div>
 
             <!-- Form Pencarian -->
-            <div class="flex-1 max-w-2xl mx-4 sm:mx-6 md:mx-8">
-                <form action="#" method="GET" class="flex items-center gap-2">
-                    <div class="flex-1 relative">
-                        <input
-                            type="text"
-                            id="search-input"
-                            name="q"
-                            placeholder="Cari artikel, berita, atau informasi..."
-                            class="w-full px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-green-700 focus:outline-none text-sm sm:text-base"
-                            style="font-family: 'Dosis', sans-serif;"
-                            autofocus
+            <div class="flex items-center">
+                <div class="relative">
+                    <div class="flex items-center gap-1" style="width: 600px; max-width: 90vw;">
+                        <div class="flex-1 relative">
+                            <input
+                                type="text"
+                                id="search-input"
+                                name="q"
+                                placeholder="Cari artikel, berita, atau informasi..."
+                                class="w-full px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-green-700 focus:outline-none text-sm sm:text-base"
+                                style="font-family: 'Dosis', sans-serif;"
+                                autofocus
+                                autocomplete="off"
+                            >
+                            <!-- Dropdown Hasil Pencarian -->
+                            <div id="search-results" class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-96 overflow-y-auto hidden" style="border-radius: 0;">
+                                <div id="search-results-list" class="py-1"></div>
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            id="search-close"
+                            class="text-gray-700 dark:text-slate-300 hover:text-white dark:hover:text-white p-2 hover:bg-green-700 dark:hover:bg-green-600 rounded-full transition-colors duration-200"
+                            aria-label="Tutup pencarian"
                         >
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <button
-                        type="submit"
-                        class="bg-green-700 hover:bg-green-800 text-white font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-colors duration-200 uppercase text-xs sm:text-sm"
-                        style="font-family: 'Dosis', sans-serif;"
-                    >
-                        Cari
-                    </button>
-                    <button
-                        type="button"
-                        id="search-close"
-                        class="text-gray-700 hover:text-gray-900 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                        aria-label="Tutup pencarian"
-                    >
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -213,6 +213,12 @@ document.addEventListener('DOMContentLoaded', function() {
         headerSearch.classList.add('hidden');
         headerNormal.classList.remove('hidden');
         searchInput.value = '';
+        if (searchResults) {
+            searchResults.classList.add('hidden');
+        }
+        if (searchResultsList) {
+            searchResultsList.innerHTML = '';
+        }
     });
 
     // ESC key untuk menutup search
@@ -221,6 +227,125 @@ document.addEventListener('DOMContentLoaded', function() {
             searchClose.click();
         }
     });
+
+    // Auto-search dengan debounce
+    let searchTimeout = null;
+    let isSearching = false;
+    const searchResults = document.getElementById('search-results');
+    const searchResultsList = document.getElementById('search-results-list');
+
+    function performSearch(query) {
+        if (!query || query.trim() === '') {
+            searchResults.classList.add('hidden');
+            searchResultsList.innerHTML = '';
+            return;
+        }
+
+        if (isSearching) return;
+        isSearching = true;
+
+        fetch('{{ route('api.search') }}?q=' + encodeURIComponent(query), {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            isSearching = false;
+            displaySearchResults(data, query);
+        })
+        .catch(error => {
+            console.error('Search error:', error);
+            isSearching = false;
+            searchResults.classList.add('hidden');
+        });
+    }
+
+    function displaySearchResults(results, query) {
+        if (!results || results.length === 0) {
+            searchResultsList.innerHTML = '<div class="px-4 py-3 text-sm text-gray-500 text-center">Tidak ada hasil ditemukan</div>';
+            searchResults.classList.remove('hidden');
+            return;
+        }
+
+        let html = '';
+        results.forEach(function(item) {
+            const typeLabel = item.type === 'berita' ? 'Berita' : 'Artikel';
+            const typeColor = item.type === 'berita' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300';
+            const url = '{{ url('/informasi') }}/' + item.type + '/' + item.slug;
+            const thumbnail = item.thumbnail_path ? '{{ asset('storage') }}/' + item.thumbnail_path : '{{ asset('img/banner1.jpg') }}';
+            
+            html += `
+                <a href="${url}" class="block px-4 py-3 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors border-b border-gray-100 dark:border-slate-700 last:border-b-0">
+                    <div class="flex items-start gap-3">
+                        <div class="w-16 h-16 flex-shrink-0 overflow-hidden" style="border-radius: 0;">
+                            <img src="${thumbnail}" alt="${item.title}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded ${typeColor}" style="border-radius: 0;">
+                                    ${typeLabel}
+                                </span>
+                                <span class="text-xs text-gray-500">${item.published_at || ''}</span>
+                            </div>
+                            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-1 line-clamp-1">${item.title}</h4>
+                            ${item.excerpt ? `<p class="text-xs text-gray-600 dark:text-slate-400 line-clamp-2">${item.excerpt}</p>` : ''}
+                        </div>
+                    </div>
+                </a>
+            `;
+        });
+
+        searchResultsList.innerHTML = html;
+        searchResults.classList.remove('hidden');
+    }
+
+        // Auto-search saat mengetik
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                
+                // Clear timeout sebelumnya
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                }
+                
+                // Jika query kosong, tutup dropdown
+                if (query === '') {
+                    if (searchResults) {
+                        searchResults.classList.add('hidden');
+                    }
+                    if (searchResultsList) {
+                        searchResultsList.innerHTML = '';
+                    }
+                    return;
+                }
+                
+                // Set timeout baru (500ms setelah user berhenti mengetik)
+                searchTimeout = setTimeout(function() {
+                    performSearch(query);
+                }, 500);
+            });
+
+        // Tutup dropdown saat klik di luar
+        document.addEventListener('click', function(e) {
+            if (searchResults && !searchResults.classList.contains('hidden')) {
+                const searchContainer = document.querySelector('#header-search .relative');
+                if (searchContainer && !searchContainer.contains(e.target)) {
+                    searchResults.classList.add('hidden');
+                }
+            }
+        });
+
+        // Tutup dropdown saat ESC
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                searchResults.classList.add('hidden');
+            }
+        });
+    }
 
     // Dropdown PROFIL untuk mobile (klik toggle)
     const profilDropdown = document.getElementById('profil-dropdown');

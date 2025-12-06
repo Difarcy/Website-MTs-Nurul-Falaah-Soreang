@@ -17,6 +17,7 @@ class BannerSetting extends Model
         'show_title',
         'show_description',
         'show_button',
+        'promosi_banner_path',
     ];
 
     protected $casts = [

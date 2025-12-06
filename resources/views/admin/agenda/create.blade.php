@@ -22,7 +22,7 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">
-                        Judul Agenda *
+                        Judul Agenda <span class="text-red-600 dark:text-red-500">*</span>
                     </label>
                     <input type="text" name="judul" value="{{ old('judul') }}" required placeholder="Masukkan judul agenda" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     @error('judul') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror

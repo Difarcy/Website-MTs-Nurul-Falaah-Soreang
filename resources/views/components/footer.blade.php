@@ -1,6 +1,6 @@
 <!-- Footer -->
 <footer class="bg-green-800 text-white mt-auto">
-    <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 max-w-7xl pt-8 sm:pt-12 pb-2">
+    <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl pt-8 sm:pt-12 pb-2">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Logo dan Nama Sekolah -->
             @php
@@ -145,13 +145,13 @@
                 </ul>
             </div>
         </div>
+    </div>
 
-        <!-- Copyright -->
-        <div class="border-t border-green-700 mt-8 pt-6 text-center">
-            <p class="text-xs sm:text-sm text-gray-200">
-                Copyright © MTs Nurul Falaah Soreang {{ date('Y') }}
-            </p>
-        </div>
+    <!-- Copyright -->
+    <div class="w-full mt-8 pt-6 pb-2">
+        <p class="text-xs sm:text-sm text-gray-200 text-center">
+            Copyright © MTs Nurul Falaah Soreang {{ date('Y') }}
+        </p>
     </div>
 </footer>
 

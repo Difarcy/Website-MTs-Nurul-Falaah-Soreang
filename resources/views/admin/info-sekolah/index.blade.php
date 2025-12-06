@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 
-@section('title', 'Info Sekolah')
+@section('title', 'Profil Sekolah')
 
 @section('content')
     <div class="space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900">Info Sekolah</h1>
+                <h1 class="text-2xl font-bold text-slate-900">Profil Sekolah</h1>
                 <p class="text-sm text-slate-500 mt-1">Kelola informasi umum sekolah yang ditampilkan di website</p>
             </div>
             <a href="{{ route('admin.info-sekolah.create') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-bold text-white bg-green-700 rounded-lg hover:bg-green-800 shadow-lg">

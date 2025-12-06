@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Tambah Info Sekolah')
+@section('title', 'Tambah Profil Sekolah')
 
 @section('content')
     <div class="space-y-6">
@@ -11,7 +11,7 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-slate-900">Tambah Info Sekolah</h1>
+                <h1 class="text-2xl font-bold text-slate-900">Tambah Profil Sekolah</h1>
                 <p class="text-sm text-slate-500 mt-1">Tambah informasi umum sekolah baru</p>
             </div>
         </div>
@@ -22,7 +22,7 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">
-                        Key (Identifikasi) *
+                        Key (Identifikasi) <span class="text-red-600 dark:text-red-500">*</span>
                     </label>
                     <input type="text" name="key" value="{{ old('key') }}" required placeholder="Masukkan key (contoh: nama_sekolah)" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     <p class="text-xs text-slate-500 mt-1">Gunakan huruf kecil dan underscore, contoh: nama_sekolah</p>
@@ -31,7 +31,7 @@
 
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">
-                        Label *
+                        Label <span class="text-red-600 dark:text-red-500">*</span>
                     </label>
                     <input type="text" name="label" value="{{ old('label') }}" required placeholder="Masukkan label" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     @error('label') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror

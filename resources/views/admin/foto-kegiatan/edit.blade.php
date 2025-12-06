@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Foto Kegiatan')
+@section('title', 'Edit Galeri')
 
 @section('content')
     <div class="space-y-6">
@@ -12,7 +12,7 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-slate-900">Edit Foto Kegiatan</h1>
+                <h1 class="text-2xl font-bold text-slate-900">Edit Galeri</h1>
                 <p class="text-sm text-slate-500 mt-1">Ubah informasi foto kegiatan</p>
             </div>
         </div>

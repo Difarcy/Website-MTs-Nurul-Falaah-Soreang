@@ -95,6 +95,147 @@ body {
     border-radius: 0.5rem;
 }
 
+/* TinyMCE Content Styling - Preserve formatting from editor */
+.tinymce-content {
+    word-wrap: break-word;
+}
+
+/* Override global text-justify untuk konten TinyMCE */
+.tinymce-content p,
+.tinymce-content p[style*="text-align: left"],
+.tinymce-content p[style*="text-align: center"],
+.tinymce-content p[style*="text-align: right"],
+.tinymce-content p[style*="text-align: justify"] {
+    text-align: inherit !important;
+}
+
+/* Preserve alignment dari inline style TinyMCE */
+.tinymce-content p[style*="text-align: left"] {
+    text-align: left !important;
+}
+
+.tinymce-content p[style*="text-align: center"] {
+    text-align: center !important;
+}
+
+.tinymce-content p[style*="text-align: right"] {
+    text-align: right !important;
+}
+
+.tinymce-content p[style*="text-align: justify"] {
+    text-align: justify !important;
+}
+
+.tinymce-content p {
+    margin: 1em 0;
+}
+
+.tinymce-content .text-left {
+    text-align: left !important;
+}
+
+.tinymce-content .text-center {
+    text-align: center !important;
+}
+
+.tinymce-content .text-right {
+    text-align: right !important;
+}
+
+.tinymce-content .text-justify {
+    text-align: justify !important;
+}
+
+/* List styling untuk TinyMCE - harus lebih spesifik dari prose */
+.prose .tinymce-content ul,
+.prose .tinymce-content ol,
+.tinymce-content ul,
+.tinymce-content ol {
+    margin: 1em 0 !important;
+    padding-left: 2.5em !important;
+    list-style-position: outside !important;
+    list-style: disc outside !important;
+}
+
+.prose .tinymce-content ul,
+.tinymce-content ul {
+    list-style-type: disc !important;
+}
+
+.prose .tinymce-content ol,
+.tinymce-content ol {
+    list-style-type: decimal !important;
+}
+
+.prose .tinymce-content ul ul,
+.tinymce-content ul ul {
+    list-style-type: circle !important;
+}
+
+.prose .tinymce-content ul ul ul,
+.tinymce-content ul ul ul {
+    list-style-type: square !important;
+}
+
+.prose .tinymce-content li,
+.tinymce-content li {
+    margin: 0.5em 0 !important;
+    display: list-item !important;
+    list-style-position: outside !important;
+    padding-left: 0.5em !important;
+}
+
+.tinymce-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.tinymce-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.tinymce-content table td,
+.tinymce-content table th {
+    padding: 0.5em;
+    border: 1px solid #e2e8f0;
+}
+
+.tinymce-content a {
+    color: #059669;
+    text-decoration: underline;
+}
+
+.tinymce-content a:hover {
+    color: #047857;
+}
+
+/* Dark mode untuk konten TinyMCE */
+@media (prefers-color-scheme: dark) {
+    .tinymce-content table td,
+    .tinymce-content table th {
+        border-color: rgba(148, 163, 184, 0.35);
+    }
+    
+    .tinymce-content a {
+        color: #34d399;
+    }
+    
+    .tinymce-content a:hover {
+        color: #10b981;
+    }
+}
+
+/* Exception: Tombol close modal harus bulat penuh */
+.admin-main .close-modal-btn,
+.admin-main .close-banner-modal-btn,
+.close-modal-btn,
+.close-banner-modal-btn {
+    border-radius: 9999px !important;
+    padding: 0 !important;
+}
+
 .admin-main a.inline-flex {
     padding-top: 0.55rem;
     padding-bottom: 0.55rem;
@@ -155,3 +296,151 @@ select:not(:-webkit-autofill) {
         background-color: #1e293b;
     }
 }
+
+/* Border hitam tipis untuk semua input, select, dan textarea */
+input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    border-color: #000000 !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+}
+
+/* Saat focus, border menjadi hitam tebal (tidak terlalu tebal) */
+input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+    outline: none !important;
+    border-color: #000000 !important;
+    border-width: 2px !important;
+    box-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+    --tw-ring-shadow: none !important;
+    ring: none !important;
+    --tw-ring-width: 0px !important;
+}
+
+/* Dark mode: border abu-abu terang */
+@media (prefers-color-scheme: dark) {
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+        border-color: #e2e8f0 !important;
+    }
+    
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):focus,
+    select:focus,
+    textarea:focus {
+        border-color: #e2e8f0 !important;
+        border-width: 2px !important;
+    }
+}
+
+/* Text Justify untuk semua content text */
+p:not([class*="text-center"]):not([class*="text-right"]):not([class*="text-left"]):not([class*="banner-slide__description"]):not([style*="text-align"]),
+.prose p:not([style*="text-align"]):not(.tinymce-content p),
+.prose li:not(.tinymce-content li),
+.prose td,
+.prose th,
+article p:not([style*="text-align"]):not(.tinymce-content p),
+.content p:not([style*="text-align"]),
+.text-content p:not([style*="text-align"]),
+[class*="deskripsi"] p:not([class*="banner-slide__description"]):not([style*="text-align"]),
+[class*="isi"] p:not([style*="text-align"]),
+[class*="body"] p:not([style*="text-align"]) {
+    text-align: justify !important;
+}
+
+/* Exception: Deskripsi banner rata kiri */
+.banner-slide__description {
+    text-align: left !important;
+}
+
+/* Aturan Gambar: Landscape/Widescreen untuk Banner, Thumbnail, Berita, Artikel */
+/* Banner */
+.banner-slide__image,
+[class*="banner"] img:not([class*="logo"]):not([class*="kepala"]):not([alt*="Logo"]):not([alt*="logo"]),
+img[alt*="Banner"]:not([alt*="Logo"]):not([alt*="logo"]),
+img[alt*="banner"]:not([alt*="Logo"]):not([alt*="logo"]) {
+    aspect-ratio: 16/9 !important;
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Pengecualian: Logo di banner tetap menggunakan proporsi asli */
+[class*="banner"] img[alt*="Logo"],
+[class*="banner"] img[alt*="logo"],
+.banner-slide__content img[alt*="Logo"],
+.banner-slide__content img[alt*="logo"] {
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+}
+
+/* Thumbnail Berita/Artikel */
+[class*="thumbnail"] img,
+img[alt*="thumbnail"],
+article img:not([class*="logo"]):not([class*="kepala"]):not([class*="portrait"]),
+.post-thumbnail img,
+.news-thumbnail img {
+    aspect-ratio: 16/9 !important;
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Gambar di Admin Panel (Banner, Thumbnail, dll) */
+.admin-main img:not([class*="logo"]):not([class*="kepala"]):not([class*="portrait"]):not([class*="square"]):not([alt*="Logo"]):not([alt*="logo"]) {
+    aspect-ratio: 16/9 !important;
+    object-fit: cover !important;
+}
+
+/* Pengecualian: Logo di Admin Panel tetap menggunakan proporsi asli */
+.admin-main img[alt*="Logo"],
+.admin-main img[alt*="logo"],
+.admin-main [class*="logo"] img,
+.admin-main img[class*="logo"] {
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+}
+
+/* Pengecualian: Gambar di Modal Zoom - Proporsi Asli */
+#imagePreviewModal img {
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+}
+
+/* Aturan Khusus: Foto Kepala Madrasah (Portrait) */
+img[alt*="Kepala"]:not([class*="logo"]),
+img[alt*="kepala"]:not([class*="logo"]),
+[class*="kepala-madrasah"] img,
+[class*="kepala-sekolah"] img,
+.kepala-madrasah img,
+.kepala-sekolah img {
+    aspect-ratio: 3/4 !important;
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Drag and Drop untuk Gambar di Admin Panel */
+.draggable-image {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    cursor: move;
+}
+
+.draggable-image:hover {
+    transform: scale(1.02);
+}
+
+.draggable-image.drag-over {
+    border: 2px solid #10b981 !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.draggable-image[draggable="true"]:active {
+    opacity: 0.6;
+}
+
+

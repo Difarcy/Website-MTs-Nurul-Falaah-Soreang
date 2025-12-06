@@ -43,6 +43,7 @@
 
         @include('components.footer')
     </div>
+    @include('components.chatbot-widget')
     @stack('scripts')
 </body>
 </html>

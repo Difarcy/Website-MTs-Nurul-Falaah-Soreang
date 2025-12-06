@@ -36,11 +36,11 @@ class BannerController extends Controller
     public function updateSettings(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'tagline' => 'nullable|string|max:255',
-            'judul' => 'nullable|string|max:255',
-            'deskripsi' => 'nullable|string|max:220',
-            'link' => 'nullable|url|max:500',
-            'button_text' => 'nullable|string|max:100',
+            'tagline' => 'nullable|string|max:150',
+            'judul' => 'nullable|string|max:150',
+            'deskripsi' => 'nullable|string|max:200',
+            'link' => 'nullable|url|max:150',
+            'button_text' => 'nullable|string|max:150',
             'show_logo' => 'boolean',
             'show_tagline' => 'boolean',
             'show_title' => 'boolean',
@@ -62,6 +62,13 @@ class BannerController extends Controller
 
         $settings->fill($validated);
         $settings->save();
+
+        // Redirect ke URL yang diminta jika ada, atau ke halaman banner
+        $redirectUrl = $request->input('_redirect_after_save');
+        if ($redirectUrl) {
+            return redirect($redirectUrl)
+                ->with('status', 'Informasi banner berhasil disimpan.');
+        }
 
         return redirect()
             ->route('admin.banners.index')
@@ -187,5 +194,93 @@ class BannerController extends Controller
         return redirect()
             ->route('admin.banners.index')
             ->with('status', 'Gambar banner berhasil dihapus.');
+    }
+
+    /**
+     * Upload banner promosi
+     */
+    public function uploadPromosi(Request $request): RedirectResponse
+    {
+        try {
+            $validated = $request->validate([
+                'promosi_banner' => 'required|image|mimes:jpeg,jpg,png,webp|max:5120',
+            ], [
+                'promosi_banner.required' => 'Silakan pilih file gambar terlebih dahulu.',
+                'promosi_banner.image' => 'File harus berupa gambar.',
+                'promosi_banner.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
+                'promosi_banner.max' => 'Ukuran file terlalu besar! Maksimal 5MB.',
+            ]);
+
+            $file = $request->file('promosi_banner');
+            if (!$file || !$file->isValid()) {
+                return redirect()
+                    ->route('admin.banners.index')
+                    ->with('error', 'File gambar tidak valid atau rusak.');
+            }
+
+            // Hapus banner promosi lama jika ada
+            $settings = BannerSetting::first();
+            if ($settings && $settings->promosi_banner_path) {
+                Storage::disk('public')->delete($settings->promosi_banner_path);
+            }
+
+            // Simpan file baru
+            $promosiPath = $file->store('banners/promosi', 'public');
+            if (!$promosiPath) {
+                return redirect()
+                    ->route('admin.banners.index')
+                    ->with('error', 'Gagal menyimpan file gambar.');
+            }
+
+            // Update atau create settings
+            if (!$settings) {
+                $settings = new BannerSetting([
+                    'show_logo' => true,
+                    'show_tagline' => true,
+                    'show_title' => true,
+                    'show_description' => true,
+                    'show_button' => true,
+                ]);
+            }
+            $settings->promosi_banner_path = $promosiPath;
+            $settings->save();
+            
+            // Log untuk debugging
+            \Log::info('Banner promosi uploaded: ' . $promosiPath);
+
+            // Redirect dengan parameter untuk auto-reload
+            return redirect()
+                ->route('admin.banners.index')
+                ->with('status', 'Banner promosi berhasil diupload.')
+                ->with('reload', true);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->route('admin.banners.index')
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Promosi banner upload error: ' . $e->getMessage());
+            return redirect()
+                ->route('admin.banners.index')
+                ->with('error', 'Terjadi kesalahan saat mengupload gambar: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Hapus banner promosi
+     */
+    public function deletePromosi(): RedirectResponse
+    {
+        $settings = BannerSetting::first();
+        if ($settings && $settings->promosi_banner_path) {
+            Storage::disk('public')->delete($settings->promosi_banner_path);
+            $settings->promosi_banner_path = null;
+            $settings->save();
+        }
+
+        return redirect()
+            ->route('admin.banners.index')
+            ->with('status', 'Banner promosi berhasil dihapus.')
+            ->with('reload', true);
     }
 }

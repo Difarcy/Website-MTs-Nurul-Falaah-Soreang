@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'Foto Kegiatan')
+@section('title', 'Galeri')
 
 @section('content')
     <div class="space-y-6">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900">Foto Kegiatan</h1>
+                <h1 class="text-2xl font-bold text-slate-900">Galeri</h1>
                 <p class="text-sm text-slate-500 mt-1">Kelola foto-foto kegiatan sekolah yang ditampilkan di website</p>
             </div>
             <a href="{{ route('admin.foto-kegiatan.create') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-bold text-white bg-green-700 rounded-lg hover:bg-green-800 shadow-lg">

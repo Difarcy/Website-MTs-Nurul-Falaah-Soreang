@@ -91,17 +91,12 @@ class AuthController extends Controller
         $password = $credentials['password'];
         $remember = $request->boolean('remember');
 
-        $fieldsToTry = filter_var($loginValue, FILTER_VALIDATE_EMAIL)
-            ? ['email']
-            : ['username', 'email'];
+        // Hanya menggunakan username untuk login admin
+        if (Auth::attempt(['username' => $loginValue, 'password' => $password], $remember)) {
+            $request->session()->regenerate();
+            $request->session()->regenerateToken();
 
-        foreach ($fieldsToTry as $field) {
-            if (Auth::attempt([$field => $loginValue, 'password' => $password], $remember)) {
-                $request->session()->regenerate();
-                $request->session()->regenerateToken();
-
-                return redirect($redirectRoute);
-            }
+            return redirect($redirectRoute);
         }
 
         throw ValidationException::withMessages([
@@ -118,7 +113,17 @@ class AuthController extends Controller
     {
         $request->validate([
             'current_password' => ['required', 'string'],
-            'password' => ['required', 'confirmed', Password::min(8)],
+            'password' => [
+                'required',
+                'confirmed',
+                'min:8',
+                'regex:/[0-9]/',
+            ],
+        ], [
+            'password.required' => 'Kata sandi baru wajib diisi.',
+            'password.min' => 'Kata sandi baru harus minimal 8 karakter.',
+            'password.regex' => 'Kata sandi baru harus mengandung minimal 1 angka.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak sesuai. Pastikan kedua kata sandi sama.',
         ]);
 
         $user = Auth::user();
@@ -135,6 +140,40 @@ class AuthController extends Controller
         $user->save();
 
         return redirect()->route('admin.change-password')->with('status', 'Password berhasil diubah.');
+    }
+
+    public function showChangeUsername()
+    {
+        return view('admin.change-username');
+    }
+
+    public function changeUsername(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'string'],
+            'username' => ['required', 'string', 'max:50', 'alpha_dash', 'unique:users,username,' . Auth::id()],
+        ], [
+            'current_password.required' => 'Kata sandi saat ini wajib diisi.',
+            'username.required' => 'Username baru wajib diisi.',
+            'username.max' => 'Username baru maksimal 50 karakter.',
+            'username.alpha_dash' => 'Username baru hanya boleh menggunakan huruf, angka, underscore (_), dan dash (-).',
+            'username.unique' => 'Username baru sudah digunakan. Silakan pilih username lain.',
+        ]);
+
+        $user = Auth::user();
+
+        // Verifikasi password untuk keamanan
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors([
+                'current_password' => 'Password saat ini tidak sesuai.',
+            ])->withInput();
+        }
+
+        // Update username
+        $user->username = $request->username;
+        $user->save();
+
+        return redirect()->route('admin.change-username')->with('status', 'Username berhasil diubah. Silakan login ulang dengan username baru.');
     }
 
     protected function ensureRegistrationEnabled(): void

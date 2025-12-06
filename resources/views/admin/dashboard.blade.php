@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Panel')
+@section('title', 'Panel Admin')
 
 @section('content')
     <div class="space-y-6">
@@ -11,8 +11,8 @@
 
         <!-- Menu Utama -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Berita & Artikel -->
-            <a href="{{ route('admin.posts.index') }}" class="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-600 hover:shadow-lg transition-all group">
+            <!-- Berita -->
+            <a href="{{ route('admin.berita.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-green-100 rounded-lg p-3 group-hover:bg-green-600 transition">
                         <svg class="w-8 h-8 text-green-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,19 +20,39 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-slate-900 group-hover:text-green-700">Berita & Artikel</h3>
-                        <p class="text-base text-slate-500 mt-1 font-medium">Kelola berita dan artikel sekolah</p>
+                        <h3 class="text-xl font-bold text-slate-900 group-hover:text-green-700">Berita</h3>
+                        <p class="text-base text-slate-500 mt-1 font-medium">Kelola berita sekolah</p>
                         <div class="mt-3 flex items-center gap-4 text-sm text-slate-400 font-medium">
-                            <span>Total: {{ $stats['total_posts'] }}</span>
+                            <span>Total: {{ $stats['total_berita'] ?? 0 }}</span>
                             <span>•</span>
-                            <span class="text-green-600">Aktif: {{ $stats['published_posts'] }}</span>
+                            <span class="text-green-600">Aktif: {{ $stats['published_berita'] ?? 0 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Artikel -->
+            <a href="{{ route('admin.artikel.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-purple-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
+                <div class="flex items-start gap-4">
+                    <div class="bg-purple-100 rounded-lg p-3 group-hover:bg-purple-600 transition">
+                        <svg class="w-8 h-8 text-purple-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-slate-900 group-hover:text-purple-700">Artikel</h3>
+                        <p class="text-base text-slate-500 mt-1 font-medium">Kelola artikel sekolah</p>
+                        <div class="mt-3 flex items-center gap-4 text-sm text-slate-400 font-medium">
+                            <span>Total: {{ $stats['total_artikel'] ?? 0 }}</span>
+                            <span>•</span>
+                            <span class="text-green-600">Aktif: {{ $stats['published_artikel'] ?? 0 }}</span>
                         </div>
                     </div>
                 </div>
             </a>
 
             <!-- Banner -->
-            <a href="{{ route('admin.banners.index') }}" class="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-600 hover:shadow-lg transition-all group">
+            <a href="{{ route('admin.banners.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-blue-100 rounded-lg p-3 group-hover:bg-blue-600 transition">
                         <svg class="w-8 h-8 text-blue-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,8 +71,8 @@
                 </div>
             </a>
 
-            <!-- Foto Kegiatan -->
-            <a href="{{ route('admin.foto-kegiatan.index') }}" class="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-600 hover:shadow-lg transition-all group">
+            <!-- Galeri Foto -->
+            <a href="{{ route('admin.foto-kegiatan.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-purple-100 rounded-lg p-3 group-hover:bg-purple-600 transition">
                         <svg class="w-8 h-8 text-purple-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,7 +80,7 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-slate-900 group-hover:text-green-700">Foto Kegiatan</h3>
+                        <h3 class="text-xl font-bold text-slate-900 group-hover:text-green-700">Galeri</h3>
                         <p class="text-base text-slate-500 mt-1 font-medium">Kelola foto-foto kegiatan sekolah</p>
                         <div class="mt-3 flex items-center gap-4 text-sm text-slate-400 font-medium">
                             <span>Total: {{ $stats['total_fotos'] }}</span>
@@ -72,7 +92,7 @@
             </a>
 
             <!-- Prestasi Siswa -->
-            <a href="{{ route('admin.prestasi-siswa.index') }}" class="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-600 hover:shadow-lg transition-all group">
+            <a href="{{ route('admin.prestasi-siswa.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-yellow-100 rounded-lg p-3 group-hover:bg-yellow-600 transition">
                         <svg class="w-8 h-8 text-yellow-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +112,7 @@
             </a>
 
             <!-- Pengumuman -->
-            <a href="{{ route('admin.pengumuman.index') }}" class="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-600 hover:shadow-lg transition-all group">
+            <a href="{{ route('admin.pengumuman.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-orange-100 rounded-lg p-3 group-hover:bg-orange-600 transition">
                         <svg class="w-8 h-8 text-orange-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,7 +132,7 @@
             </a>
 
             <!-- Agenda -->
-            <a href="{{ route('admin.agenda.index') }}" class="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-600 hover:shadow-lg transition-all group">
+            <a href="{{ route('admin.agenda.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-indigo-100 rounded-lg p-3 group-hover:bg-indigo-600 transition">
                         <svg class="w-8 h-8 text-indigo-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +152,7 @@
             </a>
 
             <!-- Kontak -->
-            <a href="{{ route('admin.kontak.index') }}" class="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-600 hover:shadow-lg transition-all group">
+            <a href="{{ route('admin.kontak.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-teal-100 rounded-lg p-3 group-hover:bg-teal-600 transition">
                         <svg class="w-8 h-8 text-teal-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,8 +171,8 @@
                 </div>
             </a>
 
-            <!-- Info Sekolah -->
-            <a href="{{ route('admin.info-sekolah.index') }}" class="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-green-600 hover:shadow-lg transition-all group">
+            <!-- Profil Sekolah -->
+            <a href="{{ route('admin.info-sekolah.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-pink-100 rounded-lg p-3 group-hover:bg-pink-600 transition">
                         <svg class="w-8 h-8 text-pink-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +180,7 @@
                         </svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-xl font-bold text-slate-900 group-hover:text-green-700">Info Sekolah</h3>
+                        <h3 class="text-xl font-bold text-slate-900 group-hover:text-green-700">Profil Sekolah</h3>
                         <p class="text-base text-slate-500 mt-1 font-medium">Kelola teks informasi di website</p>
                     </div>
                 </div>
@@ -168,7 +188,7 @@
         </div>
 
         <!-- Info Cepat -->
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div class="bg-blue-50 border border-blue-200 p-4" style="border-radius: 0;">
             <div class="flex items-start gap-3">
                 <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>

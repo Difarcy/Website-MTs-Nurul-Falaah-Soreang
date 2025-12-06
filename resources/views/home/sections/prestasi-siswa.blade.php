@@ -9,7 +9,7 @@
                 @foreach($prestasiSiswa as $index => $item)
                 @php $i = $index + 1; @endphp
             <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105">
-                <div class="w-full aspect-[4/5] overflow-hidden relative">
+                <div class="w-full aspect-4/5 overflow-hidden relative">
                     <img
                         src="{{ $item->gambar ? asset('storage/' . $item->gambar) : asset('img/default-backgrounds.png') }}"
                         alt="{{ $item->judul }}"

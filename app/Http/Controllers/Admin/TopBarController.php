@@ -26,12 +26,12 @@ class TopBarController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'phone' => 'nullable|string|max:50',
-            'email' => 'nullable|email|max:100',
-            'facebook_url' => 'nullable|url|max:500',
-            'instagram_url' => 'nullable|url|max:500',
-            'youtube_url' => 'nullable|url|max:500',
-            'tiktok_url' => 'nullable|url|max:500',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:50',
+            'facebook_url' => 'nullable|url|max:150',
+            'instagram_url' => 'nullable|url|max:150',
+            'youtube_url' => 'nullable|url|max:150',
+            'tiktok_url' => 'nullable|url|max:150',
         ]);
 
         $settings = TopBarSetting::first();
@@ -42,6 +42,13 @@ class TopBarController extends Controller
 
         $settings->fill($validated);
         $settings->save();
+
+        // Redirect ke URL yang diminta jika ada, atau ke halaman top bar
+        $redirectUrl = $request->input('_redirect_after_save');
+        if ($redirectUrl) {
+            return redirect($redirectUrl)
+                ->with('status', 'Informasi top bar berhasil diperbarui.');
+        }
 
         return redirect()
             ->route('admin.settings.top-bar')

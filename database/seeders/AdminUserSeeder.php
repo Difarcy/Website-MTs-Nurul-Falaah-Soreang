@@ -17,12 +17,10 @@ class AdminUserSeeder extends Seeder
         // Username sulit ditebak: kombinasi singkatan + tahun + identifier
         // Password kuat: berkaitan dengan MTs Nurul Falaah Soreang
         User::updateOrCreate(
-            ['email' => 'admin@mtsnurulfalaahsoreang.sch.id'],
+            ['username' => 'mtsnfs_cp_2025'],
             [
-                'name' => 'Administrator MTs',
-                'username' => 'mtsnfs_cp_2025',
+                'name' => 'Admin',
                 'password' => Hash::make('MTsNurulFalaah_Soreang2025!'),
-                'email_verified_at' => now(),
             ]
         );
 

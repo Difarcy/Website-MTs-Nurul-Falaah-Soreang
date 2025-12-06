@@ -1,26 +1,18 @@
 @extends('layouts.admin')
 
-@section('title', 'Berita & Artikel')
+@section('title', ucfirst($type ?? 'Berita'))
 
 @section('content')
     <div class="flex flex-col gap-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Berita & Artikel</h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Tambah, ubah, dan kelola semua konten informasi sekolah.</p>
+                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ ucfirst($type ?? 'Berita') }}</h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Tambah, ubah, dan kelola {{ strtolower($type ?? 'berita') }} di website.</p>
             </div>
             <div class="flex items-center gap-3">
-                @if(request()->hasAny(['type', 'status', 'q', 'sort', 'order', 'view']))
-                    <a href="{{ route('admin.posts.index') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                        Clear
-                    </a>
-                @endif
                 @if($posts->total() > 0)
-                    <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-green-700 rounded-lg hover:bg-green-800">
-                        + Tambah Konten
+                    <a href="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.create' : 'admin.berita.create') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-green-700 rounded-lg hover:bg-green-800">
+                        + Tambah {{ ucfirst($type ?? 'Berita') }}
                     </a>
                 @endif
             </div>
@@ -30,7 +22,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div class="flex items-center gap-3 flex-1 flex-wrap">
                 <!-- Pencarian -->
-                <form method="GET" action="{{ route('admin.posts.index') }}" id="search-form" class="flex-1 max-w-md">
+                <form method="GET" action="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index') }}" id="search-form" class="flex-1 max-w-md">
                     <div class="relative">
                         <input 
                             type="text" 
@@ -53,28 +45,11 @@
                         @if(request('view'))
                             <input type="hidden" name="view" value="{{ request('view') }}">
                         @endif
-                        @if(request('type'))
-                            <input type="hidden" name="type" value="{{ request('type') }}">
-                        @endif
                         @if(request('status'))
                             <input type="hidden" name="status" value="{{ request('status') }}">
                         @endif
                     </div>
                 </form>
-                
-                <!-- Filter Tipe -->
-                <div class="relative">
-                    <select id="filter-type" onchange="applyFilter()" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg px-4 py-2 pr-8 text-sm font-semibold focus:ring-2 focus:ring-green-600 focus:border-green-600 appearance-none cursor-pointer min-w-[140px]">
-                        <option value="">Semua Tipe</option>
-                        <option value="berita" @selected(request('type') === 'berita')>Berita</option>
-                        <option value="artikel" @selected(request('type') === 'artikel')>Artikel</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                        <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </div>
-                </div>
                 
                 <!-- Filter Status -->
                 <div class="relative">
@@ -82,6 +57,7 @@
                         <option value="">Semua Status</option>
                         <option value="published" @selected(request('status') === 'published')>Terpublikasi</option>
                         <option value="draft" @selected(request('status') === 'draft')>Draft</option>
+                        <option value="unpublished" @selected(request('status') === 'unpublished')>Nonaktif</option>
                     </select>
                     <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                         <svg class="w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,12 +85,15 @@
                 </div>
                 <!-- View Toggle -->
                 <div class="flex items-center gap-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-1">
-                    <button id="view-table" onclick="setView('table')" class="p-2 rounded {{ request('view', 'table') === 'table' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'text-slate-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700' }} transition-colors" title="Tampilan Tabel">
+                    @php
+                        $currentView = request('view', $viewPreference);
+                    @endphp
+                    <button id="view-table" onclick="setView('table')" class="p-2 rounded {{ $currentView === 'table' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'text-slate-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700' }} transition-colors" title="Tampilan Tabel">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                         </svg>
                     </button>
-                    <button id="view-grid" onclick="setView('grid')" class="p-2 rounded {{ request('view') === 'grid' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'text-slate-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700' }} transition-colors" title="Tampilan Grid">
+                    <button id="view-grid" onclick="setView('grid')" class="p-2 rounded {{ $currentView === 'grid' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'text-slate-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700' }} transition-colors" title="Tampilan Grid">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                         </svg>
@@ -189,7 +168,7 @@
                 @endif
                 
                 // Fetch dengan AJAX
-                const url = '{{ route('admin.posts.index') }}?' + params.toString();
+                const url = '{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index') }}?' + params.toString();
                 
                 fetch(url, {
                     method: 'GET',
@@ -233,15 +212,8 @@
             }
             
             function applyFilter() {
-                const typeValue = document.getElementById('filter-type').value;
                 const statusValue = document.getElementById('filter-status').value;
                 const url = new URL(window.location.href);
-                
-                if (typeValue) {
-                    url.searchParams.set('type', typeValue);
-                } else {
-                    url.searchParams.delete('type');
-                }
                 
                 if (statusValue) {
                     url.searchParams.set('status', statusValue);
@@ -274,9 +246,6 @@
                 @if(request('q'))
                     url.searchParams.set('q', '{{ request('q') }}');
                 @endif
-                @if(request('type'))
-                    url.searchParams.set('type', '{{ request('type') }}');
-                @endif
                 @if(request('status'))
                     url.searchParams.set('status', '{{ request('status') }}');
                 @endif
@@ -288,17 +257,11 @@
 
             function setView(view) {
                 const url = new URL(window.location.href);
-                if (view === 'table') {
-                    url.searchParams.delete('view');
-                } else {
-                    url.searchParams.set('view', view);
-                }
+                // Always set view parameter (even for 'table') to save preference
+                url.searchParams.set('view', view);
                 // Preserve other parameters
                 @if(request('q'))
                     url.searchParams.set('q', '{{ request('q') }}');
-                @endif
-                @if(request('type'))
-                    url.searchParams.set('type', '{{ request('type') }}');
                 @endif
                 @if(request('status'))
                     url.searchParams.set('status', '{{ request('status') }}');
@@ -310,24 +273,24 @@
             }
         </script>
 
-        <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl overflow-hidden" id="posts-container">
-            @if(request('view') === 'grid')
+        <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 overflow-hidden" id="posts-container" style="border-radius: 0;">
+            @php
+                $currentView = request('view', $viewPreference);
+            @endphp
+            @if($currentView === 'grid')
                 <!-- Grid View -->
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($posts as $post)
-                        <div class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 overflow-hidden hover:shadow-lg transition-shadow" style="border-radius: 0;">
                             @if($post->thumbnail_path)
-                                <div class="w-full h-48 overflow-hidden">
+                                <div class="w-full aspect-video overflow-hidden">
                                     <img src="{{ asset('storage/' . $post->thumbnail_path) }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
                                 </div>
                             @endif
                             <div class="p-4">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-xs font-semibold px-2 py-1 rounded-full {{ $post->type === 'berita' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' : 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300' }}">
-                                        {{ ucfirst($post->type) }}
-                                    </span>
-                                    <span class="text-xs font-semibold px-2 py-1 rounded-full {{ $post->status === 'published' ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300' }}">
-                                        {{ $post->status === 'published' ? 'Publikasi' : 'Draft' }}
+                                    <span class="text-xs font-semibold px-2 py-1 rounded-full {{ $post->status === 'published' ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300' : ($post->status === 'unpublished' ? 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300') }}">
+                                        {{ $post->status === 'published' ? 'Publikasi' : ($post->status === 'unpublished' ? 'Nonaktif' : 'Draft') }}
                                     </span>
                                 </div>
                                 <h3 class="font-semibold text-slate-900 dark:text-slate-100 mb-2 line-clamp-2">{{ $post->title }}</h3>
@@ -335,18 +298,14 @@
                                     <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 line-clamp-2">{{ $post->excerpt }}</p>
                                 @endif
                                 <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                                    {{ $post->published_at ? $post->published_at->format('d M Y') : 'Belum dijadwalkan' }}
+                                    {{ $post->published_at ? $post->published_at->format('d M Y H:i') : 'Belum dijadwalkan' }}
                                 </p>
                                 <div class="flex items-center gap-2">
-                                    <a href="{{ route('admin.posts.edit', $post) }}" class="flex-1 text-center px-3 py-2 text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
-                                        Edit
-                                    </a>
-                                    <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus konten ini?');" class="flex-1">
+                                    <a href="{{ route(($post->type === 'artikel' ? 'admin.artikel.edit' : 'admin.berita.edit'), $post) }}" class="flex-1 text-center px-3.5 py-1.5 text-xs font-bold text-white bg-green-700 rounded-lg hover:bg-green-800 whitespace-nowrap" style="font-size: 0.8rem;">Ubah</a>
+                                    <form action="{{ route(($post->type === 'artikel' ? 'admin.artikel.destroy' : 'admin.berita.destroy'), $post) }}" method="POST" class="flex-1 delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="w-full px-3 py-2 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
-                                            Hapus
-                                        </button>
+                                        <button type="button" class="w-full text-center px-3.5 py-1.5 text-xs font-bold text-white bg-red-700 rounded-lg hover:bg-red-800 whitespace-nowrap delete-btn" style="font-size: 0.8rem;" data-title="{{ $post->title }}">Hapus</button>
                                     </form>
                                 </div>
                             </div>
@@ -359,43 +318,52 @@
                                     <svg class="w-16 h-16 text-gray-400 dark:text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                     </svg>
-                                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">Hasil Pencarian Tidak Ditemukan</h3>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">
+                                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2 text-center">Hasil Pencarian Tidak Ditemukan</h3>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 text-center">
                                         Tidak ada konten yang sesuai dengan pencarian "<strong>{{ request('q') }}</strong>"
                                     </p>
-                                    <a href="{{ route('admin.posts.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-slate-700 text-white font-bold rounded-lg hover:bg-slate-800 dark:hover:bg-slate-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                        Kosongkan Pencarian
-                                    </a>
+                                    <div class="text-center">
+                                        <a href="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-slate-700 text-white font-bold rounded-lg hover:bg-slate-800 dark:hover:bg-slate-600">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                            Kosongkan Pencarian
+                                        </a>
+                                    </div>
                                 @elseif(request()->hasAny(['type', 'status']))
                                     {{-- Jika hanya filter tipe atau status (tanpa pencarian) --}}
                                     <svg class="w-16 h-16 text-gray-400 dark:text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                     </svg>
-                                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">Belum Ada Konten</h3>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">
-                                        @if(request('type'))
-                                            Belum ada konten dengan tipe "<strong>{{ ucfirst(request('type')) }}</strong>"
-                                        @elseif(request('status'))
-                                            Belum ada konten dengan status "<strong>{{ request('status') === 'published' ? 'Terpublikasi' : 'Draft' }}</strong>"
+                                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2 text-center">Tidak Ditemukan {{ ucfirst($type ?? 'Berita') }}</h3>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 text-center">
+                                        @if(request('status'))
+                                            @if(request('status') === 'published')
+                                                Belum ada {{ ($type ?? 'berita') === 'artikel' ? 'artikel' : 'berita' }} dengan status "<strong>Terpublikasi</strong>"
+                                            @elseif(request('status') === 'draft')
+                                                Belum ada {{ ($type ?? 'berita') === 'artikel' ? 'artikel' : 'berita' }} dengan status "<strong>Draft</strong>"
+                                            @elseif(request('status') === 'unpublished')
+                                                Belum ada {{ ($type ?? 'berita') === 'artikel' ? 'artikel' : 'berita' }} dengan status "<strong>Nonaktif</strong>"
+                                            @endif
                                         @endif
                                     </p>
-                                    <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white font-bold rounded-lg hover:bg-green-800">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                        </svg>
-                                        Tambah Konten
-                                    </a>
+                                    @if(!request('status'))
+                                        {{-- Hanya tampilkan tombol jika tidak ada filter status --}}
+                                        <a href="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.create' : 'admin.berita.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white font-bold rounded-lg hover:bg-green-800">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                            </svg>
+                                            Tambah Konten
+                                        </a>
+                                    @endif
                                 @else
                                     {{-- Jika tidak ada filter sama sekali --}}
                                     <svg class="w-16 h-16 text-gray-400 dark:text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                     </svg>
-                                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">Belum Ada Konten</h3>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Mulai dengan menambahkan berita atau artikel baru</p>
-                                    <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white font-bold rounded-lg hover:bg-green-800">
+                                    <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2 text-center">Tidak Ditemukan {{ ucfirst($type ?? 'Berita') }}</h3>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 text-center">Mulai dengan menambahkan {{ ($type ?? 'berita') === 'artikel' ? 'artikel' : 'berita' }} baru</p>
+                                    <a href="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.create' : 'admin.berita.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white font-bold rounded-lg hover:bg-green-800">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                         </svg>
@@ -413,7 +381,6 @@
                     <thead class="bg-slate-50 dark:bg-slate-700 text-left text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
                         <tr>
                             <th class="px-4 py-3">Judul</th>
-                            <th class="px-4 py-3">Tipe</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3">Dijadwalkan</th>
                             <th class="px-4 py-3 text-right">Aksi</th>
@@ -421,28 +388,27 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
                         @forelse($posts as $post)
-                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <tr class="hover:bg-slate-200 dark:hover:bg-slate-700/50 transition-colors">
                                 <td class="px-4 py-3">
                                     <p class="font-semibold text-slate-900 dark:text-slate-100">{{ $post->title }}</p>
                                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">{{ $post->excerpt }}</p>
                                 </td>
-                                <td class="px-4 py-3 text-slate-600 dark:text-slate-300 capitalize">{{ $post->type }}</td>
                                 <td class="px-4 py-3">
                                     <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full
-                                        {{ $post->status === 'published' ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300' }}">
-                                        {{ $post->status === 'published' ? 'Publikasi' : 'Draft' }}
+                                        {{ $post->status === 'published' ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300' : ($post->status === 'unpublished' ? 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300') }}">
+                                        {{ $post->status === 'published' ? 'Publikasi' : ($post->status === 'unpublished' ? 'Nonaktif' : 'Draft') }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 text-slate-600 dark:text-slate-300">
                                     {{ $post->published_at ? $post->published_at->format('d M Y H:i') : 'Belum dijadwalkan' }}
                                 </td>
-                                <td class="px-4 py-3 text-right">
-                                    <div class="inline-flex items-center gap-2">
-                                        <a href="{{ route('admin.posts.edit', $post) }}" class="text-xs font-semibold text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300">Edit</a>
-                                        <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus konten ini?');" class="inline">
+                                <td class="px-4 py-3 text-right align-bottom">
+                                    <div class="flex flex-col items-end gap-2">
+                                        <a href="{{ route(($post->type === 'artikel' ? 'admin.artikel.edit' : 'admin.berita.edit'), $post) }}" class="w-20 text-center px-3.5 py-1.5 text-xs font-bold text-white bg-green-700 rounded-lg hover:bg-green-800 whitespace-nowrap" style="font-size: 0.8rem;">Ubah</a>
+                                        <form action="{{ route(($post->type === 'artikel' ? 'admin.artikel.destroy' : 'admin.berita.destroy'), $post) }}" method="POST" class="inline delete-form">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">Hapus</button>
+                                            <button type="button" class="w-20 text-center px-3.5 py-1.5 text-xs font-bold text-white bg-red-700 rounded-lg hover:bg-red-800 whitespace-nowrap delete-btn" style="font-size: 0.8rem;" data-title="{{ $post->title }}">Hapus</button>
                                         </form>
                                     </div>
                                 </td>
@@ -456,43 +422,52 @@
                                             <svg class="w-16 h-16 text-gray-400 dark:text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                             </svg>
-                                            <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">Hasil Pencarian Tidak Ditemukan</h3>
-                                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">
+                                            <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2 text-center">Hasil Pencarian Tidak Ditemukan</h3>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 text-center">
                                                 Tidak ada konten yang sesuai dengan pencarian "<strong>{{ request('q') }}</strong>"
                                             </p>
-                                            <a href="{{ route('admin.posts.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-slate-700 text-white font-bold rounded-lg hover:bg-slate-800 dark:hover:bg-slate-600">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                </svg>
-                                                Kosongkan Pencarian
-                                            </a>
+                                            <div class="text-center">
+                                                <a href="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-slate-700 text-white font-bold rounded-lg hover:bg-slate-800 dark:hover:bg-slate-600">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                    Kosongkan Pencarian
+                                                </a>
+                                            </div>
                                         @elseif(request()->hasAny(['type', 'status']))
                                             {{-- Jika hanya filter tipe atau status (tanpa pencarian) --}}
                                             <svg class="w-16 h-16 text-gray-400 dark:text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
-                                            <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">Belum Ada Konten</h3>
-                                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">
-                                                @if(request('type'))
-                                                    Belum ada konten dengan tipe "<strong>{{ ucfirst(request('type')) }}</strong>"
-                                                @elseif(request('status'))
-                                                    Belum ada konten dengan status "<strong>{{ request('status') === 'published' ? 'Terpublikasi' : 'Draft' }}</strong>"
+                                            <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2 text-center">Tidak Ditemukan {{ ucfirst($type ?? 'Berita') }}</h3>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 text-center">
+                                                @if(request('status'))
+                                                    @if(request('status') === 'published')
+                                                        Belum ada {{ ($type ?? 'berita') === 'artikel' ? 'artikel' : 'berita' }} dengan status "<strong>Terpublikasi</strong>"
+                                                    @elseif(request('status') === 'draft')
+                                                        Belum ada {{ ($type ?? 'berita') === 'artikel' ? 'artikel' : 'berita' }} dengan status "<strong>Draft</strong>"
+                                                    @elseif(request('status') === 'unpublished')
+                                                        Belum ada {{ ($type ?? 'berita') === 'artikel' ? 'artikel' : 'berita' }} dengan status "<strong>Nonaktif</strong>"
+                                                    @endif
                                                 @endif
                                             </p>
-                                            <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white font-bold rounded-lg hover:bg-green-800">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                                </svg>
-                                                Tambah Konten
-                                            </a>
+                                            @if(!request('status'))
+                                                {{-- Hanya tampilkan tombol jika tidak ada filter status --}}
+                                                <a href="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.create' : 'admin.berita.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white font-bold rounded-lg hover:bg-green-800">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                                    </svg>
+                                                    Tambah Konten
+                                                </a>
+                                            @endif
                                         @else
                                             {{-- Jika tidak ada filter sama sekali --}}
                                             <svg class="w-16 h-16 text-gray-400 dark:text-slate-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
-                                            <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2">Belum Ada Konten</h3>
-                                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Mulai dengan menambahkan berita atau artikel baru</p>
-                                            <a href="{{ route('admin.posts.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white font-bold rounded-lg hover:bg-green-800">
+                                            <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 mb-2 text-center">Tidak Ditemukan {{ ucfirst($type ?? 'Berita') }}</h3>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 text-center">Mulai dengan menambahkan {{ ($type ?? 'berita') === 'artikel' ? 'artikel' : 'berita' }} baru</p>
+                                            <a href="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.create' : 'admin.berita.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-green-700 text-white font-bold rounded-lg hover:bg-green-800">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                                 </svg>
@@ -513,16 +488,75 @@
         </div>
     </div>
 
-    @if(session('status') && str_contains(session('status'), 'dipublikasikan'))
-        <script>
-            // Auto-refresh admin panel setelah publish berhasil
-            document.addEventListener('DOMContentLoaded', function() {
-                // Tunggu 2 detik untuk menampilkan pesan sukses, lalu refresh
-                setTimeout(function() {
-                    window.location.reload();
-                }, 2000);
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div id="delete-modal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Konfirmasi Hapus</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">Apakah Anda yakin ingin menghapus konten "<strong id="delete-title"></strong>"? Tindakan ini tidak dapat dibatalkan.</p>
+                <div class="flex items-center justify-end gap-3">
+                    <button type="button" id="delete-cancel-btn" class="px-6 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[100px]">Batal</button>
+                    <button type="button" id="delete-confirm-btn" class="px-6 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors min-w-[100px]">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteModal = document.getElementById('delete-modal');
+            const deleteCancelBtn = document.getElementById('delete-cancel-btn');
+            const deleteConfirmBtn = document.getElementById('delete-confirm-btn');
+            const deleteTitleElement = document.getElementById('delete-title');
+            let deleteForm = null;
+
+            // Handle delete button clicks
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    deleteForm = this.closest('.delete-form');
+                    const title = this.getAttribute('data-title');
+                    
+                    if (deleteTitleElement) {
+                        deleteTitleElement.textContent = title;
+                    }
+                    
+                    if (deleteModal) {
+                        deleteModal.classList.remove('hidden');
+                    }
+                });
             });
-        </script>
-    @endif
+
+            // Cancel button
+            if (deleteCancelBtn) {
+                deleteCancelBtn.addEventListener('click', function() {
+                    if (deleteModal) {
+                        deleteModal.classList.add('hidden');
+                    }
+                    deleteForm = null;
+                });
+            }
+
+            // Confirm button
+            if (deleteConfirmBtn) {
+                deleteConfirmBtn.addEventListener('click', function() {
+                    if (deleteForm) {
+                        deleteForm.submit();
+                    }
+                });
+            }
+
+            // Close modal on outside click
+            if (deleteModal) {
+                deleteModal.addEventListener('click', function(e) {
+                    if (e.target === deleteModal) {
+                        deleteModal.classList.add('hidden');
+                        deleteForm = null;
+                    }
+                });
+            }
+        });
+    </script>
 @endsection
 

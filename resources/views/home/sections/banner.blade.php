@@ -130,7 +130,7 @@
     }
 @endphp
 <section class="w-full relative overflow-hidden">
-    <div class="relative banner-slider h-[460px] sm:h-[560px] md:h-[620px] lg:h-[680px]" data-banner-slider>
+    <div class="relative banner-slider h-[500px] sm:h-[600px] md:h-[660px] lg:h-[720px]" data-banner-slider>
         <!-- Hanya gambar yang di-slide -->
         @foreach ($slideImages as $index => $slideImage)
             @php
@@ -177,7 +177,7 @@
                     </h1>
                 @endif
                 @if($showDescription && !empty($description))
-                    <p class="text-sm sm:text-base md:text-lg text-white mb-5 drop-shadow-md leading-relaxed max-w-2xl banner-slide__description">
+                    <p class="text-sm sm:text-base md:text-lg text-white mb-5 drop-shadow-md leading-relaxed max-w-2xl banner-slide__description text-left">
                         {{ $description }}
                     </p>
                 @endif

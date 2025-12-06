@@ -3,7 +3,12 @@
 @section('title', 'Informasi Sekolah | MTs Nurul Falaah Soreang')
 
 @section('content')
-    <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 max-w-7xl py-8 sm:py-12">
+    <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl py-8 sm:py-12">
+        <x-breadcrumb :items="[
+            ['label' => 'Beranda', 'url' => route('home')],
+            ['label' => 'Profil', 'url' => route('profil')],
+            ['label' => 'Informasi Sekolah']
+        ]" />
         <!-- Header Section -->
         <div class="mb-8">
             <x-page-title title="Informasi Sekolah" />

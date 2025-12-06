@@ -51,12 +51,12 @@
 
             function startAutoRefresh() {
                 if (refreshInterval) return;
-                // Cek setiap 5 detik untuk responsifitas lebih cepat
-                refreshInterval = setInterval(checkForNewPosts, 5000);
+                // Cek setiap 3 detik untuk responsifitas lebih cepat
+                refreshInterval = setInterval(checkForNewPosts, 3000);
             }
 
-            // Cek segera setelah halaman dimuat (tidak perlu tunggu 5 detik pertama)
-            setTimeout(checkForNewPosts, 2000);
+            // Cek segera setelah halaman dimuat (tidak perlu tunggu 3 detik pertama)
+            setTimeout(checkForNewPosts, 1000);
 
             function stopAutoRefresh() {
                 if (refreshInterval) {
@@ -78,7 +78,7 @@
 
 @section('content')
     @include('home.sections.banner', ['banners' => $banners ?? collect()])
-    @include('home.sections.info-bar')
+    @include('home.sections.info-bar', ['runningTexts' => $runningTexts ?? collect()])
     @include('home.sections.berita-terbaru', [
         'latestNews' => $latestNews,
         'latestArticles' => $latestArticles,

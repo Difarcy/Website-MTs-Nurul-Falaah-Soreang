@@ -3,7 +3,11 @@
 @section('title', 'Pengumuman | MTs Nurul Falaah Soreang')
 
 @section('content')
-    <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 max-w-7xl py-8 sm:py-12">
+    <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl py-8 sm:py-12">
+        <x-breadcrumb :items="[
+            ['label' => 'Beranda', 'url' => route('home')],
+            ['label' => 'Pengumuman']
+        ]" />
         <x-page-title title="Pengumuman" />
         
         <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 mt-8">
@@ -27,9 +31,9 @@
                                     <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 hover:text-green-700 transition-colors">
                                         {{ $item->judul }}
                                     </h3>
-                                    <p class="text-sm text-gray-700 leading-relaxed mb-3">
-                                        {{ $item->isi }}
-                                    </p>
+                                    <div class="text-sm text-gray-700 leading-relaxed mb-3 prose prose-sm max-w-none">
+                                        {!! $item->isi !!}
+                                    </div>
                                     <div class="flex items-center justify-start">
                                         <div class="flex items-center gap-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -122,7 +126,7 @@
                         <div class="space-y-4 min-h-[300px]">
                             @if(count($berita) > 0)
                                 @foreach($berita as $item)
-                                <article class="border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
+                                <article class="pb-4 last:pb-0">
                                     <a href="#" class="block hover:text-green-700 transition-colors">
                                         <h4 class="text-xs sm:text-sm font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-green-700">
                                             {{ $item['judul'] }}
@@ -171,7 +175,7 @@
                         <div class="space-y-3 min-h-[300px]">
                             @if(count($infoTerkini) > 0)
                                 @foreach($infoTerkini as $item)
-                                <div class="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
+                                <div class="pb-3 last:pb-0">
                                     <a href="#" class="block hover:text-green-700 transition-colors">
                                         <h4 class="text-xs sm:text-sm font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-green-700">
                                             {{ $item['judul'] }}

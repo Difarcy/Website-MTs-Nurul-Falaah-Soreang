@@ -13,7 +13,7 @@
         <div class="space-y-2 min-h-[200px]">
             @if($infoTerkiniData->count() > 0)
                 @foreach($infoTerkiniData->take(4) as $item)
-                <div class="border-b border-gray-200 pb-2 last:border-b-0 last:pb-0">
+                <div class="pb-2 last:pb-0">
                     <a href="{{ route('informasi.pengumuman') }}" class="block hover:text-green-700 transition-colors">
                         <h4 class="text-xs sm:text-sm font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-green-700">
                             {{ $item->judul }}

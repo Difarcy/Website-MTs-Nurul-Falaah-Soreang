@@ -35,6 +35,13 @@ class SettingController extends Controller
 
         $settings->save();
 
+        // Redirect ke URL yang diminta jika ada, atau ke halaman logo
+        $redirectUrl = $request->input('_redirect_after_save');
+        if ($redirectUrl) {
+            return redirect($redirectUrl)
+                ->with('status', 'Logo berhasil diperbarui. Semua halaman akan menggunakan logo baru.');
+        }
+
         return redirect()
             ->route('admin.settings.logo')
             ->with('status', 'Logo berhasil diperbarui. Semua halaman akan menggunakan logo baru.');

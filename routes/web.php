@@ -19,16 +19,86 @@ use App\Http\Controllers\Admin\KontakController;
 use App\Http\Controllers\Admin\InfoSekolahController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TopBarController;
+use App\Http\Controllers\Admin\ImageUploadController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Admin\CommentController as AdminCommentController;
+use App\Http\Controllers\ChatbotController;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/api/posts/last-update', function() {
-    $lastUpdate = \App\Models\Post::published()->max('updated_at');
-    return response()->json([
-        'timestamp' => $lastUpdate ? $lastUpdate->timestamp : time(),
-        'datetime' => $lastUpdate ? $lastUpdate->toDateTimeString() : now()->toDateTimeString(),
-    ]);
+Route::get('/api/posts/last-update', function () {
+    try {
+        $lastPost = \App\Models\Post::published()->orderBy('updated_at', 'desc')->first();
+        if ($lastPost && $lastPost->updated_at) {
+            return response()->json([
+                'timestamp' => $lastPost->updated_at->timestamp,
+                'datetime' => $lastPost->updated_at->toDateTimeString(),
+            ]);
+        }
+        return response()->json([
+            'timestamp' => time(),
+            'datetime' => now()->toDateTimeString(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'timestamp' => time(),
+            'datetime' => now()->toDateTimeString(),
+            'error' => 'Failed to get last update'
+        ], 500);
+    }
 })->name('api.posts.last-update');
+
+Route::get('/api/tags/suggestions', function () {
+    $query = request('q', '');
+
+    // Get all unique tags from all posts (published and draft)
+    $allTags = \App\Models\Post::whereNotNull('tags')
+        ->get()
+        ->pluck('tags')
+        ->flatten()
+        ->filter()
+        ->map(fn($tag) => trim($tag))
+        ->unique()
+        ->values();
+
+    // Filter by query if provided
+    if ($query) {
+        $allTags = $allTags->filter(function ($tag) use ($query) {
+            return stripos($tag, $query) !== false;
+        });
+    }
+
+    // Return top 10 suggestions (sinkron dengan maksimal tag per posting)
+    return response()->json($allTags->take(10)->values()->toArray());
+})->name('api.tags.suggestions');
+
+Route::get('/api/search', function () {
+    $query = request('q', '');
+
+    if (empty(trim($query))) {
+        return response()->json([]);
+    }
+
+    // Cari di berita dan artikel yang published
+    $results = \App\Models\Post::published()
+        ->search($query)
+        ->latest('published_at')
+        ->take(10)
+        ->get()
+        ->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'title' => $post->title,
+                'slug' => $post->slug,
+                'type' => $post->type,
+                'excerpt' => $post->excerpt,
+                'thumbnail_path' => $post->thumbnail_path,
+                'published_at' => $post->published_at?->format('d M Y'),
+            ];
+        });
+
+    return response()->json($results->toArray());
+})->name('api.search');
 
 // Profil
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
@@ -42,9 +112,11 @@ Route::get('/profil/prestasi', [ProfilController::class, 'prestasi'])->name('pro
 // Informasi
 Route::get('/informasi/berita', [InformasiController::class, 'berita'])->name('informasi.berita');
 Route::get('/informasi/artikel', [InformasiController::class, 'artikel'])->name('informasi.artikel');
+Route::get('/informasi/tag/{tag}', [InformasiController::class, 'byTag'])->name('informasi.tag');
 Route::get('/pengumuman', [InformasiController::class, 'pengumuman'])->name('informasi.pengumuman');
 Route::get('/informasi/agenda', [InformasiController::class, 'agenda'])->name('informasi.agenda');
 Route::get('/informasi/{type}/{slug}', [InformasiController::class, 'show'])->name('informasi.show');
+Route::post('/informasi/{type}/{slug}/comment', [CommentController::class, 'store'])->name('comments.store');
 
 // Galeri
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri');
@@ -54,6 +126,9 @@ Route::get('/galeri/prestasi-siswa', [GaleriController::class, 'prestasiSiswa'])
 
 // Kontak
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+
+// Chatbot
+Route::post('/api/chatbot/query', [ChatbotController::class, 'query'])->name('chatbot.query');
 
 // Auth Umum (Tidak digunakan sekarang - untuk masa depan jika website membutuhkan login/daftar publik)
 // Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -78,13 +153,35 @@ Route::middleware('auth')->prefix('ap')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
     Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change-password.update');
-    Route::resource('posts', PostController::class)->except(['show']);
+    Route::get('/change-username', [AuthController::class, 'showChangeUsername'])->name('change-username');
+    Route::post('/change-username', [AuthController::class, 'changeUsername'])->name('change-username.update');
+    // Berita
+    Route::get('berita', [PostController::class, 'index'])->name('berita.index');
+    Route::get('berita/create', [PostController::class, 'create'])->name('berita.create');
+    Route::post('berita', [PostController::class, 'store'])->name('berita.store');
+    Route::get('berita/{post}/edit', [PostController::class, 'edit'])->name('berita.edit');
+    Route::put('berita/{post}', [PostController::class, 'update'])->name('berita.update');
+    Route::patch('berita/{post}', [PostController::class, 'update'])->name('berita.update');
+    Route::delete('berita/{post}', [PostController::class, 'destroy'])->name('berita.destroy');
+
+    // Artikel
+    Route::get('artikel', [PostController::class, 'index'])->name('artikel.index');
+    Route::get('artikel/create', [PostController::class, 'create'])->name('artikel.create');
+    Route::post('artikel', [PostController::class, 'store'])->name('artikel.store');
+    Route::get('artikel/{post}/edit', [PostController::class, 'edit'])->name('artikel.edit');
+    Route::put('artikel/{post}', [PostController::class, 'update'])->name('artikel.update');
+    Route::patch('artikel/{post}', [PostController::class, 'update'])->name('artikel.update');
+    Route::delete('artikel/{post}', [PostController::class, 'destroy'])->name('artikel.destroy');
     Route::post('banners/settings', [BannerController::class, 'updateSettings'])->name('banners.settings.update');
     Route::post('banners/upload', [BannerController::class, 'upload'])->name('banners.upload');
+    Route::post('banners/upload-promosi', [BannerController::class, 'uploadPromosi'])->name('banners.upload-promosi');
+    Route::delete('banners/delete-promosi', [BannerController::class, 'deletePromosi'])->name('banners.delete-promosi');
     Route::patch('banners/update-order', [BannerController::class, 'updateOrder'])->name('banners.update-order');
     Route::patch('banners/{banner}/toggle', [BannerController::class, 'toggle'])->name('banners.toggle');
     Route::resource('banners', BannerController::class)->only(['index', 'destroy']);
     Route::resource('foto-kegiatan', FotoKegiatanController::class);
+    // Editor image upload (used by CKEditor 5 SimpleUploadAdapter)
+    Route::post('uploads/images', [ImageUploadController::class, 'store'])->name('uploads.images');
     Route::resource('prestasi-siswa', PrestasiSiswaController::class);
     Route::resource('pengumuman', PengumumanController::class);
     Route::resource('agenda', AgendaController::class);
@@ -95,4 +192,11 @@ Route::middleware('auth')->prefix('ap')->name('admin.')->group(function () {
     Route::post('settings/logo', [SettingController::class, 'updateLogo'])->name('settings.logo.update');
     Route::get('settings/top-bar', [TopBarController::class, 'index'])->name('settings.top-bar');
     Route::put('settings/top-bar', [TopBarController::class, 'update'])->name('settings.top-bar.update');
+    // Comments
+    Route::get('comments', [AdminCommentController::class, 'index'])->name('comments.index');
+    Route::patch('comments/{comment}/approve', [AdminCommentController::class, 'approve'])->name('comments.approve');
+    Route::patch('comments/{comment}/reject', [AdminCommentController::class, 'reject'])->name('comments.reject');
+    Route::patch('comments/{comment}/read', [AdminCommentController::class, 'markAsRead'])->name('comments.read');
+    Route::post('comments/mark-all-read', [AdminCommentController::class, 'markAllAsRead'])->name('comments.mark-all-read');
+    Route::delete('comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
 });

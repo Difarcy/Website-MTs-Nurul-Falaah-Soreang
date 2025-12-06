@@ -1,6 +1,6 @@
 <!-- Info Bar dengan Tanggal, Waktu, dan Text Berjalan -->
-<section class="bg-white py-2 sm:py-3 shadow-md border-b border-gray-200">
-    <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 max-w-7xl">
+<section class="bg-white dark:bg-slate-900 py-2 sm:py-3 shadow-md">
+    <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl">
         <div class="flex items-stretch">
             <!-- Tanggal (Kiri) -->
             <div class="flex items-center gap-2 shrink-0 bg-green-800 text-white px-3 py-1.5">
@@ -12,14 +12,25 @@
 
             <!-- Text Berjalan (Tengah) -->
             <div class="flex-1 overflow-hidden">
-                <div class="marquee-container bg-white border border-gray-400 px-3 py-1.5 h-full flex items-center">
-                    <div class="marquee-content text-black text-xs sm:text-sm font-semibold">
-                        <span class="inline-block mr-8">
-                            PPDB Tahun Pelajaran 2025/2026 sudah dibuka! Informasi lengkap dan formulir pendaftaran dapat diakses melalui menu “Program” → “Akademik”.
-                        </span>
-                        <span class="inline-block mr-8">
-                            Hubungi WhatsApp resmi MTs Nurul Falaah Soreang di +62 812-3456-7890 untuk konsultasi beasiswa, layanan administrasi, dan informasi kegiatan terbaru.
-                        </span>
+                <div class="marquee-container bg-white dark:bg-slate-800 border border-gray-400 dark:border-slate-600 px-3 py-1.5 h-full flex items-center">
+                    @php
+                        $hasTicker = isset($tickerItems) && $tickerItems->count() > 0;
+                        
+                        if ($hasTicker) {
+                            // Ticker otomatis dari data terbaru dengan pemisah profesional
+                            $tickerText = $tickerItems->map(fn($item) => trim($item))->filter()->implode(' • ');
+                            $tickerClass = '';
+                        } else {
+                            // Default: Ticker kosong
+                            $tickerText = 'Tidak ada informasi terbaru';
+                            $tickerClass = 'opacity-80 italic';
+                        }
+                    @endphp
+                    <div class="marquee-wrapper">
+                        <div class="marquee-content text-black dark:text-white text-xs sm:text-sm font-semibold {{ $tickerClass }}">
+                            <span class="marquee-item">{{ $tickerText }}</span>
+                            <span class="marquee-item" aria-hidden="true">{{ $tickerText }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -44,9 +55,23 @@
     align-items: center;
 }
 
+.marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
 .marquee-content {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: marquee 40s linear infinite;
+    will-change: transform;
+}
+
+.marquee-item {
     display: inline-block;
-    animation: marquee 30s linear infinite;
+    padding-right: 4rem; /* Spacing antara duplikat untuk seamless loop */
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 @keyframes marquee {
@@ -54,12 +79,17 @@
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-50%);
+        transform: translateX(calc(-50% - 2rem)); /* Offset untuk spacing */
     }
 }
 
 .marquee-content:hover {
     animation-play-state: paused;
+}
+
+/* Smooth transition untuk dark mode */
+.marquee-content {
+    transition: color 0.3s ease;
 }
 </style>
 
