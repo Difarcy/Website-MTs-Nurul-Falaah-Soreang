@@ -22,10 +22,10 @@
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="jenis" class="block text-sm font-semibold text-slate-700 mb-2">
                         Jenis Kontak *
                     </label>
-                    <select name="jenis" required class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <select name="jenis" id="jenis" required class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                         <option value="">Pilih Jenis</option>
                         <option value="email" {{ old('jenis', $kontak->jenis) == 'email' ? 'selected' : '' }}>Email</option>
                         <option value="telp" {{ old('jenis', $kontak->jenis) == 'telp' ? 'selected' : '' }}>Telepon</option>
@@ -40,27 +40,27 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="label" class="block text-sm font-semibold text-slate-700 mb-2">
                         Label <span class="text-red-600 dark:text-red-500">*</span>
                     </label>
-                    <input type="text" name="label" value="{{ old('label', $kontak->label) }}" required placeholder="Masukkan label kontak" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <input type="text" name="label" id="label" value="{{ old('label', $kontak->label) }}" required placeholder="Masukkan label kontak" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     @error('label') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="nilai" class="block text-sm font-semibold text-slate-700 mb-2">
                         Nilai/Konten *
                     </label>
-                    <input type="text" name="nilai" value="{{ old('nilai', $kontak->nilai) }}" required placeholder="Masukkan nilai kontak" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <input type="text" name="nilai" id="nilai" value="{{ old('nilai', $kontak->nilai) }}" required placeholder="Masukkan nilai kontak" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     @error('nilai') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="icon" class="block text-sm font-semibold text-slate-700 mb-2">
                         Icon (Emoji)
                         <span class="text-xs font-normal text-slate-400">(opsional)</span>
                     </label>
-                    <input type="text" name="icon" value="{{ old('icon', $kontak->icon) }}" placeholder="Masukkan nama icon" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <input type="text" name="icon" id="icon" value="{{ old('icon', $kontak->icon) }}" placeholder="Masukkan nama icon" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     <p class="text-xs text-slate-500 mt-1">Gunakan nama icon atau emoji, contoh: email, phone, atau 📧 untuk email</p>
                     @error('icon') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
@@ -72,8 +72,8 @@
                 </summary>
                 <div class="px-4 pb-4 pt-2 space-y-4 border-t border-gray-200">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Urutan Tampil</label>
-                        <input type="number" name="urutan" value="{{ old('urutan', $kontak->urutan) }}" min="0" placeholder="0" class="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                        <label for="urutan" class="block text-sm font-semibold text-slate-700 mb-2">Urutan Tampil</label>
+                        <input type="number" name="urutan" id="urutan" value="{{ old('urutan', $kontak->urutan) }}" min="0" placeholder="0" class="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                         <p class="text-xs text-slate-500 mt-1">Angka lebih kecil akan tampil lebih dulu</p>
                         @error('urutan') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>

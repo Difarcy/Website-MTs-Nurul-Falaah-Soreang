@@ -36,8 +36,8 @@
                     <div id="preview-container" class="mt-4 hidden">
                         <img id="preview-image" src="" alt="Preview" class="max-w-full max-h-64 mx-auto rounded-lg border border-gray-200">
                     </div>
-                    @error('gambar') 
-                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p> 
+                    @error('gambar')
+                        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
@@ -48,41 +48,41 @@
                     <span class="bg-green-100 text-green-700 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">2</span>
                     Informasi Prestasi
                 </h3>
-                
+
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="judul" class="block text-sm font-semibold text-slate-700 mb-2">
                         Judul Prestasi *
                     </label>
-                    <input type="text" name="judul" value="{{ old('judul') }}" required placeholder="Masukkan judul prestasi" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <input type="text" name="judul" id="judul" value="{{ old('judul') }}" required placeholder="Masukkan judul prestasi" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     @error('judul') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        <label for="kategori" class="block text-sm font-semibold text-slate-700 mb-2">
                             Kategori
                             <span class="text-xs font-normal text-slate-400">(opsional)</span>
                         </label>
-                        <input type="text" name="kategori" value="{{ old('kategori') }}" placeholder="Masukkan kategori prestasi" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                        <input type="text" name="kategori" id="kategori" value="{{ old('kategori') }}" placeholder="Masukkan kategori prestasi" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                         @error('kategori') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        <label for="tanggal_prestasi" class="block text-sm font-semibold text-slate-700 mb-2">
                             Tanggal Prestasi
                             <span class="text-xs font-normal text-slate-400">(opsional)</span>
                         </label>
-                        <input type="date" name="tanggal_prestasi" value="{{ old('tanggal_prestasi') }}" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                        <input type="date" name="tanggal_prestasi" id="tanggal_prestasi" value="{{ old('tanggal_prestasi') }}" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                         @error('tanggal_prestasi') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="deskripsi" class="block text-sm font-semibold text-slate-700 mb-2">
                         Deskripsi
                         <span class="text-xs font-normal text-slate-400">(opsional)</span>
                     </label>
-                    <textarea name="deskripsi" rows="3" placeholder="Masukkan deskripsi prestasi" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">{{ old('deskripsi') }}</textarea>
+                    <textarea name="deskripsi" id="deskripsi" rows="3" placeholder="Masukkan deskripsi prestasi" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">{{ old('deskripsi') }}</textarea>
                     @error('deskripsi') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -94,8 +94,8 @@
                 </summary>
                 <div class="px-4 pb-4 pt-2 space-y-4 border-t border-gray-200">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Urutan Tampil</label>
-                        <input type="number" name="urutan" value="{{ old('urutan', 0) }}" min="0" placeholder="0" class="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                        <label for="urutan" class="block text-sm font-semibold text-slate-700 mb-2">Urutan Tampil</label>
+                        <input type="number" name="urutan" id="urutan" value="{{ old('urutan', 0) }}" min="0" placeholder="0" class="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                         <p class="text-xs text-slate-500 mt-1">Angka lebih kecil akan tampil lebih dulu</p>
                         @error('urutan') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
@@ -125,15 +125,15 @@
         function previewImage(input) {
             const previewContainer = document.getElementById('preview-container');
             const previewImage = document.getElementById('preview-image');
-            
+
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                
+
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     previewContainer.classList.remove('hidden');
                 }
-                
+
                 reader.readAsDataURL(input.files[0]);
             }
         }

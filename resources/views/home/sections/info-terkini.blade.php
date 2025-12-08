@@ -1,11 +1,11 @@
-<!-- Info Terkini -->
-<div class="bg-white border border-gray-200 overflow-hidden mt-6">
+<!-- Pengumuman -->
+<div class="bg-white overflow-hidden mt-6">
     <div class="p-4">
         <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Info Terkini
+            Pengumuman
         </h3>
         @php
             $infoTerkiniData = isset($infoTerkini) && $infoTerkini->count() > 0 ? $infoTerkini : collect();
@@ -31,7 +31,7 @@
             @else
                 <div class="flex items-center justify-center" style="min-height: 200px;">
                     <p class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-300 text-center">
-                        Belum Ada Info Terkini
+                        Belum Ada Pengumuman
                     </p>
                 </div>
             @endif
@@ -48,7 +48,7 @@
 </div>
 
 <!-- Media Sosial -->
-<div class="bg-white border border-gray-200 overflow-hidden mt-6">
+<div class="bg-white overflow-hidden mt-6">
     <div class="p-4">
         <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,7 +92,7 @@
 </div>
 
 <!-- Kalender -->
-<div class="bg-white border border-gray-200 overflow-hidden mt-6">
+<div class="bg-white overflow-hidden mt-6">
     <div class="p-4">
         <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,20 +104,20 @@
             $now = \Carbon\Carbon::now();
             $selectedMonth = request()->get('cal_month', $now->month);
             $selectedYear = request()->get('cal_year', $now->year);
-            
+
             // Validate month and year
             $selectedMonth = max(1, min(12, (int)$selectedMonth));
             $selectedYear = max(2000, min(2100, (int)$selectedYear));
-            
+
             $firstDay = \Carbon\Carbon::create($selectedYear, $selectedMonth, 1);
             $lastDay = $firstDay->copy()->endOfMonth();
             $startDate = $firstDay->copy()->startOfWeek(\Carbon\Carbon::SUNDAY);
             $endDate = $lastDay->copy()->endOfWeek(\Carbon\Carbon::SATURDAY);
-            
+
             $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
             $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
             $daysShort = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-            
+
             // Calculate prev/next month
             $prevMonth = $selectedMonth - 1;
             $prevYear = $selectedYear;
@@ -125,7 +125,7 @@
                 $prevMonth = 12;
                 $prevYear--;
             }
-            
+
             $nextMonth = $selectedMonth + 1;
             $nextYear = $selectedYear;
             if ($nextMonth > 12) {
@@ -171,35 +171,35 @@
     let currentCalendarMonth = {{ $selectedMonth }};
     let currentCalendarYear = {{ $selectedYear }};
     const today = new Date({{ $now->year }}, {{ $now->month - 1 }}, {{ $now->day }});
-    
+
     const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     const daysShort = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-    
+
     function getDaysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
     }
-    
+
     function getFirstDayOfMonth(month, year) {
         const firstDay = new Date(year, month - 1, 1);
         return firstDay.getDay(); // 0 = Sunday, 1 = Monday, etc.
     }
-    
+
     function isToday(date, month, year) {
-        return date === today.getDate() && 
-               month === today.getMonth() + 1 && 
+        return date === today.getDate() &&
+               month === today.getMonth() + 1 &&
                year === today.getFullYear();
     }
-    
+
     function renderCalendar(month, year) {
         const calendarTitle = document.getElementById('calendar-title');
         const calendarGrid = document.getElementById('calendar-grid');
-        
+
         // Update title
         calendarTitle.textContent = `${months[month - 1]} ${year}`;
-        
+
         // Clear existing days
         calendarGrid.innerHTML = '';
-        
+
         // Add day headers back
         daysShort.forEach(day => {
             const header = document.createElement('div');
@@ -207,16 +207,16 @@
             header.textContent = day;
             calendarGrid.appendChild(header);
         });
-        
+
         // Calculate calendar dates
         const daysInMonth = getDaysInMonth(month, year);
         const firstDay = getFirstDayOfMonth(month, year);
-        
+
         // Previous month days
         const prevMonth = month === 1 ? 12 : month - 1;
         const prevYear = month === 1 ? year - 1 : year;
         const daysInPrevMonth = getDaysInMonth(prevMonth, prevYear);
-        
+
         for (let i = firstDay - 1; i >= 0; i--) {
             const day = daysInPrevMonth - i;
             const dayElement = document.createElement('div');
@@ -224,7 +224,7 @@
             dayElement.textContent = day;
             calendarGrid.appendChild(dayElement);
         }
-        
+
         // Current month days
         for (let day = 1; day <= daysInMonth; day++) {
             const dayElement = document.createElement('div');
@@ -233,14 +233,14 @@
             dayElement.textContent = day;
             calendarGrid.appendChild(dayElement);
         }
-        
+
         // Next month days (fill remaining cells)
         const totalCells = calendarGrid.children.length;
         const remainingCells = 42 - totalCells; // 6 weeks * 7 days = 42
-        
+
         const nextMonth = month === 12 ? 1 : month + 1;
         const nextYear = month === 12 ? year + 1 : year;
-        
+
         for (let day = 1; day <= remainingCells; day++) {
             const dayElement = document.createElement('div');
             dayElement.className = 'aspect-square flex items-center justify-center text-xs text-gray-400 hover:bg-gray-100 hover:rounded transition-colors cursor-pointer';
@@ -248,10 +248,10 @@
             calendarGrid.appendChild(dayElement);
         }
     }
-    
+
     function changeCalendarMonth(direction) {
         currentCalendarMonth += direction;
-        
+
         if (currentCalendarMonth < 1) {
             currentCalendarMonth = 12;
             currentCalendarYear--;
@@ -259,9 +259,9 @@
             currentCalendarMonth = 1;
             currentCalendarYear++;
         }
-        
+
         renderCalendar(currentCalendarMonth, currentCalendarYear);
-        
+
         // Update URL without reload
         const url = new URL(window.location.href);
         url.searchParams.set('cal_month', currentCalendarMonth);

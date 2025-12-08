@@ -3,11 +3,31 @@
 @section('title', 'Tag: ' . $decodedTag . ' - MTs Nurul Falaah Soreang')
 
 @section('content')
+    @php
+        // Determine breadcrumb based on post types
+        $postTypes = $posts->pluck('type')->unique();
+        $breadcrumbItems = [
+            ['label' => 'Beranda', 'url' => route('home')]
+        ];
+
+        if ($postTypes->count() === 1) {
+            // All posts are the same type
+            $type = $postTypes->first();
+            if ($type === 'berita') {
+                $breadcrumbItems[] = ['label' => 'Berita', 'url' => route('informasi.berita')];
+            } elseif ($type === 'artikel') {
+                $breadcrumbItems[] = ['label' => 'Artikel', 'url' => route('informasi.artikel')];
+            }
+        } else {
+            // Mixed types or other cases
+            $breadcrumbItems[] = ['label' => 'Informasi', 'url' => route('home')];
+        }
+
+        $breadcrumbItems[] = ['label' => 'Tag: ' . $decodedTag];
+    @endphp
+
     <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl py-8 sm:py-12">
-        <x-breadcrumb :items="[
-            ['label' => 'Beranda', 'url' => route('home')],
-            ['label' => 'Tag: ' . $decodedTag]
-        ]" />
+        <x-breadcrumb :items="$breadcrumbItems" />
         <x-page-title :title="'Tag: ' . $decodedTag" />
 
         @php
@@ -21,8 +41,8 @@
                     <div class="space-y-6">
                         @foreach($posts as $post)
                             @php
-                                $image = $post->thumbnail_path 
-                                    ? asset('storage/' . $post->thumbnail_path) 
+                                $image = $post->thumbnail_path
+                                    ? asset('storage/' . $post->thumbnail_path)
                                     : asset($fallbackImages[array_rand($fallbackImages)]);
                                 $dateObj = $post->published_at ?? $post->created_at;
                                 $month = $monthNames[$dateObj->month - 1];
@@ -30,18 +50,21 @@
                                 $time = $dateObj->format('H:i');
                             @endphp
                             <article class="bg-white border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-                                <div class="flex flex-col md:flex-row">
-                                    @if($post->type === 'berita')
-                                        <div class="w-full md:w-1/3 flex-shrink-0">
-                                            <img src="{{ $image }}" alt="{{ $post->title }}" class="w-full h-48 md:h-full object-cover">
-                                        </div>
-                                    @endif
-                                    <div class="w-full {{ $post->type === 'berita' ? 'md:w-2/3' : '' }} p-5 sm:p-6">
+                                <div class="flex flex-col sm:flex-row">
+                                    <div class="w-full sm:w-[38%] shrink-0">
+                                        <img src="{{ $image }}" alt="{{ $post->title }}" class="w-full h-14 sm:h-16 object-cover">
+                                    </div>
+                                    <div class="w-full sm:w-[62%] p-2.5 sm:p-3 flex flex-col justify-between">
                                         <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">
                                             <a href="{{ route('informasi.show', ['type' => $post->type, 'slug' => $post->slug]) }}" class="hover:text-green-700 transition-colors">
                                                 {{ $post->title }}
                                             </a>
                                         </h3>
+                                        @if($post->excerpt)
+                                            <p class="text-xs sm:text-sm text-gray-600 line-clamp-4 mb-2 text-justify">
+                                                {{ $post->excerpt }}
+                                            </p>
+                                        @endif
                                         <div class="flex items-center justify-between">
                                             <p class="text-xs text-gray-500">
                                                 {{ $date }} | {{ $time }}
@@ -146,4 +169,79 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <!-- Image Modal untuk Thumbnail -->
+    <div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md">
+        <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
+            <img id="modalImage" src="" alt="Zoom" class="max-w-full max-h-full object-contain pointer-events-none">
+            <button type="button" class="close-image-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function openImageModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = imageSrc;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const modal = document.getElementById('imageModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+            return false;
+        }
+
+        // Setup event listeners untuk modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('imageModal');
+            const closeBtn = modal?.querySelector('.close-image-modal-btn');
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeImageModal(e);
+                    return false;
+                }, true);
+            }
+
+            // Background click handler
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        closeImageModal(e);
+                        return false;
+                    }
+                }, true);
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('imageModal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    closeImageModal(e);
+                }
+            }
+        });
+    </script>
+@endpush
 

@@ -6,9 +6,9 @@
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2 space-y-6">
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1">Judul <span class="text-red-600 dark:text-red-500">*</span></label>
+            <label for="title-input" class="block text-sm font-semibold text-slate-700 mb-1">Judul <span class="text-red-600 dark:text-red-500">*</span></label>
             <div class="relative">
-                <input type="text" name="title" id="title-input" value="{{ old('title', $post->title) }}" required maxlength="160" placeholder="Masukkan judul berita atau artikel" class="w-full border border-gray-200 rounded-lg px-3 py-2 pr-20 focus:ring-2 focus:ring-green-600 focus:border-green-600" oninput="updateCharCountDirect('title-input', 'title-char-count', 160)">
+                <input type="text" name="title" id="title-input" value="{{ old('title', $post->title) }}" required maxlength="160" placeholder="Masukkan judul berita atau artikel" autocomplete="off" class="w-full border border-gray-200 rounded-lg px-3 py-2 pr-20 focus:ring-2 focus:ring-green-600 focus:border-green-600" oninput="updateCharCountDirect('title-input', 'title-char-count', 160)">
                 <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs pointer-events-none">
                     <span id="title-char-count" class="text-slate-400">{{ mb_strlen(old('title', $post->title ?? '')) }}</span><span class="text-slate-400">/160</span>
                 </span>
@@ -17,9 +17,9 @@
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1">Slug <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
+            <label for="slug-input" class="block text-sm font-semibold text-slate-700 mb-1">Slug <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
             <div class="relative">
-                <input type="text" name="slug" id="slug-input" value="{{ old('slug', $post->slug) }}" maxlength="160" placeholder="Kosongkan untuk dibuat otomatis dari judul" class="w-full border border-gray-200 rounded-lg px-3 py-2 pr-20 focus:ring-2 focus:ring-green-600 focus:border-green-600" oninput="updateCharCountDirect('slug-input', 'slug-char-count', 160)">
+                <input type="text" name="slug" id="slug-input" value="{{ old('slug', $post->slug) }}" maxlength="160" placeholder="Kosongkan untuk dibuat otomatis dari judul" autocomplete="off" class="w-full border border-gray-200 rounded-lg px-3 py-2 pr-20 focus:ring-2 focus:ring-green-600 focus:border-green-600" oninput="updateCharCountDirect('slug-input', 'slug-char-count', 160)">
                 <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs pointer-events-none">
                     <span id="slug-char-count" class="text-slate-400">{{ mb_strlen(old('slug', $post->slug ?? '')) }}</span><span class="text-slate-400">/160</span>
                 </span>
@@ -28,7 +28,7 @@
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1">Excerpt <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
+            <label for="excerpt-input" class="block text-sm font-semibold text-slate-700 mb-1">Excerpt <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
             <div class="relative">
                 <textarea name="excerpt" id="excerpt-input" rows="3" maxlength="500" placeholder="Ringkasan singkat artikel/berita (kosongkan untuk dibuat otomatis dari konten)" class="w-full border border-gray-200 rounded-lg px-3 py-2 pb-8 focus:ring-2 focus:ring-green-600 focus:border-green-600" oninput="updateCharCountDirect('excerpt-input', 'excerpt-char-count', 500)">{{ old('excerpt', $post->excerpt) }}</textarea>
                 <span class="absolute bottom-2 right-3 text-xs pointer-events-none">
@@ -40,7 +40,7 @@
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1">Gambar Konten <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
+            <label for="images-input" class="block text-sm font-semibold text-slate-700 mb-1">Gambar Konten <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
             <p class="text-xs text-slate-500 mb-3">Tambahkan gambar untuk memperkaya konten. Maksimal 6 gambar. <strong class="text-red-600 dark:text-red-400">Jumlah harus 1, 2, 4, atau 6 gambar</strong> (jumlah ganjil selain 1 tidak dapat disimpan).</p>
             <div id="images-warning" class="hidden mb-3 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
                 <p class="text-sm text-amber-800 dark:text-amber-200 font-medium" id="images-warning-text"></p>
@@ -111,7 +111,7 @@
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1">Isi Konten <span class="text-red-600 dark:text-red-500">*</span></label>
+            <label for="body-editor" class="block text-sm font-semibold text-slate-700 mb-1">Isi Konten <span class="text-red-600 dark:text-red-500">*</span></label>
             <textarea name="body" id="body-editor" rows="10" required placeholder="Masukkan isi konten berita atau artikel lengkap" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">{{ old('body', $post->body) }}</textarea>
             @error('body') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
         </div>
@@ -123,7 +123,7 @@
             <input type="hidden" name="type" value="{{ $type ?? $post->type }}">
 
             <div>
-                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Status</label>
+                <label for="status-select" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Status</label>
                 <select name="status" id="status-select" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     <option value="published" @selected(old('status', $post->status ?? 'published') === 'published')>Publikasi</option>
                     <option value="draft" @selected(old('status', $post->status ?? 'published') === 'draft')>Draft</option>
@@ -136,9 +136,9 @@
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nama Penulis <span class="text-red-600 dark:text-red-500">*</span></label>
+                <label for="author-name-input" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nama Penulis <span class="text-red-600 dark:text-red-500">*</span></label>
                 <div class="relative">
-                    <input type="text" name="author_name" id="author-name-input" value="{{ old('author_name', $post->author_name ?? 'Admin') }}" required maxlength="100" class="w-full border border-gray-200 rounded-lg px-3 py-2 pr-20 focus:ring-2 focus:ring-green-600 focus:border-green-600" placeholder="Masukkan nama penulis" oninput="updateCharCountDirect('author-name-input', 'author-name-char-count', 100)">
+                    <input type="text" name="author_name" id="author-name-input" value="{{ old('author_name', $post->author_name ?? 'Admin') }}" required maxlength="100" autocomplete="name" class="w-full border border-gray-200 rounded-lg px-3 py-2 pr-20 focus:ring-2 focus:ring-green-600 focus:border-green-600" placeholder="Masukkan nama penulis" oninput="updateCharCountDirect('author-name-input', 'author-name-char-count', 100)">
                     <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs pointer-events-none">
                         <span id="author-name-char-count" class="text-slate-400">{{ mb_strlen(old('author_name', $post->author_name ?? 'Admin')) }}</span><span class="text-slate-400">/100</span>
                     </span>
@@ -148,7 +148,7 @@
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tanggal Publikasi</label>
+                <label for="published-at-date" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tanggal Publikasi</label>
                 @php
                     $publishedAtDate = old('published_at_date');
                     if (!$publishedAtDate && $post->published_at) {
@@ -157,13 +157,13 @@
                         $publishedAtDate = now()->format('Y-m-d');
                     }
                 @endphp
-                <input type="date" name="published_at_date" value="{{ $publishedAtDate }}" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                <input type="date" name="published_at_date" id="published-at-date" value="{{ $publishedAtDate }}" autocomplete="off" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                 @error('published_at_date') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 <p class="text-xs text-slate-500 mt-1">Pilih tanggal publikasi. Waktu otomatis menggunakan waktu saat ini.</p>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tag <span class="text-xs font-normal text-slate-400 normal-case">(opsional)</span></label>
+                <label for="tag-input" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tag <span class="text-xs font-normal text-slate-400 normal-case">(opsional)</span></label>
                 <div class="relative">
                     <div id="tags-wrapper" class="border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 min-h-[42px] flex flex-wrap gap-2 items-center focus-within:ring-2 focus-within:ring-green-600 focus-within:border-green-600 bg-white dark:bg-slate-800">
                         <div id="tags-container" class="flex flex-wrap gap-2">
@@ -191,7 +191,7 @@
                                 @endforeach
                             @endif
                         </div>
-                        <input type="text" id="tag-input" placeholder="Masukkan tag dan tekan Enter" maxlength="50" class="flex-1 min-w-[120px] border-0 outline-none bg-transparent text-sm text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-500" autocomplete="off">
+                        <input type="text" id="tag-input" placeholder="Masukkan tag dan tekan Enter" maxlength="50" autocomplete="off" class="flex-1 min-w-[120px] border-0 outline-none bg-transparent text-sm text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-500">
                     </div>
                     <div id="tag-suggestions" class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden">
                         <div id="suggestions-list" class="py-1"></div>
@@ -210,7 +210,7 @@
 
         <div class="bg-slate-50 border border-slate-200 p-4 space-y-4" style="border-radius: 0;">
             <div>
-                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Thumbnail <span class="text-red-600 dark:text-red-500">*</span></label>
+                <label for="thumbnail-input" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Thumbnail <span class="text-red-600 dark:text-red-500">*</span></label>
                 <p class="text-xs text-slate-500 mb-2">Upload file thumbnail.</p>
                 <div class="relative">
                     <input type="file" name="thumbnail" id="thumbnail-input" accept="image/*" class="hidden" onchange="updateThumbnailPreview(this)">
@@ -255,7 +255,7 @@
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1">Deskripsi Meta <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
+            <label for="meta-description-input" class="block text-sm font-semibold text-slate-700 mb-1">Deskripsi Meta <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
             <div class="relative">
                 <textarea name="meta_description" id="meta-description-input" rows="3" maxlength="255" placeholder="Deskripsi singkat untuk mesin pencari" class="w-full border border-gray-200 rounded-lg px-3 py-2 pb-8 focus:ring-2 focus:ring-green-600 focus:border-green-600" oninput="updateCharCountDirect('meta-description-input', 'meta-description-char-count', 255)">{{ old('meta_description', $post->meta_description) }}</textarea>
                 <span class="absolute bottom-2 right-3 text-xs pointer-events-none">
@@ -649,7 +649,7 @@
         `;
 
         document.getElementById('tags-container').appendChild(tagItem);
-        
+
         // Validasi tombol setelah menambah tag
         if (typeof validateThumbnailAndUpdateButton === 'function') {
             validateThumbnailAndUpdateButton();
@@ -658,7 +658,7 @@
 
     function removeTag(button) {
         button.closest('.tag-item').remove();
-        
+
         // Validasi tombol setelah menghapus tag
         if (typeof validateThumbnailAndUpdateButton === 'function') {
             validateThumbnailAndUpdateButton();
@@ -1427,7 +1427,7 @@
                 const isFeaturedInput = document.getElementById('is_featured');
                 const existingImagesInputs = document.querySelectorAll('input[name="existing_images[]"]');
                 const tagsInputs = document.querySelectorAll('input[name="tags[]"]');
-                
+
                 // Simpan data awal
                 initialData.title = titleInput ? titleInput.value.trim() : '';
                 initialData.body = getBodyContent(); // Text content untuk validasi

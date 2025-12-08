@@ -15,12 +15,12 @@
         <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-6" style="border-radius: 0;">
             <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Gambar Banner</h2>
             <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Upload gambar untuk slide banner. Setiap gambar akan menjadi slide terpisah.</p>
-            
+
             <!-- Form Upload dengan Drag & Drop Card -->
             <form action="{{ route('admin.banners.upload') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
                 @csrf
                 <input type="file" name="gambar[]" id="gambar" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
-                
+
                 <!-- Drag & Drop Card dengan Tombol Upload -->
                 <div id="upload-card" class="border-2 border-dashed border-gray-300 dark:border-slate-600 p-8 text-center cursor-pointer hover:border-green-500 dark:hover:border-green-600 transition-colors relative" style="border-radius: 0;" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" onclick="if(!event.target.closest('#preview-container') && !event.target.closest('button')) document.getElementById('gambar').click()">
                     <!-- Default Content -->
@@ -111,12 +111,13 @@
             <!-- Banner Promosi -->
             <div class="mt-6">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Banner Promosi</h3>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Upload banner promosi yang akan ditampilkan di beranda antara berita dan artikel.</p>
-                
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Upload banner promosi yang akan ditampilkan di beranda antara berita dan artikel.</p>
+                <p class="text-xs text-green-600 dark:text-green-400 font-medium mb-4">Ukuran yang disarankan: 1920 × 600 px</p>
+
                 <form action="{{ route('admin.banners.upload-promosi') }}" method="POST" enctype="multipart/form-data" id="promosiForm" @if($settings && $settings->promosi_banner_path) style="display: none;" @endif>
                     @csrf
                     <input type="file" name="promosi_banner" id="promosi_banner" accept="image/*" class="hidden" onchange="handlePromosiFileSelect(event)">
-                    
+
                     <!-- Drag & Drop Card untuk Banner Promosi -->
                     <div id="promosi-upload-card" class="border-2 border-dashed border-gray-300 dark:border-slate-600 p-8 text-center cursor-pointer hover:border-green-500 dark:hover:border-green-600 transition-colors relative" style="border-radius: 0;" ondrop="handlePromosiDrop(event)" ondragover="handlePromosiDragOver(event)" ondragleave="handlePromosiDragLeave(event)" onclick="if(!event.target.closest('#promosi-preview-container') && !event.target.closest('button')) document.getElementById('promosi_banner').click()">
                         <!-- Default Content -->
@@ -138,8 +139,8 @@
 
                         <!-- Preview Image -->
                         <div id="promosi-preview-container" class="hidden">
-                            <div class="relative border border-gray-200 dark:border-slate-700 overflow-hidden group" style="border-radius: 0;">
-                                <img id="promosi-preview-img" src="" alt="Preview" class="w-full h-48 object-cover" style="height: 192px;">
+                            <div class="relative border border-gray-200 dark:border-slate-700 overflow-hidden group" style="border-radius: 0; aspect-ratio: 1920/600;">
+                                <img id="promosi-preview-img" src="" alt="Preview" class="w-full h-full object-cover">
                                 <button type="button" onclick="event.stopPropagation(); resetPromosiImage();" class="absolute top-0 -right-1 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
@@ -162,8 +163,8 @@
                 @if($settings && $settings->promosi_banner_path)
                     <div class="mt-6">
                         <div class="bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 overflow-hidden group relative" style="border-radius: 0;">
-                            <div class="w-full h-48 overflow-hidden cursor-pointer" onclick="openImagePreview('{{ asset('storage/' . $settings->promosi_banner_path) }}', 'Banner Promosi')" style="height: 192px;">
-                                <img src="{{ asset('storage/' . $settings->promosi_banner_path) }}?v={{ $settings->updated_at->timestamp ?? time() }}" alt="Banner Promosi" class="w-full h-full object-cover hover:opacity-90 transition-opacity" style="height: 192px; object-fit: cover;">
+                            <div class="w-full overflow-hidden cursor-pointer" onclick="openImagePreview('{{ asset('storage/' . $settings->promosi_banner_path) }}', 'Banner Promosi')" style="aspect-ratio: 1920/600; height: auto;">
+                                <img src="{{ asset('storage/' . $settings->promosi_banner_path) }}?v={{ $settings->updated_at->timestamp ?? time() }}" alt="Banner Promosi" class="w-full h-full object-cover hover:opacity-90 transition-opacity" style="object-fit: cover;">
                             </div>
                             <div class="p-4">
                                 <div class="flex items-center gap-2">
@@ -185,11 +186,11 @@
             <div>
                 <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Pengaturan Informasi Banner</h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Informasi ini akan digunakan untuk semua slide banner</p>
-                
+
                 <form action="{{ route('admin.banners.settings.update') }}" method="POST" enctype="multipart/form-data" id="settings-form">
                     @csrf
                     @method('POST')
-                    
+
                     <div class="space-y-4">
                         <!-- Tagline -->
                         <div>
@@ -427,21 +428,25 @@
             const img = document.getElementById('previewImage');
             img.src = imageSrc;
             img.alt = imageAlt;
-            
-            // Jika banner promosi, tampilkan dengan ukuran yang sesuai (192px tinggi)
+
+            // Jika banner promosi, tampilkan dengan ukuran yang sesuai (600px tinggi)
             if (imageAlt && imageAlt.toLowerCase().includes('promosi')) {
-                img.className = 'w-full object-cover pointer-events-none';
-                img.style.height = '192px';
-                img.style.maxHeight = '192px';
+                img.className = 'pointer-events-none';
+                img.style.width = '1920px';
+                img.style.height = '600px';
+                img.style.maxWidth = '1920px';
+                img.style.maxHeight = '600px';
                 img.style.objectFit = 'cover';
             } else {
                 // Untuk banner biasa, tampilkan full size
                 img.className = 'max-w-full max-h-full object-contain pointer-events-none';
+                img.style.width = '';
                 img.style.height = '';
+                img.style.maxWidth = '';
                 img.style.maxHeight = '';
                 img.style.objectFit = '';
             }
-            
+
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.style.overflow = 'hidden';
@@ -465,11 +470,11 @@
         function toggleButtonTextInput() {
             const linkInput = document.getElementById('link');
             const buttonTextInput = document.getElementById('button_text');
-            
+
             if (!linkInput || !buttonTextInput) return;
-            
+
             const linkValue = linkInput.value.trim();
-            
+
             // Validasi URL - cek apakah tidak kosong dan format URL valid
             let isValidUrl = false;
             if (linkValue.length > 0) {
@@ -482,7 +487,7 @@
                     isValidUrl = linkValue.startsWith('http://') || linkValue.startsWith('https://');
                 }
             }
-            
+
             if (isValidUrl) {
                 // Enable input Teks Tombol
                 buttonTextInput.disabled = false;
@@ -502,15 +507,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Cek status input Link saat halaman dimuat
             toggleButtonTextInput();
-            
+
             // Modal Hapus Banner
             const deleteBannerModal = document.getElementById('deleteBannerModal');
             const deleteBannerCancelBtn = document.getElementById('deleteBannerCancelBtn');
-            
+
             if (deleteBannerCancelBtn) {
                 deleteBannerCancelBtn.addEventListener('click', hideDeleteBannerModal);
             }
-            
+
             if (deleteBannerModal) {
                 deleteBannerModal.addEventListener('click', function(e) {
                     if (e.target === deleteBannerModal) {
@@ -522,11 +527,11 @@
             // Modal Hapus Banner Promosi
             const deletePromosiModal = document.getElementById('deletePromosiModal');
             const deletePromosiCancelBtn = document.getElementById('deletePromosiCancelBtn');
-            
+
             if (deletePromosiCancelBtn) {
                 deletePromosiCancelBtn.addEventListener('click', hideDeletePromosiModal);
             }
-            
+
             if (deletePromosiModal) {
                 deletePromosiModal.addEventListener('click', function(e) {
                     if (e.target === deletePromosiModal) {
@@ -534,10 +539,10 @@
                     }
                 });
             }
-            
+
             const modal = document.getElementById('imagePreviewModal');
             const closeBtn = modal?.querySelector('.close-banner-modal-btn');
-            
+
             if (closeBtn) {
                 closeBtn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -546,7 +551,7 @@
                     return false;
                 }, true);
             }
-            
+
             // Background click handler
             if (modal) {
                 modal.addEventListener('click', function(e) {
@@ -585,7 +590,7 @@
                 alert('File harus berupa gambar (JPG, PNG, atau WEBP)');
                 return;
             }
-            
+
             // Validasi ukuran file (5MB = 5 * 1024 * 1024 bytes)
             const maxSize = 5 * 1024 * 1024; // 5MB dalam bytes
             if (file.size > maxSize) {
@@ -593,7 +598,7 @@
                 alert(`Ukuran file terlalu besar! File Anda: ${fileSizeMB}MB. Maksimal: 5MB.\n\nSilakan kompres atau pilih file lain.`);
                 return;
             }
-            
+
             selectedFile = file;
             updatePreview();
         }
@@ -603,13 +608,13 @@
             event.stopPropagation();
             const uploadCard = document.getElementById('upload-card');
             uploadCard.classList.remove('border-green-500', 'bg-green-50', 'dark:bg-green-900');
-            
+
             const file = Array.from(event.dataTransfer.files).find(f => f.type.startsWith('image/'));
             if (!file) {
                 alert('File harus berupa gambar (JPG, PNG, atau WEBP)');
                 return;
             }
-            
+
             const input = document.getElementById('gambar');
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(file);
@@ -698,7 +703,7 @@
             event.preventDefault();
             event.stopPropagation();
             event.currentTarget.classList.remove('border-green-500', 'dark:border-green-600');
-            
+
             const files = event.dataTransfer.files;
             if (files.length > 0) {
                 const file = files[0];
@@ -727,10 +732,10 @@
                 event.preventDefault();
                 return false;
             }
-            
+
             const file = fileInput.files[0];
             const maxSize = 5 * 1024 * 1024; // 5MB
-            
+
             if (file.size > maxSize) {
                 const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
                 alert(`Ukuran file terlalu besar! File Anda: ${fileSizeMB}MB. Maksimal: 5MB.\n\nSilakan kompres atau pilih file lain.`);
@@ -747,23 +752,23 @@
                 event.preventDefault();
                 return false;
             }
-            
+
             const file = fileInput.files[0];
             if (!file) {
                 alert('Silakan pilih file gambar terlebih dahulu.');
                 event.preventDefault();
                 return false;
             }
-            
+
             const maxSize = 5 * 1024 * 1024; // 5MB
-            
+
             if (file.size > maxSize) {
                 const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
                 alert(`Ukuran file terlalu besar! File Anda: ${fileSizeMB}MB. Maksimal: 5MB.\n\nSilakan kompres atau pilih file lain.`);
                 event.preventDefault();
                 return false;
             }
-            
+
             // Pastikan form submit dengan benar
             return true;
         });
@@ -838,7 +843,7 @@
             if (!saveBtn) return;
 
             const hasFormChanges = hasFormChanged();
-            
+
             if (hasFormChanges) {
                 // Ada perubahan → enable tombol
                 saveBtn.disabled = false;
@@ -951,7 +956,7 @@
                 const url = pendingNavigationUrl;
                 hideModal();
                 isSubmitting = true;
-                
+
                 if (settingsForm) {
                     if (url) {
                         const existingInput = settingsForm.querySelector('input[name="_redirect_after_save"]');
@@ -1001,7 +1006,7 @@
 
             bannerList.querySelectorAll('.banner-item').forEach(item => {
                 item.draggable = true;
-                
+
                 item.addEventListener('dragstart', function(e) {
                     draggedElement = this;
                     this.style.opacity = '0.5';

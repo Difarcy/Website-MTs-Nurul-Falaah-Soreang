@@ -163,14 +163,14 @@
                     </div>
                 </div>
 
-                <!-- Info Terkini -->
+                <!-- Pengumuman -->
                 <div class="bg-white border border-gray-200 overflow-hidden mb-6">
                     <div class="p-4">
                         <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Info Terkini
+                            Pengumuman
                         </h3>
                         <div class="space-y-3 min-h-[300px]">
                             @if(count($infoTerkini) > 0)
@@ -189,7 +189,7 @@
                             @else
                                 <div class="flex items-center justify-center" style="min-height: 300px;">
                                     <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-300 text-center">
-                                        Belum Ada Info Terkini
+                                        Belum Ada Pengumuman
                                     </p>
                                 </div>
                             @endif

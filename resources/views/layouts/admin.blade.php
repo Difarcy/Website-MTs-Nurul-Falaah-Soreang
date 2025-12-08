@@ -64,7 +64,7 @@
 <body class="bg-gray-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
     <div class="min-h-screen flex">
         <aside class="hidden lg:flex lg:flex-col lg:w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 h-screen fixed left-0 top-0 overflow-y-auto">
-            <div class="px-4 pt-3 pb-2 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+            <div class="px-4 py-2 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
                 <div class="flex items-center gap-1.5">
                     <div class="flex items-center justify-center w-12 h-12 bg-white dark:bg-slate-900 rounded-lg">
                         <svg class="w-7 h-7 text-slate-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,14 +138,6 @@
                          class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors {{ request()->routeIs('admin.settings.top-bar*') ? 'bg-slate-200 text-slate-900 font-semibold dark:bg-slate-700 dark:text-white' : 'text-slate-900 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white' }}">
                     <span>Top Bar</span>
                 </a>
-                     <a href="{{ route('admin.change-username') }}"
-                         class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors {{ request()->routeIs('admin.change-username') ? 'bg-slate-200 text-slate-900 font-semibold dark:bg-slate-700 dark:text-white' : 'text-slate-900 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white' }}">
-                    <span>Ubah Username</span>
-                </a>
-                     <a href="{{ route('admin.change-password') }}"
-                         class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors {{ request()->routeIs('admin.change-password') ? 'bg-slate-200 text-slate-900 font-semibold dark:bg-slate-700 dark:text-white' : 'text-slate-900 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white' }}">
-                    <span>Ubah Password</span>
-                </a>
             </nav>
         </aside>
 
@@ -162,7 +154,25 @@
                         <p class="text-base font-bold tracking-tight dark:text-white">Panel Admin</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-4 ml-auto">
+                <div class="flex items-center gap-3 ml-auto">
+                    <a href="{{ route('admin.change-username') }}" data-spa-link class="inline-flex items-center justify-center px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Ubah Username
+                    </a>
+                    <a href="{{ route('admin.change-password') }}" data-spa-link class="inline-flex items-center justify-center px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        Ubah Password
+                    </a>
+                    <a href="#" data-spa-link class="inline-flex items-center justify-center px-3 py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Bantuan
+                    </a>
                     <form action="{{ route('logout') }}" method="POST" class="hidden sm:block" id="logout-form">
                         @csrf
                         <button type="button" id="logout-btn" class="inline-flex items-center justify-center px-4 py-1.5 text-sm font-semibold text-white bg-red-700 rounded-lg hover:bg-red-800 transition-colors">
@@ -191,7 +201,7 @@
     </div>
 
     <!-- Modal Konfirmasi Logout -->
-    <div id="logout-modal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50">
+    <div id="logout-modal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center">
         <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full mx-4">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Konfirmasi Keluar</h3>
@@ -223,7 +233,6 @@
                 // Tutup modal saat klik Batal
                 logoutCancelBtn.addEventListener('click', function() {
                     logoutModal.classList.add('hidden');
-                    logoutModal.classList.remove('flex');
                 });
 
                 // Submit form saat klik Keluar
@@ -343,6 +352,207 @@
             });
         })();
 
+        // SPA Navigation System (Next.js style)
+        (function() {
+            let isNavigating = false;
+            let currentPath = window.location.pathname + window.location.search;
+
+            // Function to show loading state
+            function showLoading() {
+                // No loading overlay - instant navigation
+            }
+
+            // Function to hide loading state
+            function hideLoading() {
+                // No loading overlay to hide
+            }
+
+            // Function to load content via AJAX
+            async function loadContent(url) {
+                if (isNavigating) return;
+                isNavigating = true;
+
+                try {
+                    showLoading();
+
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                            'Cache-Control': 'no-cache'
+                        },
+                        credentials: 'same-origin'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const html = await response.text();
+
+                    // Parse the HTML to extract the content
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // Update page title
+                    const newTitle = doc.querySelector('title');
+                    if (newTitle) {
+                        document.title = newTitle.textContent;
+                    }
+
+                    // Update main content
+                    const newMainContent = doc.querySelector('.admin-main');
+                    const currentMainContent = document.querySelector('.admin-main');
+
+                    if (newMainContent && currentMainContent) {
+                        // Preserve any existing event listeners by doing a more careful replacement
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = newMainContent.innerHTML;
+
+                        // Copy over the content
+                        currentMainContent.innerHTML = tempDiv.innerHTML;
+
+                        // Re-initialize any scripts that might be in the content
+                        const scripts = currentMainContent.querySelectorAll('script');
+                        scripts.forEach(script => {
+                            if (script.textContent) {
+                                try {
+                                    eval(script.textContent);
+                                } catch (e) {
+                                    console.warn('Error executing inline script:', e);
+                                }
+                            }
+                        });
+                    }
+
+                    // Update URL without reloading
+                    window.history.pushState({ path: url }, '', url);
+                    currentPath = url;
+
+                    // Update active menu state
+                    updateActiveMenuState(url);
+
+                    // Scroll to top of content
+                    window.scrollTo(0, 0);
+
+                    // Re-initialize dynamic elements
+                    initializeDynamicElements();
+
+                } catch (error) {
+                    console.error('Error loading content:', error);
+                    // Fallback to normal navigation
+                    window.location.href = url;
+                } finally {
+                    hideLoading();
+                    isNavigating = false;
+                }
+            }
+
+            // Function to update active menu state
+            function updateActiveMenuState(currentUrl) {
+                const sidebarLinks = document.querySelectorAll('aside nav a');
+
+                // Remove active state from all links
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('bg-slate-200', 'text-slate-900', 'font-semibold', 'dark:bg-slate-700', 'dark:text-white');
+                    link.classList.add('text-slate-900', 'hover:bg-slate-200', 'dark:text-slate-400', 'dark:hover:bg-slate-700', 'dark:hover:text-white');
+                });
+
+                // Find and activate the current link
+                sidebarLinks.forEach(link => {
+                    const linkUrl = new URL(link.href);
+                    const currentUrlObj = new URL(currentUrl);
+
+                    // Check if the link matches the current URL
+                    if (linkUrl.pathname === currentUrlObj.pathname) {
+                        link.classList.remove('text-slate-900', 'hover:bg-slate-200', 'dark:text-slate-400', 'dark:hover:bg-slate-700', 'dark:hover:text-white');
+                        link.classList.add('bg-slate-200', 'text-slate-900', 'font-semibold', 'dark:bg-slate-700', 'dark:text-white');
+                    }
+                });
+            }
+
+            // Function to initialize dynamic elements after content load
+            function initializeDynamicElements() {
+                // Re-initialize character counters
+                document.querySelectorAll('[maxlength]').forEach(function(field) {
+                    const fieldId = field.id;
+                    const maxLength = parseInt(field.getAttribute('maxlength'));
+
+                    if (fieldId && maxLength && !field.hasAttribute('data-char-counter-initialized')) {
+                        field.setAttribute('data-char-counter-initialized', 'true');
+                        field.addEventListener('input', function() {
+                            updateCharCount(fieldId, maxLength);
+                        });
+                    }
+                });
+
+                // Re-initialize any modal handlers or other dynamic content
+                // Add more initialization code here as needed
+            }
+
+            // Handle SPA navigation clicks (sidebar and header buttons)
+            document.addEventListener('click', function(e) {
+                // Check for sidebar navigation links
+                const sidebarLink = e.target.closest('aside nav a');
+                // Check for header SPA links
+                const headerLink = e.target.closest('[data-spa-link]');
+
+                const link = sidebarLink || headerLink;
+
+                if (link && link.href && !link.href.includes('#')) {
+                    // Check if it's an external link or different domain
+                    const linkUrl = new URL(link.href);
+                    const currentUrl = new URL(window.location.href);
+
+                    if (linkUrl.origin === currentUrl.origin) {
+                        e.preventDefault();
+
+                        // Save sidebar scroll position before navigation (only for sidebar links)
+                        if (sidebarLink) {
+                            const sidebar = document.querySelector('aside');
+                            if (sidebar) {
+                                sessionStorage.setItem('admin_sidebar_scroll_position', sidebar.scrollTop.toString());
+                            }
+                        }
+
+                        loadContent(link.href);
+                    }
+                }
+            });
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function(e) {
+                if (e.state && e.state.path) {
+                    loadContent(e.state.path);
+                } else {
+                    // Update active state for current URL
+                    updateActiveMenuState(window.location.href);
+                }
+            });
+
+            // Handle form submissions that should trigger SPA navigation
+            document.addEventListener('submit', function(e) {
+                const form = e.target;
+                const action = form.action || window.location.href;
+
+                // Only intercept forms that are GET requests (navigation forms)
+                if (form.method.toUpperCase() === 'GET') {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    const params = new URLSearchParams(formData);
+                    const url = action + (params.toString() ? '?' + params.toString() : '');
+                    loadContent(url);
+                }
+            });
+
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeDynamicElements();
+                updateActiveMenuState(window.location.href);
+            });
+        })();
+
         // Auto-reload setelah berhasil menyimpan/publish/edit berita/artikel
         document.addEventListener('DOMContentLoaded', function() {
             const statusMessage = @json(session('status'));
@@ -377,4 +587,3 @@
     </script>
 </body>
 </html>
-

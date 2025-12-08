@@ -187,22 +187,5 @@
             </a>
         </div>
 
-        <!-- Info Cepat -->
-        <div class="bg-blue-50 border border-blue-200 p-4" style="border-radius: 0;">
-            <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div>
-                    <h4 class="font-bold text-blue-900 text-base">Tips Menggunakan Panel</h4>
-                    <ul class="text-sm text-blue-700 mt-2 space-y-1 list-disc list-inside font-medium">
-                        <li>Klik menu di atas untuk mengelola konten</li>
-                        <li>Gunakan tombol "Tambah" untuk membuat konten baru</li>
-                        <li>Klik "Edit" untuk mengubah konten yang sudah ada</li>
-                        <li>Pastikan gambar yang diupload ukurannya tidak terlalu besar (maksimal 5MB)</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection

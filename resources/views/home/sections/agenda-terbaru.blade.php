@@ -1,5 +1,5 @@
 <!-- Agenda Terbaru -->
-<div class="bg-white border border-gray-200 overflow-hidden mt-6">
+<div class="bg-white overflow-hidden mt-6">
     <div class="p-4">
         <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">

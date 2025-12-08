@@ -313,11 +313,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label for="name" class="block text-sm font-semibold text-slate-700 mb-2">Nama <span class="text-red-600 dark:text-red-500">*</span></label>
-                            <input type="text" id="name" name="name" value="{{ old('name') }}" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600" placeholder="Masukkan nama Anda">
+                            <input type="text" id="name" name="name" value="{{ old('name') }}" required autocomplete="name" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600" placeholder="Masukkan nama Anda">
                         </div>
                         <div>
                             <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email <span class="text-red-600 dark:text-red-500">*</span></label>
-                            <input type="email" id="email" name="email" value="{{ old('email') }}" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600" placeholder="Masukkan email Anda">
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" required autocomplete="email" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600" placeholder="Masukkan email Anda">
                         </div>
                     </div>
                     <div>
@@ -423,7 +423,7 @@
     <!-- Image Modal -->
     <div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md">
         <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
-            <img id="modalImage" src="" alt="Zoom" class="max-w-full max-h-full object-cover pointer-events-none">
+            <img id="modalImage" src="" alt="Zoom" class="max-w-full max-h-full aspect-video object-cover pointer-events-none">
             <button type="button" class="close-image-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>

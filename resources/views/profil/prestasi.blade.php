@@ -14,7 +14,7 @@
         @php
             // Data prestasi dari database sudah dikirim dari controller
             $prestasi = isset($prestasi) ? $prestasi : collect();
-            
+
             $berita = [
                 [
                     'judul' => 'Siswa MTs Nurul Falaah Soreang Raih Juara 1 Olimpiade Matematika',
@@ -27,7 +27,7 @@
                     'tanggal' => '2025-01-12 14:20:00'
                 ],
             ];
-            
+
             $infoTerkini = [
                 ['judul' => 'Pengumuman Libur Semester Genap', 'tanggal' => '2025-01-20'],
                 ['judul' => 'Jadwal Ujian Tengah Semester', 'tanggal' => '2025-01-18'],
@@ -126,7 +126,7 @@
                     </div>
                 </div>
 
-                <!-- Info Terkini -->
+                <!-- Pengumuman -->
                 <div>
                     <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,7 +151,7 @@
                         @else
                             <div class="flex items-center justify-center" style="min-height: 300px;">
                                 <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-300 text-center">
-                                    Belum Ada Info Terkini
+                                    Belum Ada Pengumuman
                                 </p>
                             </div>
                         @endif
@@ -251,20 +251,20 @@
         function updateLightboxImage(direction = 'next') {
             const lightboxImage = document.getElementById('lightbox-image');
             const item = prestasi[currentLightboxIndex];
-            
+
             // Fade out with slight translate
             const translateX = direction === 'next' ? '-20px' : '20px';
             lightboxImage.style.transform = `scale(0.95) translateX(${translateX})`;
             lightboxImage.style.opacity = '0';
-            
+
             setTimeout(() => {
                 lightboxImage.src = item.gambar ? "{{ asset('storage/') }}/" + item.gambar : "{{ asset('img/default-backgrounds.png') }}";
                 lightboxImage.alt = item.judul;
-                
+
                 // Fade in from opposite direction
                 const translateInX = direction === 'next' ? '20px' : '-20px';
                 lightboxImage.style.transform = `scale(0.95) translateX(${translateInX})`;
-                
+
                 setTimeout(() => {
                     lightboxImage.style.opacity = '1';
                     lightboxImage.style.transform = 'scale(1) translateX(0)';

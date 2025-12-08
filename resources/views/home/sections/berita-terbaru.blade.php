@@ -4,6 +4,62 @@
         <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
             <!-- Kiri: Berita Terbaru (70%) -->
             <div class="w-full lg:w-[70%]">
+                @php
+                    $fallbackImages = ['img/banner1.jpg', 'img/banner2.jpg', 'img/banner3.jpg'];
+                    $monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                @endphp
+
+                <!-- Highlight News Slider -->
+                @if(isset($highlightNews) && $highlightNews->count() > 0)
+                <div class="mb-8">
+                    <div class="relative overflow-hidden shadow-lg group" id="highlight-slider">
+                        <div class="highlight-slides flex transition-transform duration-500 ease-in-out" id="highlight-slides">
+                            @foreach($highlightNews as $index => $news)
+                                @php
+                                    $image = $news->thumbnail_path
+                                        ? asset('storage/' . $news->thumbnail_path)
+                                        : asset($fallbackImages[$index % count($fallbackImages)]);
+                                    $dateObj = $news->published_at ?? $news->created_at;
+                                    $month = $monthNames[$dateObj->month - 1];
+                                    $date = $dateObj->day . ' ' . $month . ', ' . $dateObj->year;
+                                @endphp
+                                <div class="highlight-slide flex-shrink-0 w-full relative cursor-pointer" onclick="window.location.href='{{ route('informasi.show', ['type' => $news->type, 'slug' => $news->slug]) }}'">
+                                    <img src="{{ $image }}" alt="{{ $news->title }}" class="w-full h-72 sm:h-80 md:h-96 lg:h-[28rem] object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                                    <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white">
+                                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 line-clamp-2 drop-shadow-lg">
+                                            {{ $news->title }}
+                                        </h3>
+                                        <p class="text-sm sm:text-base opacity-90 drop-shadow-md">
+                                            {{ $date }}
+                                        </p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Navigation Arrows -->
+                        <button class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm opacity-0 group-hover:opacity-100" id="highlight-prev">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm opacity-0 group-hover:opacity-100" id="highlight-next">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Indicators -->
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2" id="highlight-indicators">
+                            @for($i = 0; $i < $highlightNews->count(); $i++)
+                                <button class="w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-200 {{ $i === 0 ? 'bg-white' : '' }}" data-slide="{{ $i }}"></button>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 <h2 class="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-4 flex items-center gap-3">
                     <span class="w-px h-6 sm:h-8 bg-green-700"></span>
                     Berita Terbaru
@@ -11,8 +67,6 @@
                 @php
                     $newsItems = $latestNews ?? collect();
                     $articleItems = ($latestArticles ?? collect())->take(4);
-                    $fallbackImages = ['img/banner1.jpg', 'img/banner2.jpg', 'img/banner3.jpg'];
-                    $monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                 @endphp
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
                     @forelse($newsItems as $index => $item)
@@ -75,18 +129,18 @@
                 <!-- Banner Promosi -->
                 <div class="mt-8">
                     @if(isset($promosiBannerPath) && $promosiBannerPath)
-                        <div class="bg-gray-100 border border-gray-300 overflow-hidden hover:shadow-lg transition-all duration-300" style="height: 192px;">
+                        <div class="bg-gray-100 border border-gray-300 overflow-hidden hover:shadow-lg transition-all duration-300" style="aspect-ratio: 1920/600;">
                             <div class="w-full h-full pointer-events-none">
                                 <img
                                     src="{{ asset('storage/' . $promosiBannerPath) }}"
                                     alt="Banner Promosi"
                                     class="w-full h-full object-cover"
-                                    style="height: 192px; width: 100%; object-fit: cover; display: block;"
+                                    style="object-fit: cover;"
                                 >
                             </div>
                         </div>
                     @else
-                        <div class="bg-gray-100 border border-gray-300 overflow-hidden" style="height: 192px;">
+                        <div class="bg-gray-100 border border-gray-300 overflow-hidden" style="aspect-ratio: 1920/600;">
                             <div class="w-full h-full flex items-center justify-center">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada banner</p>
                             </div>
@@ -168,8 +222,8 @@
             </div>
 
             <!-- Kanan: Sambutan Kepala Madrasah (30%) -->
-            <div class="w-full lg:w-[30%] lg:pt-8">
-                <div class="bg-white border border-gray-200 overflow-hidden">
+            <div class="w-full lg:w-[30%] lg:-mt-4">
+                <div class="bg-white overflow-hidden">
                     <div class="p-4">
                         @php
                             $kepalaMadrasahPath = 'img/kepala-madrasah.jpg';
@@ -187,10 +241,10 @@
                             >
                         </div>
                         <div class="mb-3 text-center">
-                            <p class="text-base text-gray-700 font-semibold">
+                            <p class="text-base text-gray-700 font-semibold text-center">
                                 Waskam, S.Pd. M.Pd.
                             </p>
-                            <p class="text-xs sm:text-sm text-gray-600 mt-1">
+                            <p class="text-xs sm:text-sm text-gray-600 mt-1 text-center">
                                 - Kepala Madrasah -
                             </p>
                         </div>
@@ -304,7 +358,7 @@
             modal.className = 'fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md';
             modal.innerHTML = `
                 <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
-                    <img id="promosiModalImage" src="" alt="Banner Promosi" class="w-full object-cover pointer-events-none" style="height: 192px; max-height: 192px; object-fit: cover;">
+                    <img id="promosiModalImage" src="" alt="Banner Promosi" class="w-full object-cover pointer-events-none" style="height: 600px; max-height: 600px; object-fit: cover;">
                     <button type="button" class="close-promosi-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -352,6 +406,105 @@
             document.body.style.overflow = '';
         }
         return false;
+    }
+
+    // Highlight News Slider
+    let highlightCurrentSlide = 0;
+    let highlightSlideInterval = null;
+    const highlightSlides = document.getElementById('highlight-slides');
+    const highlightIndicators = document.getElementById('highlight-indicators');
+    const highlightPrevBtn = document.getElementById('highlight-prev');
+    const highlightNextBtn = document.getElementById('highlight-next');
+
+    if (highlightSlides && highlightIndicators) {
+        const totalSlides = {{ $highlightNews ? $highlightNews->count() : 0 }};
+
+        function updateHighlightSlide() {
+            if (!highlightSlides || totalSlides === 0) return;
+
+            // Update slide position
+            highlightSlides.style.transform = `translateX(-${highlightCurrentSlide * 100}%)`;
+
+            // Update indicators
+            const indicatorButtons = highlightIndicators.querySelectorAll('button');
+            indicatorButtons.forEach((btn, index) => {
+                btn.classList.toggle('bg-white', index === highlightCurrentSlide);
+                btn.classList.toggle('bg-white/50', index !== highlightCurrentSlide);
+            });
+        }
+
+        function nextHighlightSlide() {
+            highlightCurrentSlide = (highlightCurrentSlide + 1) % totalSlides;
+            updateHighlightSlide();
+        }
+
+        function prevHighlightSlide() {
+            highlightCurrentSlide = (highlightCurrentSlide - 1 + totalSlides) % totalSlides;
+            updateHighlightSlide();
+        }
+
+        function goToHighlightSlide(slideIndex) {
+            highlightCurrentSlide = slideIndex;
+            updateHighlightSlide();
+        }
+
+        // Event listeners
+        if (highlightNextBtn) {
+            highlightNextBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                nextHighlightSlide();
+                resetHighlightAutoSlide();
+            });
+        }
+
+        if (highlightPrevBtn) {
+            highlightPrevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                prevHighlightSlide();
+                resetHighlightAutoSlide();
+            });
+        }
+
+        // Indicator click handlers
+        const indicatorButtons = highlightIndicators.querySelectorAll('button');
+        indicatorButtons.forEach((btn, index) => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                goToHighlightSlide(index);
+                resetHighlightAutoSlide();
+            });
+        });
+
+        // Auto slide functionality
+        function startHighlightAutoSlide() {
+            if (highlightSlideInterval) clearInterval(highlightSlideInterval);
+            highlightSlideInterval = setInterval(nextHighlightSlide, 3000); // Change slide every 3 seconds
+        }
+
+        function stopHighlightAutoSlide() {
+            if (highlightSlideInterval) {
+                clearInterval(highlightSlideInterval);
+                highlightSlideInterval = null;
+            }
+        }
+
+        function resetHighlightAutoSlide() {
+            stopHighlightAutoSlide();
+            startHighlightAutoSlide();
+        }
+
+        // Pause on hover
+        const highlightSlider = document.getElementById('highlight-slider');
+        if (highlightSlider) {
+            highlightSlider.addEventListener('mouseenter', stopHighlightAutoSlide);
+            highlightSlider.addEventListener('mouseleave', startHighlightAutoSlide);
+        }
+
+        // Initialize
+        updateHighlightSlide();
+        if (totalSlides > 1) {
+            startHighlightAutoSlide();
+        }
     }
 </script>
 @endpush

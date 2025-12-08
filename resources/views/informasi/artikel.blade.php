@@ -17,6 +17,7 @@
                     name="q"
                     value="{{ request('q') }}"
                     placeholder="Cari artikel inspiratif..."
+                    autocomplete="off"
                     class="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-green-700 focus:border-green-700"
                 >
                 <button type="submit" class="px-4 py-2 bg-green-700 text-white rounded-lg text-sm font-semibold hover:bg-green-800">
@@ -130,7 +131,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Info Terkini
+                            Pengumuman
                         </h3>
                         <div class="space-y-3 min-h-[300px]">
                             @forelse($infoTerkini as $info)
@@ -303,7 +304,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('imageModal');
             const closeBtn = modal?.querySelector('.close-image-modal-btn');
-            
+
             if (closeBtn) {
                 closeBtn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -312,7 +313,7 @@
                     return false;
                 }, true);
             }
-            
+
             // Background click handler
             if (modal) {
                 modal.addEventListener('click', function(e) {
