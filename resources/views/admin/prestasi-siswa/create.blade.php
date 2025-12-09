@@ -101,8 +101,8 @@
                     </div>
 
                     <div>
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                        <label for="is_active" class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
                             <span class="text-sm font-semibold text-slate-700">Tampilkan di Website</span>
                         </label>
                     </div>

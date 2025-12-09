@@ -120,7 +120,7 @@
     <div class="space-y-6">
         <div class="bg-slate-50 border border-slate-200 p-4 space-y-4" style="border-radius: 0;">
             <!-- Type hidden field - determined by route -->
-            <input type="hidden" name="type" value="{{ $type ?? $post->type }}">
+            <input type="hidden" name="type" id="type" value="{{ $type ?? $post->type }}">
 
             <div>
                 <label for="status-select" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Status</label>
@@ -191,7 +191,7 @@
                                 @endforeach
                             @endif
                         </div>
-                        <input type="text" id="tag-input" placeholder="Masukkan tag dan tekan Enter" maxlength="50" autocomplete="off" class="flex-1 min-w-[120px] border-0 outline-none bg-transparent text-sm text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-500">
+                        <input type="text" id="tag-input" name="tag-input" placeholder="Masukkan tag dan tekan Enter" maxlength="50" autocomplete="off" class="flex-1 min-w-[120px] border-0 outline-none bg-transparent text-sm text-slate-700 dark:text-slate-300 placeholder-slate-400 dark:placeholder-slate-500">
                     </div>
                     <div id="tag-suggestions" class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden">
                         <div id="suggestions-list" class="py-1"></div>
@@ -292,31 +292,32 @@
         tags: []
     };
 
-    // Fungsi untuk mendapatkan body content dari TinyMCE atau textarea (text only)
+    // Fungsi untuk mendapatkan body content dari Summernote atau textarea (text only)
     function getBodyContent() {
         let bodyContent = '';
-        if (typeof tinymce !== 'undefined' && tinymce.get('body-editor')) {
-            const htmlContent = tinymce.get('body-editor').getContent();
+        const bodyInput = document.querySelector('textarea[name="body"]');
+        if (bodyInput) {
+            if ($(bodyInput).summernote('code')) {
+                const htmlContent = $(bodyInput).summernote('code');
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = htmlContent;
             bodyContent = tempDiv.textContent || tempDiv.innerText || '';
         } else {
-            const bodyInput = document.querySelector('textarea[name="body"]');
-            if (bodyInput) {
                 bodyContent = bodyInput.value;
             }
         }
         return bodyContent;
     }
 
-    // Fungsi untuk mendapatkan HTML content dari TinyMCE
+    // Fungsi untuk mendapatkan HTML content dari Summernote
     function getBodyHtmlContent() {
-        if (typeof tinymce !== 'undefined' && tinymce.get('body-editor')) {
-            return tinymce.get('body-editor').getContent();
-        } else {
             const bodyInput = document.querySelector('textarea[name="body"]');
-            return bodyInput ? bodyInput.value : '';
+        if (bodyInput && $(bodyInput).summernote('code')) {
+            return $(bodyInput).summernote('code');
+        } else if (bodyInput) {
+            return bodyInput.value;
         }
+        return '';
     }
 
     // Fungsi untuk cek apakah ada perubahan dari data awal
@@ -508,7 +509,7 @@
         const hasThumbnailFile = thumbnailInput && thumbnailInput.files && thumbnailInput.files.length > 0;
 
         // Cek thumbnail dari preview (baik dari file atau URL)
-        const hasThumbnailPreview = thumbnailPreview && !thumbnailPreview.classList.contains('hidden');
+        const hasThumbnailPreview = thumbnailPreview && thumbnailPreview.classList && !thumbnailPreview.classList.contains('hidden');
 
         // Cek thumbnail existing
         const hasExistingThumbnail = currentThumbnail !== null;
@@ -749,9 +750,10 @@
 
     // Add tag on Enter key
     const tagInput = document.getElementById('tag-input');
+    if (tagInput) {
     tagInput.addEventListener('keydown', function(e) {
         const suggestionsDiv = document.getElementById('tag-suggestions');
-        const isSuggestionsVisible = !suggestionsDiv.classList.contains('hidden');
+            const isSuggestionsVisible = suggestionsDiv && suggestionsDiv.classList && !suggestionsDiv.classList.contains('hidden');
 
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -809,6 +811,7 @@
             }
         }
     });
+    }
 
     function updateSuggestionHighlight() {
         const suggestionsList = document.getElementById('suggestions-list');
@@ -855,7 +858,7 @@
     document.addEventListener('click', function(e) {
         const wrapper = document.getElementById('tags-wrapper');
         const suggestions = document.getElementById('tag-suggestions');
-        if (!wrapper.contains(e.target) && !suggestions.contains(e.target)) {
+        if (wrapper && suggestions && !wrapper.contains(e.target) && !suggestions.contains(e.target)) {
             hideSuggestions();
         }
     });
@@ -1444,15 +1447,15 @@
 
                 // Simpan status thumbnail awal
                 const hasThumbnailFile = thumbnailInput && thumbnailInput.files && thumbnailInput.files.length > 0;
-                const hasThumbnailPreview = thumbnailPreview && !thumbnailPreview.classList.contains('hidden');
+                const hasThumbnailPreview = thumbnailPreview && thumbnailPreview.classList && !thumbnailPreview.classList.contains('hidden');
                 const hasExistingThumbnail = currentThumbnail !== null;
                 initialData.hasThumbnail = hasThumbnailFile || hasThumbnailPreview || hasExistingThumbnail;
 
                 // Validasi setelah data awal disimpan
                 validateThumbnailAndUpdateButton();
-            }, 800); // Delay lebih lama untuk memastikan TinyMCE sudah ter-load dan data tersimpan
+            }, 800); // Delay lebih lama untuk memastikan Summernote sudah ter-load dan data tersimpan
         } else {
-            // Create mode: validasi setelah semua elemen ter-render (termasuk TinyMCE)
+            // Create mode: validasi setelah semua elemen ter-render (termasuk Summernote)
             setTimeout(() => {
                 validateThumbnailAndUpdateButton();
             }, 500);
@@ -1592,101 +1595,74 @@
             isFeaturedInput.addEventListener('change', validateThumbnailAndUpdateButton);
         }
 
-        // Initialize rich editor (CKEditor 5) with image upload adapter
-        (function initCKEditor() {
+        // Initialize Summernote editor with image upload
+        (function initSummernote() {
             const editorEl = document.querySelector('#body-editor');
             if (!editorEl) return;
 
             function createEditor() {
-                if (window.ClassicEditor) {
-                    ClassicEditor.create(editorEl, {
+                if (typeof $ !== 'undefined' && $.fn.summernote) {
+                    $(editorEl).summernote({
+                        height: 400,
                         toolbar: [
-                            'heading', '|', 'bold', 'italic', 'link', 'blockquote',
-                            'bulletedList', 'numberedList', '|', 'outdent', 'indent', '|',
-                            'insertTable', 'imageUpload', 'mediaEmbed', '|', 'undo', 'redo'
+                            ['style', ['style']],
+                            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                            ['fontname', ['fontname']],
+                            ['fontsize', ['fontsize']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['table', ['table']],
+                            ['insert', ['link', 'picture', 'video']],
+                            ['view', ['fullscreen', 'codeview', 'help']],
+                            ['history', ['undo', 'redo']]
                         ],
-                        image: {
-                            toolbar: ['imageTextAlternative', 'imageStyle:full', 'imageStyle:side'],
-                        },
-                        simpleUpload: {
-                            uploadUrl: '{{ route("admin.uploads.images") }}',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        }
-                    })
-                        .then(editor => {
-                            window.ckeditorInstance = editor;
-                            // Sync data back to textarea on change for form submit and validation
-                            editor.model.document.on('change:data', () => {
-                                const ta = document.querySelector('#body-editor');
-                                if (ta) ta.value = editor.getData();
-                                if (typeof validateThumbnailAndUpdateButton === 'function') validateThumbnailAndUpdateButton();
-                            });
-
-                            // Apply dark-mode styles if page is in dark mode
-                            const isDarkMode = document.body.classList.contains('dark') ||
-                                               document.documentElement.classList.contains('dark') ||
-                                               window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-                            if (isDarkMode) {
-                                try {
-                                    // Add helper CSS once
-                                    if (!document.getElementById('ck-dark-mode-styles')) {
-                                        const style = document.createElement('style');
-                                        style.id = 'ck-dark-mode-styles';
-                                        style.innerHTML = `
-                                            .ck-dark-mode .ck-editor__editable_inline, .ck-dark-mode .ck-content {
-                                                background: #0f172a !important;
-                                                color: #e2e8f0 !important;
-                                            }
-                                            .ck-dark-mode .ck-toolbar {
-                                                background: #0b1220 !important;
-                                                border-color: #1f2937 !important;
-                                            }
-                                            .ck-dark-mode .ck-button__label, .ck-dark-mode .ck-button {
-                                                color: #e2e8f0 !important;
-                                            }
-                                            .ck-dark-mode .ck-dropdown__panel {
-                                                background: #0b1220 !important;
-                                                color: #e2e8f0 !important;
-                                            }
-                                            .ck-dark-mode .ck-dialog .ck-dialog__panel {
-                                                background: #0b1220 !important;
-                                                color: #e2e8f0 !important;
-                                            }
-                                        `;
-                                        document.head.appendChild(style);
-                                    }
-
-                                    const wrapper = editor.ui.view.element;
-                                    wrapper.classList.add('ck-dark-mode');
-
-                                    // Set editable area styles via editing view
-                                    editor.editing.view.change(writer => {
-                                        writer.setStyle('background-color', '#0f172a', editor.editing.view.document.getRoot());
-                                        writer.setStyle('color', '#e2e8f0', editor.editing.view.document.getRoot());
-                                    });
-                                } catch (e) {
-                                    console.warn('Failed to apply CKEditor dark mode styles', e);
+                        callbacks: {
+                            onImageUpload: function(files) {
+                                uploadImageToServer(files[0], editorEl);
+                            },
+                            onChange: function(contents) {
+                                if (typeof validateThumbnailAndUpdateButton === 'function') {
+                                    validateThumbnailAndUpdateButton();
                                 }
                             }
+                        }
+                            });
 
-                            // Initial validation after editor ready
-                            setTimeout(() => {
-                                if (typeof validateThumbnailAndUpdateButton === 'function') validateThumbnailAndUpdateButton();
-                            }, 200);
-                        })
-                    .catch(err => console.error('CKEditor init error:', err));
+                    // Initial validation after editor ready
+                    setTimeout(() => {
+                        if (typeof validateThumbnailAndUpdateButton === 'function') {
+                            validateThumbnailAndUpdateButton();
+                        }
+                    }, 200);
                 } else {
-                    const s = document.createElement('script');
-                    s.src = 'https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js';
-                    s.referrerPolicy = 'origin';
-                    s.onload = createEditor;
-                    s.onerror = function() { console.error('Failed to load CKEditor'); };
-                    document.head.appendChild(s);
-                }
+                    console.error('Summernote not loaded');
+                                            }
+            }
+
+            function uploadImageToServer(file, editorEl) {
+                const formData = new FormData();
+                formData.append('upload', file);
+
+                fetch('{{ route("admin.uploads.images") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.url) {
+                        $(editorEl).summernote('insertImage', data.url);
+                } else {
+                        alert('Gagal mengupload gambar');
+                    }
+                })
+                .catch(error => {
+                    console.error('Upload error:', error);
+                    alert('Gagal mengupload gambar');
+                });
             }
 
             if (document.readyState === 'loading') {
@@ -1774,7 +1750,7 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             const modal = document.getElementById('imagePreviewModal');
-            if (modal && !modal.classList.contains('hidden')) {
+            if (modal && modal.classList && !modal.classList.contains('hidden')) {
                 closeImagePreview(e);
             }
         }
@@ -1938,9 +1914,10 @@
     const formEl = document.querySelector('form');
     if (formEl) {
         formEl.addEventListener('submit', function(e) {
-        // Sync TinyMCE content ke textarea sebelum submit
-        if (typeof tinymce !== 'undefined' && tinymce.get('body-editor')) {
-            tinymce.get('body-editor').save();
+        // Sync Summernote content ke textarea sebelum submit
+        const bodyEditor = document.querySelector('#body-editor');
+        if (bodyEditor && typeof $ !== 'undefined' && $(bodyEditor).summernote('code')) {
+            bodyEditor.value = $(bodyEditor).summernote('code');
         }
 
         // Sync selectedImages dengan input file sebelum validasi

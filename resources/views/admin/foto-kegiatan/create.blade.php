@@ -51,20 +51,20 @@
                 </h3>
                 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="judul" class="block text-sm font-semibold text-slate-700 mb-2">
                         Judul Foto
                         <span class="text-xs font-normal text-slate-400">(bisa dikosongkan)</span>
                     </label>
-                    <input type="text" name="judul" value="{{ old('judul') }}" placeholder="Masukkan judul foto kegiatan" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <input type="text" name="judul" id="judul" value="{{ old('judul') }}" placeholder="Masukkan judul foto kegiatan" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     @error('judul') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="deskripsi" class="block text-sm font-semibold text-slate-700 mb-2">
                         Deskripsi
                         <span class="text-xs font-normal text-slate-400">(bisa dikosongkan)</span>
                     </label>
-                    <textarea name="deskripsi" rows="3" placeholder="Masukkan deskripsi foto kegiatan" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">{{ old('deskripsi') }}</textarea>
+                    <textarea name="deskripsi" id="deskripsi" rows="3" placeholder="Masukkan deskripsi foto kegiatan" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">{{ old('deskripsi') }}</textarea>
                     @error('deskripsi') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -76,15 +76,15 @@
                 </summary>
                 <div class="px-4 pb-4 pt-2 space-y-4 border-t border-gray-200">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Urutan Tampil</label>
-                        <input type="number" name="urutan" value="{{ old('urutan', 0) }}" min="0" placeholder="0" class="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                        <label for="urutan" class="block text-sm font-semibold text-slate-700 mb-2">Urutan Tampil</label>
+                        <input type="number" name="urutan" id="urutan" value="{{ old('urutan', 0) }}" min="0" placeholder="0" class="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                         <p class="text-xs text-slate-500 mt-1">Angka lebih kecil akan tampil lebih dulu</p>
                         @error('urutan') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                        <label for="is_active" class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
                             <span class="text-sm font-semibold text-slate-700">Tampilkan di Website</span>
                         </label>
                         <p class="text-xs text-slate-500 mt-1 ml-8">Jika tidak dicentang, foto tidak akan ditampilkan di website</p>

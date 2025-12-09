@@ -180,7 +180,7 @@ Route::middleware('auth')->prefix('ap')->name('admin.')->group(function () {
     Route::patch('banners/{banner}/toggle', [BannerController::class, 'toggle'])->name('banners.toggle');
     Route::resource('banners', BannerController::class)->only(['index', 'destroy']);
     Route::resource('foto-kegiatan', FotoKegiatanController::class);
-    // Editor image upload (used by CKEditor 5 SimpleUploadAdapter)
+    // Editor image upload (used by Summernote)
     Route::post('uploads/images', [ImageUploadController::class, 'store'])->name('uploads.images');
     Route::resource('prestasi-siswa', PrestasiSiswaController::class);
     Route::resource('pengumuman', PengumumanController::class);

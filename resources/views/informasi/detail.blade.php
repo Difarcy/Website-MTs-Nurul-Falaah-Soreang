@@ -150,7 +150,7 @@
                 @endif
 
                 <div class="prose max-w-none prose-slate">
-                    <div class="tinymce-content">
+                    <div class="summernote-content editor-content">
                         {!! $post->body !!}
                     </div>
                 </div>

@@ -54,7 +54,7 @@
                 </h3>
                 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    <label for="tagline" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         Tagline
                         <span class="text-xs font-normal text-slate-400">(opsional, teks kecil di atas judul)</span>
                     </label>
@@ -66,7 +66,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    <label for="judul" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         Judul Banner
                         <span class="text-xs font-normal text-slate-400">(opsional, judul utama banner)</span>
                     </label>
@@ -78,7 +78,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    <label for="deskripsi" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         Deskripsi
                         <span class="text-xs font-normal text-slate-400">(opsional, usahakan singkat ±2 baris kalimat)</span>
                     </label>
@@ -90,7 +90,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    <label for="link" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         Link
                         <span class="text-xs font-normal text-slate-400">(opsional, URL yang dibuka saat banner diklik)</span>
                     </label>
@@ -102,7 +102,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    <label for="button_text" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         Teks Tombol
                         <span class="text-xs font-normal text-slate-400">(opsional, teks pada tombol jika ada link)</span>
                     </label>
@@ -118,34 +118,34 @@
                     <h4 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Kontrol Tampilan Elemen</h4>
                     <div class="space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <label class="flex items-center gap-3 cursor-pointer">
-                                <input type="checkbox" name="show_logo" value="1" {{ old('show_logo', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                            <label for="show_logo" class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" name="show_logo" id="show_logo" value="1" {{ old('show_logo', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
                                 <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tampilkan Logo</span>
                             </label>
-                            <label class="flex items-center gap-3 cursor-pointer">
-                                <input type="checkbox" name="show_tagline" value="1" {{ old('show_tagline', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                            <label for="show_tagline" class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" name="show_tagline" id="show_tagline" value="1" {{ old('show_tagline', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
                                 <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tampilkan Tagline</span>
                             </label>
-                            <label class="flex items-center gap-3 cursor-pointer">
-                                <input type="checkbox" name="show_title" value="1" {{ old('show_title', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                            <label for="show_title" class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" name="show_title" id="show_title" value="1" {{ old('show_title', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
                                 <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tampilkan Judul</span>
                             </label>
-                            <label class="flex items-center gap-3 cursor-pointer">
-                                <input type="checkbox" name="show_description" value="1" {{ old('show_description', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                            <label for="show_description" class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" name="show_description" id="show_description" value="1" {{ old('show_description', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
                                 <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tampilkan Deskripsi</span>
                             </label>
-                            <label class="flex items-center gap-3 cursor-pointer">
-                                <input type="checkbox" name="show_button" value="1" {{ old('show_button', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                            <label for="show_button" class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" name="show_button" id="show_button" value="1" {{ old('show_button', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
                                 <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tampilkan Tombol</span>
                             </label>
-                            <label class="flex items-center gap-3 cursor-pointer">
-                                <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
+                            <label for="is_active" class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-600">
                                 <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tampilkan di Website</span>
                             </label>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Urutan Tampil</label>
-                            <input type="number" name="urutan" value="{{ old('urutan') }}" min="1" placeholder="{{ $nextUrutan }} (kosongkan untuk urutan terakhir)" class="w-full bg-white dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-lg px-4 py-2 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                            <label for="urutan" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Urutan Tampil</label>
+                            <input type="number" name="urutan" id="urutan" value="{{ old('urutan') }}" min="1" placeholder="{{ $nextUrutan }} (kosongkan untuk urutan terakhir)" class="w-full bg-white dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-lg px-4 py-2 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Kosongkan untuk menambahkan di urutan terakhir, atau isi angka untuk menentukan posisi (1 = pertama, 2 = kedua, dst)</p>
                             @error('urutan') <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ $message }}</p> @enderror
                         </div>

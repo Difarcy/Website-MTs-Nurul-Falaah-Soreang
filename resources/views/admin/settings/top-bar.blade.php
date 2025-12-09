@@ -15,12 +15,12 @@
             <form action="{{ route('admin.settings.top-bar.update') }}" method="POST" id="top-bar-form">
                 @csrf
                 @method('PUT')
-                
+
                 <div class="space-y-6">
                     <!-- Informasi Kontak -->
                     <div>
                         <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">Informasi Kontak</h2>
-                        
+
                         <div class="space-y-4">
                             <!-- Telepon -->
                             <div>
@@ -55,7 +55,7 @@
                     <div class="border-t border-gray-200 dark:border-slate-700 pt-6">
                         <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">Link Sosial Media</h2>
                         <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Masukkan URL lengkap untuk setiap platform sosial media (contoh: https://facebook.com/username)</p>
-                        
+
                         <div class="space-y-4">
                             <!-- Facebook -->
                             <div>
@@ -180,8 +180,8 @@
             return false;
         }
 
-        // Inisialisasi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
+        // Function untuk initialize top bar
+        function initializeTopBar() {
             // Inisialisasi counter untuk semua field
             initializeCounters();
 
@@ -242,10 +242,15 @@
             return snapshot;
         }
 
-        let initialSnapshot = getFormSnapshot();
+        let initialSnapshot;
 
         // Check if form has changed
         function hasFormChanged() {
+            // Safety check: ensure initialSnapshot is defined
+            if (!initialSnapshot || !initialSnapshot.inputs) {
+                return false;
+            }
+
             const currentSnapshot = getFormSnapshot();
 
             for (const key in initialSnapshot.inputs) {
@@ -268,7 +273,7 @@
             if (!saveBtn) return;
 
             const hasFormChanges = hasFormChanged();
-            
+
             if (hasFormChanges) {
                 // Ada perubahan → enable tombol
                 saveBtn.disabled = false;
@@ -313,12 +318,10 @@
             const topBarForm = document.getElementById('top-bar-form');
             if (!topBarForm) return;
 
-            // Simpan snapshot awal setelah delay untuk memastikan semua data ter-load
-            setTimeout(() => {
-                initialSnapshot = getFormSnapshot();
-                // Set tombol disabled secara default
-                updateSaveButtonState();
-            }, 500);
+            // Simpan snapshot awal segera setelah DOM ready
+            initialSnapshot = getFormSnapshot();
+            // Set tombol disabled secara default
+            updateSaveButtonState();
 
             // Listen untuk semua perubahan input
             const inputs = topBarForm.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], input[type="url"]');
@@ -351,7 +354,7 @@
                 const url = pendingNavigationUrl;
                 hideModal();
                 isSubmitting = true;
-                
+
                 if (topBarForm) {
                     if (url) {
                         const existingInput = topBarForm.querySelector('input[name="_redirect_after_save"]');

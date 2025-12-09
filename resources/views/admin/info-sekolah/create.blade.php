@@ -21,27 +21,27 @@
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="key" class="block text-sm font-semibold text-slate-700 mb-2">
                         Key (Identifikasi) <span class="text-red-600 dark:text-red-500">*</span>
                     </label>
-                    <input type="text" name="key" value="{{ old('key') }}" required placeholder="Masukkan key (contoh: nama_sekolah)" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <input type="text" name="key" id="key" value="{{ old('key') }}" required placeholder="Masukkan key (contoh: nama_sekolah)" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     <p class="text-xs text-slate-500 mt-1">Gunakan huruf kecil dan underscore, contoh: nama_sekolah</p>
                     @error('key') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="label" class="block text-sm font-semibold text-slate-700 mb-2">
                         Label <span class="text-red-600 dark:text-red-500">*</span>
                     </label>
-                    <input type="text" name="label" value="{{ old('label') }}" required placeholder="Masukkan label" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <input type="text" name="label" id="label" value="{{ old('label') }}" required placeholder="Masukkan label" class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     @error('label') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="type" class="block text-sm font-semibold text-slate-700 mb-2">
                         Tipe *
                     </label>
-                    <select name="type" required class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <select name="type" id="type" required class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">
                         <option value="text" {{ old('type') == 'text' ? 'selected' : '' }}>Text (Satu Baris)</option>
                         <option value="textarea" {{ old('type') == 'textarea' ? 'selected' : '' }}>Textarea (Banyak Baris)</option>
                         <option value="image" {{ old('type') == 'image' ? 'selected' : '' }}>Image (Gambar)</option>
@@ -50,10 +50,10 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    <label for="value" class="block text-sm font-semibold text-slate-700 mb-2">
                         Value (Isi) *
                     </label>
-                    <textarea name="value" rows="4" required placeholder="Masukkan isi informasi..." class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">{{ old('value') }}</textarea>
+                    <textarea name="value" id="value" rows="4" required placeholder="Masukkan isi informasi..." class="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-green-600 focus:border-green-600">{{ old('value') }}</textarea>
                     @error('value') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -64,8 +64,8 @@
                 </summary>
                 <div class="px-4 pb-4 pt-2 space-y-4 border-t border-gray-200">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Urutan Tampil</label>
-                        <input type="number" name="urutan" value="{{ old('urutan', 0) }}" min="0" placeholder="0" class="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                        <label for="urutan" class="block text-sm font-semibold text-slate-700 mb-2">Urutan Tampil</label>
+                        <input type="number" name="urutan" id="urutan" value="{{ old('urutan', 0) }}" min="0" placeholder="0" class="w-full border-2 border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                         <p class="text-xs text-slate-500 mt-1">Angka lebih kecil akan tampil lebih dulu</p>
                         @error('urutan') <p class="text-sm text-red-600 mt-1">{{ $message }}</p> @enderror
                     </div>

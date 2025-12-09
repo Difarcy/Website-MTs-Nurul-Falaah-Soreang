@@ -24,12 +24,12 @@
                 <!-- Pencarian -->
                 <form method="GET" action="{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index') }}" id="search-form" class="flex-1 max-w-md">
                     <div class="relative">
-                        <input 
-                            type="text" 
-                            name="q" 
+                        <input
+                            type="text"
+                            name="q"
                             id="search-input"
-                            value="{{ request('q') }}" 
-                            placeholder="Cari judul atau ringkasan..." 
+                            value="{{ request('q') }}"
+                            placeholder="Cari judul atau ringkasan..."
                             class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg px-4 py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-green-600 focus:border-green-600"
                             onkeypress="if(event.key === 'Enter') { event.preventDefault(); submitSearch(); }"
                             oninput="autoSearch()"
@@ -40,17 +40,17 @@
                             </svg>
                         </div>
                         @if(request('sort'))
-                            <input type="hidden" name="sort" value="{{ request('sort') }}">
+                            <input type="hidden" name="sort" id="sort" value="{{ request('sort') }}">
                         @endif
                         @if(request('view'))
-                            <input type="hidden" name="view" value="{{ request('view') }}">
+                            <input type="hidden" name="view" id="view" value="{{ request('view') }}">
                         @endif
                         @if(request('status'))
-                            <input type="hidden" name="status" value="{{ request('status') }}">
+                            <input type="hidden" name="status" id="status" value="{{ request('status') }}">
                         @endif
                     </div>
                 </form>
-                
+
                 <!-- Filter Status -->
                 <div class="relative">
                     <select id="filter-status" onchange="applyFilter()" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-lg px-4 py-2 pr-8 text-sm font-semibold focus:ring-2 focus:ring-green-600 focus:border-green-600 appearance-none cursor-pointer min-w-[160px]">
@@ -106,19 +106,19 @@
             // Auto-search dengan debounce dan AJAX (tidak reload halaman)
             let searchTimeout = null;
             let isSubmitting = false;
-            
+
             function autoSearch() {
                 // Clear timeout sebelumnya
                 if (searchTimeout) {
                     clearTimeout(searchTimeout);
                 }
-                
+
                 // Set timeout baru (500ms setelah user berhenti mengetik)
                 searchTimeout = setTimeout(function() {
                     submitSearchAjax();
                 }, 500);
             }
-            
+
             function submitSearch() {
                 // Submit dengan form (reload halaman) - untuk Enter key
                 const form = document.getElementById('search-form');
@@ -127,31 +127,31 @@
                     form.submit();
                 }
             }
-            
+
             function submitSearchAjax() {
                 // Submit dengan AJAX (tidak reload halaman) - untuk auto-search
                 const form = document.getElementById('search-form');
                 const searchInput = document.getElementById('search-input');
                 if (!form || !searchInput || isSubmitting) return;
-                
+
                 isSubmitting = true;
-                
+
                 // Build URL dengan semua parameter
                 const formData = new FormData(form);
                 const params = new URLSearchParams();
-                
+
                 // Add all form data
                 for (const [key, value] of formData.entries()) {
                     if (value) {
                         params.set(key, value);
                     }
                 }
-                
+
                 // Add current filter values
                 const filterType = document.getElementById('filter-type');
                 const filterStatus = document.getElementById('filter-status');
                 const sortSelect = document.getElementById('sort-select');
-                
+
                 if (filterType && filterType.value) {
                     params.set('type', filterType.value);
                 }
@@ -161,15 +161,15 @@
                 if (sortSelect && sortSelect.value) {
                     params.set('sort', sortSelect.value);
                 }
-                
+
                 // Preserve view
                 @if(request('view'))
                     params.set('view', '{{ request('view') }}');
                 @endif
-                
+
                 // Fetch dengan AJAX
                 const url = '{{ route(($type ?? 'berita') === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index') }}?' + params.toString();
-                
+
                 fetch(url, {
                     method: 'GET',
                     headers: {
@@ -182,20 +182,20 @@
                     // Parse HTML response
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
-                    
+
                     // Update content area (posts container)
                     const newContent = doc.getElementById('posts-container');
                     const currentContent = document.getElementById('posts-container');
-                    
+
                     if (newContent && currentContent) {
                         currentContent.innerHTML = newContent.innerHTML;
                     }
-                    
+
                     // Update URL tanpa reload
                     window.history.pushState({}, '', url);
-                    
+
                     isSubmitting = false;
-                    
+
                     // Keep focus on input dan set cursor ke akhir
                     setTimeout(function() {
                         searchInput.focus();
@@ -210,17 +210,17 @@
                     submitSearch();
                 });
             }
-            
+
             function applyFilter() {
                 const statusValue = document.getElementById('filter-status').value;
                 const url = new URL(window.location.href);
-                
+
                 if (statusValue) {
                     url.searchParams.set('status', statusValue);
                 } else {
                     url.searchParams.delete('status');
                 }
-                
+
                 // Preserve other parameters
                 const searchInput = document.getElementById('search-input');
                 if (searchInput && searchInput.value) {
@@ -234,7 +234,7 @@
                 @if(request('view'))
                     url.searchParams.set('view', '{{ request('view') }}');
                 @endif
-                
+
                 window.location.href = url.toString();
             }
 
@@ -271,6 +271,9 @@
                 @endif
                 window.location.href = url.toString();
             }
+
+            // Make setView function globally available for SPA navigation
+            window.setView = setView;
         </script>
 
         <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 overflow-hidden" id="posts-container" style="border-radius: 0;">
@@ -517,11 +520,11 @@
                     e.preventDefault();
                     deleteForm = this.closest('.delete-form');
                     const title = this.getAttribute('data-title');
-                    
+
                     if (deleteTitleElement) {
                         deleteTitleElement.textContent = title;
                     }
-                    
+
                     if (deleteModal) {
                         deleteModal.classList.remove('hidden');
                     }

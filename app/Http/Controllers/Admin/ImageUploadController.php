@@ -9,11 +9,11 @@ use Illuminate\Support\Str;
 class ImageUploadController extends Controller
 {
     /**
-     * Handle image upload from editor (CKEditor 5 Simple Upload Adapter)
+     * Handle image upload from editor (Summernote)
      */
     public function store(Request $request)
     {
-        // Accept file under 'upload' (CKEditor default) or 'file'
+        // Accept file under 'upload' (Summernote default) or 'file'
         $file = $request->file('upload') ?? $request->file('file');
 
         if (!$file || !$file->isValid()) {
@@ -37,7 +37,7 @@ class ImageUploadController extends Controller
             return response()->json(['error' => 'Failed to store file'], 500);
         }
 
-        // Return URL expected by CKEditor SimpleUploadAdapter
+        // Return URL expected by Summernote
         $url = asset('storage/' . $path);
 
         return response()->json(['url' => $url]);

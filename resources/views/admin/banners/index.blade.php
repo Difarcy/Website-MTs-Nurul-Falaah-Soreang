@@ -423,48 +423,8 @@
             }, 100);
         }
 
-        function openImagePreview(imageSrc, imageAlt) {
-            const modal = document.getElementById('imagePreviewModal');
-            const img = document.getElementById('previewImage');
-            img.src = imageSrc;
-            img.alt = imageAlt;
-
-            // Jika banner promosi, tampilkan dengan ukuran yang sesuai (600px tinggi)
-            if (imageAlt && imageAlt.toLowerCase().includes('promosi')) {
-                img.className = 'pointer-events-none';
-                img.style.width = '1920px';
-                img.style.height = '600px';
-                img.style.maxWidth = '1920px';
-                img.style.maxHeight = '600px';
-                img.style.objectFit = 'cover';
-            } else {
-                // Untuk banner biasa, tampilkan full size
-                img.className = 'max-w-full max-h-full object-contain pointer-events-none';
-                img.style.width = '';
-                img.style.height = '';
-                img.style.maxWidth = '';
-                img.style.maxHeight = '';
-                img.style.objectFit = '';
-            }
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeImagePreview(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            const modal = document.getElementById('imagePreviewModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            }
-            return false;
-        }
+        // Fungsi openImagePreview dan closeImagePreview sudah didefinisikan secara global di layouts/admin.blade.php
+        // Tidak perlu didefinisikan ulang di sini
 
         // Fungsi untuk toggle input Teks Tombol berdasarkan input Link
         function toggleButtonTextInput() {
@@ -569,7 +529,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 const modal = document.getElementById('imagePreviewModal');
-                if (modal && !modal.classList.contains('hidden')) {
+                if (modal && modal.classList && !modal.classList.contains('hidden')) {
                     closeImagePreview(e);
                 }
             }

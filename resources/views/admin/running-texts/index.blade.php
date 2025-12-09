@@ -322,7 +322,7 @@
 
             // Check edit form
             const editModal = document.getElementById('edit-modal');
-            if (editForm && editModal && !editModal.classList.contains('hidden')) {
+            if (editForm && editModal && editModal.classList && !editModal.classList.contains('hidden')) {
                 const editTextInput = editForm.querySelector('textarea[name="text"]');
                 if (editTextInput) {
                     snapshot.editText = editTextInput.value.trim();

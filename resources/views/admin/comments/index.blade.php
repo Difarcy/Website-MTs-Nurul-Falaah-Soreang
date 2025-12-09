@@ -59,10 +59,10 @@
                             </svg>
                         </div>
                         @if(request('status'))
-                            <input type="hidden" name="status" value="{{ request('status') }}">
+                            <input type="hidden" name="status" id="status" value="{{ request('status') }}">
                         @endif
                         @if(request('read'))
-                            <input type="hidden" name="read" value="{{ request('read') }}">
+                            <input type="hidden" name="read" id="read" value="{{ request('read') }}">
                         @endif
                     </div>
                 </form>

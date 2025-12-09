@@ -129,12 +129,12 @@
                 <!-- Banner Promosi -->
                 <div class="mt-8">
                     @if(isset($promosiBannerPath) && $promosiBannerPath)
-                        <div class="bg-gray-100 border border-gray-300 overflow-hidden hover:shadow-lg transition-all duration-300" style="aspect-ratio: 1920/600;">
-                            <div class="w-full h-full pointer-events-none">
+                        <div class="bg-gray-100 border border-gray-300 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer" style="aspect-ratio: 1920/600;" onclick="openPromosiBannerModal('{{ asset('storage/' . $promosiBannerPath) }}')">
+                            <div class="w-full h-full">
                                 <img
                                     src="{{ asset('storage/' . $promosiBannerPath) }}"
                                     alt="Banner Promosi"
-                                    class="w-full h-full object-cover"
+                                    class="w-full h-full object-cover hover:opacity-90 transition-opacity"
                                     style="object-fit: cover;"
                                 >
                             </div>
@@ -348,7 +348,8 @@
         });
     }
 
-    // Fungsi khusus untuk zoom banner promosi dengan ukuran yang sama seperti di admin panel
+    // Fungsi khusus untuk zoom banner promosi dengan fitur zoom in/out
+    let isZoomed = false;
     function openPromosiBannerModal(imageSrc) {
         let modal = document.getElementById('promosiBannerModal');
         if (!modal) {
@@ -358,7 +359,7 @@
             modal.className = 'fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md';
             modal.innerHTML = `
                 <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
-                    <img id="promosiModalImage" src="" alt="Banner Promosi" class="w-full object-cover pointer-events-none" style="height: 600px; max-height: 600px; object-fit: cover;">
+                    <img id="promosiModalImage" src="" alt="Banner Promosi" class="max-w-full max-h-[90vh] object-contain cursor-zoom-in transition-transform duration-300" style="transform: scale(1);">
                     <button type="button" class="close-promosi-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -370,12 +371,30 @@
 
             // Setup event listeners
             const closeBtn = modal.querySelector('.close-promosi-modal-btn');
+            const img = modal.querySelector('#promosiModalImage');
+            
             closeBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 closePromosiBannerModal(e);
                 return false;
             }, true);
+
+            // Zoom on click
+            img.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!isZoomed) {
+                    img.style.transform = 'scale(1.5)';
+                    img.classList.remove('cursor-zoom-in');
+                    img.classList.add('cursor-zoom-out');
+                    isZoomed = true;
+                } else {
+                    img.style.transform = 'scale(1)';
+                    img.classList.remove('cursor-zoom-out');
+                    img.classList.add('cursor-zoom-in');
+                    isZoomed = false;
+                }
+            });
 
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
@@ -389,6 +408,10 @@
 
         const img = document.getElementById('promosiModalImage');
         img.src = imageSrc;
+        img.style.transform = 'scale(1)';
+        img.classList.remove('cursor-zoom-out');
+        img.classList.add('cursor-zoom-in');
+        isZoomed = false;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         document.body.style.overflow = 'hidden';
@@ -401,6 +424,13 @@
         }
         const modal = document.getElementById('promosiBannerModal');
         if (modal) {
+            const img = document.getElementById('promosiModalImage');
+            if (img) {
+                img.style.transform = 'scale(1)';
+                img.classList.remove('cursor-zoom-out');
+                img.classList.add('cursor-zoom-in');
+                isZoomed = false;
+            }
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             document.body.style.overflow = '';
