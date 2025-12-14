@@ -33,26 +33,35 @@
         @php
             $monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
             $fallbackImages = ['img/banner1.jpg', 'img/banner2.jpg', 'img/banner3.jpg'];
+
+            // Helper function untuk formatting tanggal
+            function formatDate($item, $monthNames) {
+                $dateObj = $item->published_at ?? $item->created_at;
+                $month = $monthNames[$dateObj->month - 1];
+                return [
+                    'date' => $dateObj->day . ' ' . $month . ', ' . $dateObj->year,
+                    'time' => $dateObj->format('H:i')
+                ];
+            }
         @endphp
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
             <div class="lg:col-span-2">
                 @if($posts->count() > 0)
                     <div class="space-y-6">
-                        @foreach($posts as $post)
+                        @forelse($posts as $post)
                             @php
                                 $image = $post->thumbnail_path
                                     ? asset('storage/' . $post->thumbnail_path)
-                                    : asset($fallbackImages[array_rand($fallbackImages)]);
-                                $dateObj = $post->published_at ?? $post->created_at;
-                                $month = $monthNames[$dateObj->month - 1];
-                                $date = $dateObj->day . ' ' . $month . ', ' . $dateObj->year;
-                                $time = $dateObj->format('H:i');
+                                    : asset($fallbackImages[$loop->index % count($fallbackImages)]);
+                                $formattedDate = formatDate($post, $monthNames);
                             @endphp
                             <article class="bg-white border border-gray-200 overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
                                 <div class="flex flex-col sm:flex-row">
                                     <div class="w-full sm:w-[38%] shrink-0">
-                                        <img src="{{ $image }}" alt="{{ $post->title }}" class="w-full h-14 sm:h-16 object-cover">
+                                        <div class="w-full aspect-video bg-gray-100 overflow-hidden">
+                                            <img src="{{ $image }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+                                        </div>
                                     </div>
                                     <div class="w-full sm:w-[62%] p-2.5 sm:p-3 flex flex-col justify-between">
                                         <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">
@@ -67,7 +76,7 @@
                                         @endif
                                         <div class="flex items-center justify-between">
                                             <p class="text-xs text-gray-500">
-                                                {{ $date }} | {{ $time }}
+                                                {{ $formattedDate['date'] }} | {{ $formattedDate['time'] }}
                                             </p>
                                             <a href="{{ route('informasi.show', ['type' => $post->type, 'slug' => $post->slug]) }}" class="inline-flex items-center gap-1 text-green-700 hover:text-green-800 font-semibold text-xs transition-colors duration-300 group">
                                                 Selengkapnya
@@ -106,16 +115,13 @@
                             <div class="space-y-4">
                                 @foreach($sidebarNews as $news)
                                     @php
-                                        $dateObj = $news->published_at ?? $news->created_at;
-                                        $month = $monthNames[$dateObj->month - 1];
-                                        $date = $dateObj->day . ' ' . $month . ', ' . $dateObj->year;
-                                        $time = $dateObj->format('H:i');
+                                        $formattedDate = formatDate($news, $monthNames);
                                     @endphp
                                     <a href="{{ route('informasi.show', ['type' => $news->type, 'slug' => $news->slug]) }}" class="block group">
                                         <h4 class="text-sm font-semibold text-gray-900 group-hover:text-green-700 transition-colors line-clamp-2 mb-1">
                                             {{ $news->title }}
                                         </h4>
-                                        <p class="text-xs text-gray-500">{{ $date }} | {{ $time }}</p>
+                                        <p class="text-xs text-gray-500">{{ $formattedDate['date'] }} | {{ $formattedDate['time'] }}</p>
                                     </a>
                                 @endforeach
                             </div>
@@ -128,16 +134,13 @@
                             <div class="space-y-4">
                                 @foreach($sidebarArticles as $article)
                                     @php
-                                        $dateObj = $article->published_at ?? $article->created_at;
-                                        $month = $monthNames[$dateObj->month - 1];
-                                        $date = $dateObj->day . ' ' . $month . ', ' . $dateObj->year;
-                                        $time = $dateObj->format('H:i');
+                                        $formattedDate = formatDate($article, $monthNames);
                                     @endphp
                                     <a href="{{ route('informasi.show', ['type' => $article->type, 'slug' => $article->slug]) }}" class="block group">
                                         <h4 class="text-sm font-semibold text-gray-900 group-hover:text-green-700 transition-colors line-clamp-2 mb-1">
                                             {{ $article->title }}
                                         </h4>
-                                        <p class="text-xs text-gray-500">{{ $date }} | {{ $time }}</p>
+                                        <p class="text-xs text-gray-500">{{ $formattedDate['date'] }} | {{ $formattedDate['time'] }}</p>
                                     </a>
                                 @endforeach
                             </div>
@@ -169,79 +172,4 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <!-- Image Modal untuk Thumbnail -->
-    <div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md">
-        <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
-            <img id="modalImage" src="" alt="Zoom" class="max-w-full max-h-full object-contain pointer-events-none">
-            <button type="button" class="close-image-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <script>
-        function openImageModal(imageSrc) {
-            const modal = document.getElementById('imageModal');
-            const img = document.getElementById('modalImage');
-            img.src = imageSrc;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeImageModal(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            const modal = document.getElementById('imageModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            }
-            return false;
-        }
-
-        // Setup event listeners untuk modal
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('imageModal');
-            const closeBtn = modal?.querySelector('.close-image-modal-btn');
-
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeImageModal(e);
-                    return false;
-                }, true);
-            }
-
-            // Background click handler
-            if (modal) {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        closeImageModal(e);
-                        return false;
-                    }
-                }, true);
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('imageModal');
-                if (modal && !modal.classList.contains('hidden')) {
-                    closeImageModal(e);
-                }
-            }
-        });
-    </script>
-@endpush
 

@@ -27,7 +27,7 @@ class BannerController extends Controller
             ]);
         }
 
-        return view('admin.banners.index', compact('banners', 'settings'));
+        return view('admin.banners.page', compact('banners', 'settings'));
     }
 
     /**
@@ -172,7 +172,7 @@ class BannerController extends Controller
         ]);
 
         $status = $banner->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        
+
         return redirect()
             ->route('admin.banners.index')
             ->with('status', "Banner berhasil {$status}.");
@@ -181,7 +181,7 @@ class BannerController extends Controller
     public function destroy(Banner $banner): RedirectResponse
     {
         $deletedUrutan = $banner->urutan;
-        
+
         if ($banner->gambar) {
             Storage::disk('public')->delete($banner->gambar);
         }
@@ -244,7 +244,7 @@ class BannerController extends Controller
             }
             $settings->promosi_banner_path = $promosiPath;
             $settings->save();
-            
+
             // Log untuk debugging
             \Log::info('Banner promosi uploaded: ' . $promosiPath);
 

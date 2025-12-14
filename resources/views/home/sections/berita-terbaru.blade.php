@@ -129,7 +129,7 @@
                 <!-- Banner Promosi -->
                 <div class="mt-8">
                     @if(isset($promosiBannerPath) && $promosiBannerPath)
-                        <div class="bg-gray-100 border border-gray-300 overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer" style="aspect-ratio: 1920/600;" onclick="openPromosiBannerModal('{{ asset('storage/' . $promosiBannerPath) }}')">
+                        <div class="bg-gray-100 border border-gray-300 overflow-hidden hover:shadow-lg transition-all duration-300" style="aspect-ratio: 1920/600;">
                             <div class="w-full h-full">
                                 <img
                                     src="{{ asset('storage/' . $promosiBannerPath) }}"
@@ -168,11 +168,13 @@
                         <article class="bg-white border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300">
                             <div class="flex flex-col sm:flex-row">
                                 <div class="w-full sm:w-[38%] shrink-0">
-                                    <img
-                                        src="{{ $image }}"
-                                        alt="{{ $item->title }}"
-                                        class="w-full h-14 sm:h-16 object-cover"
-                                    >
+                                    <div class="w-full aspect-video bg-gray-100 overflow-hidden">
+                                        <img
+                                            src="{{ $image }}"
+                                            alt="{{ $item->title }}"
+                                            class="w-full h-full object-contain"
+                                        >
+                                    </div>
                                 </div>
                                 <div class="w-full sm:w-[62%] p-2.5 sm:p-3 flex flex-col justify-between">
                                     <div>
@@ -273,269 +275,133 @@
 
 @push('scripts')
 <script>
-    // Fungsi untuk open image modal (jika belum ada di layout)
-    if (typeof openImageModal === 'undefined') {
-        function openImageModal(imageSrc) {
-            let modal = document.getElementById('imageModal');
-            if (!modal) {
-                // Create modal if doesn't exist
-                modal = document.createElement('div');
-                modal.id = 'imageModal';
-                modal.className = 'fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md';
-                modal.innerHTML = `
-                    <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
-                        <img id="modalImage" src="" alt="Zoom" class="max-w-full max-h-full object-contain pointer-events-none">
-                        <button type="button" class="close-image-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-                `;
-                document.body.appendChild(modal);
-
-                // Setup event listeners
-                const closeBtn = modal.querySelector('.close-image-modal-btn');
-                closeBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeImageModal(e);
-                    return false;
-                }, true);
-
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        closeImageModal(e);
-                        return false;
-                    }
-                }, true);
-            }
-
-            const img = document.getElementById('modalImage');
-            img.src = imageSrc;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeImageModal(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            const modal = document.getElementById('imageModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            }
-            return false;
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('imageModal');
-                if (modal && !modal.classList.contains('hidden')) {
-                    closeImageModal(e);
-                }
-                const promosiModal = document.getElementById('promosiBannerModal');
-                if (promosiModal && !promosiModal.classList.contains('hidden')) {
-                    closePromosiBannerModal(e);
-                }
-            }
-        });
-    }
-
-    // Fungsi khusus untuk zoom banner promosi dengan fitur zoom in/out
-    let isZoomed = false;
-    function openPromosiBannerModal(imageSrc) {
-        let modal = document.getElementById('promosiBannerModal');
-        if (!modal) {
-            // Create modal if doesn't exist
-            modal = document.createElement('div');
-            modal.id = 'promosiBannerModal';
-            modal.className = 'fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md';
-            modal.innerHTML = `
-                <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
-                    <img id="promosiModalImage" src="" alt="Banner Promosi" class="max-w-full max-h-[90vh] object-contain cursor-zoom-in transition-transform duration-300" style="transform: scale(1);">
-                    <button type="button" class="close-promosi-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            // Setup event listeners
-            const closeBtn = modal.querySelector('.close-promosi-modal-btn');
-            const img = modal.querySelector('#promosiModalImage');
-            
-            closeBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                closePromosiBannerModal(e);
-                return false;
-            }, true);
-
-            // Zoom on click
-            img.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (!isZoomed) {
-                    img.style.transform = 'scale(1.5)';
-                    img.classList.remove('cursor-zoom-in');
-                    img.classList.add('cursor-zoom-out');
-                    isZoomed = true;
-                } else {
-                    img.style.transform = 'scale(1)';
-                    img.classList.remove('cursor-zoom-out');
-                    img.classList.add('cursor-zoom-in');
-                    isZoomed = false;
-                }
-            });
-
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closePromosiBannerModal(e);
-                    return false;
-                }
-            }, true);
-        }
-
-        const img = document.getElementById('promosiModalImage');
-        img.src = imageSrc;
-        img.style.transform = 'scale(1)';
-        img.classList.remove('cursor-zoom-out');
-        img.classList.add('cursor-zoom-in');
-        isZoomed = false;
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closePromosiBannerModal(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        const modal = document.getElementById('promosiBannerModal');
-        if (modal) {
-            const img = document.getElementById('promosiModalImage');
-            if (img) {
-                img.style.transform = 'scale(1)';
-                img.classList.remove('cursor-zoom-out');
-                img.classList.add('cursor-zoom-in');
-                isZoomed = false;
-            }
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-        return false;
-    }
-
     // Highlight News Slider
-    let highlightCurrentSlide = 0;
-    let highlightSlideInterval = null;
-    const highlightSlides = document.getElementById('highlight-slides');
-    const highlightIndicators = document.getElementById('highlight-indicators');
-    const highlightPrevBtn = document.getElementById('highlight-prev');
-    const highlightNextBtn = document.getElementById('highlight-next');
+    (function() {
+        function initHighlightSlider() {
+            let highlightCurrentSlide = 0;
+            let highlightSlideInterval = null;
+            const highlightSlides = document.getElementById('highlight-slides');
+            const highlightIndicators = document.getElementById('highlight-indicators');
+            const highlightPrevBtn = document.getElementById('highlight-prev');
+            const highlightNextBtn = document.getElementById('highlight-next');
 
-    if (highlightSlides && highlightIndicators) {
-        const totalSlides = {{ $highlightNews ? $highlightNews->count() : 0 }};
+            if (!highlightSlides || !highlightIndicators) {
+                return;
+            }
 
-        function updateHighlightSlide() {
-            if (!highlightSlides || totalSlides === 0) return;
+            const totalSlides = {{ $highlightNews ? $highlightNews->count() : 0 }};
 
-            // Update slide position
-            highlightSlides.style.transform = `translateX(-${highlightCurrentSlide * 100}%)`;
+            function updateHighlightSlide() {
+                if (!highlightSlides || totalSlides === 0) return;
 
-            // Update indicators
+                // Update slide position
+                highlightSlides.style.transform = `translateX(-${highlightCurrentSlide * 100}%)`;
+
+                // Update indicators
+                const indicatorButtons = highlightIndicators.querySelectorAll('button');
+                indicatorButtons.forEach((btn, index) => {
+                    btn.classList.toggle('bg-white', index === highlightCurrentSlide);
+                    btn.classList.toggle('bg-white/50', index !== highlightCurrentSlide);
+                });
+            }
+
+            function nextHighlightSlide() {
+                highlightCurrentSlide = (highlightCurrentSlide + 1) % totalSlides;
+                updateHighlightSlide();
+            }
+
+            function prevHighlightSlide() {
+                highlightCurrentSlide = (highlightCurrentSlide - 1 + totalSlides) % totalSlides;
+                updateHighlightSlide();
+            }
+
+            function goToHighlightSlide(slideIndex) {
+                highlightCurrentSlide = slideIndex;
+                updateHighlightSlide();
+            }
+
+            // Event listeners
+            if (highlightNextBtn) {
+                highlightNextBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    nextHighlightSlide();
+                    resetHighlightAutoSlide();
+                });
+            }
+
+            if (highlightPrevBtn) {
+                highlightPrevBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    prevHighlightSlide();
+                    resetHighlightAutoSlide();
+                });
+            }
+
+            // Indicator click handlers
             const indicatorButtons = highlightIndicators.querySelectorAll('button');
             indicatorButtons.forEach((btn, index) => {
-                btn.classList.toggle('bg-white', index === highlightCurrentSlide);
-                btn.classList.toggle('bg-white/50', index !== highlightCurrentSlide);
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    goToHighlightSlide(index);
+                    resetHighlightAutoSlide();
+                });
             });
-        }
 
-        function nextHighlightSlide() {
-            highlightCurrentSlide = (highlightCurrentSlide + 1) % totalSlides;
+            // Auto slide functionality
+            function startHighlightAutoSlide() {
+                if (highlightSlideInterval) clearInterval(highlightSlideInterval);
+                if (!document.hidden) {
+                    highlightSlideInterval = setInterval(nextHighlightSlide, 3000); // Change slide every 3 seconds
+                }
+            }
+
+            function stopHighlightAutoSlide() {
+                if (highlightSlideInterval) {
+                    clearInterval(highlightSlideInterval);
+                    highlightSlideInterval = null;
+                }
+            }
+
+            function resetHighlightAutoSlide() {
+                stopHighlightAutoSlide();
+                startHighlightAutoSlide();
+            }
+
+            // Pause on hover
+            const highlightSlider = document.getElementById('highlight-slider');
+            if (highlightSlider) {
+                highlightSlider.addEventListener('mouseenter', stopHighlightAutoSlide);
+                highlightSlider.addEventListener('mouseleave', startHighlightAutoSlide);
+            }
+
+            // Cleanup saat halaman tidak aktif
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    stopHighlightAutoSlide();
+                } else {
+                    if (totalSlides > 1 && !highlightSlideInterval) {
+                        startHighlightAutoSlide();
+                    }
+                }
+            });
+
+            window.addEventListener('pagehide', function() {
+                stopHighlightAutoSlide();
+            });
+
+            // Initialize
             updateHighlightSlide();
-        }
-
-        function prevHighlightSlide() {
-            highlightCurrentSlide = (highlightCurrentSlide - 1 + totalSlides) % totalSlides;
-            updateHighlightSlide();
-        }
-
-        function goToHighlightSlide(slideIndex) {
-            highlightCurrentSlide = slideIndex;
-            updateHighlightSlide();
-        }
-
-        // Event listeners
-        if (highlightNextBtn) {
-            highlightNextBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                nextHighlightSlide();
-                resetHighlightAutoSlide();
-            });
-        }
-
-        if (highlightPrevBtn) {
-            highlightPrevBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                prevHighlightSlide();
-                resetHighlightAutoSlide();
-            });
-        }
-
-        // Indicator click handlers
-        const indicatorButtons = highlightIndicators.querySelectorAll('button');
-        indicatorButtons.forEach((btn, index) => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                goToHighlightSlide(index);
-                resetHighlightAutoSlide();
-            });
-        });
-
-        // Auto slide functionality
-        function startHighlightAutoSlide() {
-            if (highlightSlideInterval) clearInterval(highlightSlideInterval);
-            highlightSlideInterval = setInterval(nextHighlightSlide, 3000); // Change slide every 3 seconds
-        }
-
-        function stopHighlightAutoSlide() {
-            if (highlightSlideInterval) {
-                clearInterval(highlightSlideInterval);
-                highlightSlideInterval = null;
+            if (totalSlides > 1) {
+                startHighlightAutoSlide();
             }
         }
 
-        function resetHighlightAutoSlide() {
-            stopHighlightAutoSlide();
-            startHighlightAutoSlide();
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initHighlightSlider);
+        } else {
+            initHighlightSlider();
         }
-
-        // Pause on hover
-        const highlightSlider = document.getElementById('highlight-slider');
-        if (highlightSlider) {
-            highlightSlider.addEventListener('mouseenter', stopHighlightAutoSlide);
-            highlightSlider.addEventListener('mouseleave', startHighlightAutoSlide);
-        }
-
-        // Initialize
-        updateHighlightSlide();
-        if (totalSlides > 1) {
-            startHighlightAutoSlide();
-        }
-    }
+    })();
 </script>
 @endpush
 

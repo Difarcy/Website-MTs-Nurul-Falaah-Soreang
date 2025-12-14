@@ -1,18 +1,7 @@
-@extends('layouts.admin')
+<div class="space-y-6">
 
-@section('title', 'Banner')
-
-@section('content')
-    <div class="space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Banner</h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage banner images and information displayed on all slides</p>
-            </div>
-        </div>
-
-        <!-- Card Gabungan: Gambar Banner & Pengaturan Informasi -->
-        <div class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-6" style="border-radius: 0;">
+        <!-- Pengaturan Banner -->
+        <div class="space-y-6">
             <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Gambar Banner</h2>
             <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Upload gambar untuk slide banner. Setiap gambar akan menjadi slide terpisah.</p>
 
@@ -44,7 +33,7 @@
                     <div id="preview-container" class="hidden">
                         <div class="relative border border-gray-200 dark:border-slate-700 overflow-hidden group cursor-pointer hover:opacity-90 transition-opacity" style="border-radius: 0;" onclick="if(!event.target.closest('button')) { const img = document.getElementById('preview-img'); if(img && img.src) openImagePreview(img.src, 'Preview Banner'); }">
                             <img id="preview-img" src="" alt="Preview" class="w-full h-auto max-h-[400px] object-contain pointer-events-none">
-                            <button type="button" onclick="event.stopPropagation(); resetImage();" class="absolute top-0 -right-1 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            <button type="button" onclick="event.stopPropagation(); resetImage();" class="absolute top-2 right-2 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
@@ -141,7 +130,7 @@
                         <div id="promosi-preview-container" class="hidden">
                             <div class="relative border border-gray-200 dark:border-slate-700 overflow-hidden group" style="border-radius: 0; aspect-ratio: 1920/600;">
                                 <img id="promosi-preview-img" src="" alt="Preview" class="w-full h-full object-cover">
-                                <button type="button" onclick="event.stopPropagation(); resetPromosiImage();" class="absolute top-0 -right-1 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                <button type="button" onclick="event.stopPropagation(); resetPromosiImage();" class="absolute top-2 right-2 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
@@ -301,13 +290,13 @@
     </div>
 
     <!-- Modal Konfirmasi Perubahan -->
-    <div id="confirm-modal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center">
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 items-center justify-center">
         <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full mx-4">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Ada Perubahan yang Belum Disimpan</h3>
                 <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">Anda memiliki perubahan yang belum disimpan. Apakah Anda ingin menyimpan perubahan ini?</p>
                 <div class="flex items-center justify-end gap-3">
-                    <div id="modal-sidebar-buttons" class="hidden flex items-center justify-end gap-3">
+                    <div id="modal-sidebar-buttons" class="hidden items-center justify-end gap-3">
                         <button type="button" id="modal-cancel-btn" class="px-6 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[100px]">Tutup</button>
                         <button type="button" id="modal-discard-btn" class="px-6 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[100px]">Batal</button>
                         <button type="button" id="modal-save-btn" class="px-6 py-2 text-sm font-semibold text-white bg-green-700 rounded-lg hover:bg-green-800 transition-colors min-w-[100px]">Simpan</button>
@@ -318,7 +307,7 @@
     </div>
 
     <!-- Modal Konfirmasi Hapus Banner -->
-    <div id="deleteBannerModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center">
+    <div id="deleteBannerModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 items-center justify-center">
         <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full mx-4" style="border-radius: 0;">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Konfirmasi Hapus Banner</h3>
@@ -340,7 +329,7 @@
     </div>
 
     <!-- Modal Konfirmasi Hapus Banner Promosi -->
-    <div id="deletePromosiModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 flex items-center justify-center">
+    <div id="deletePromosiModal" class="hidden fixed inset-0 bg-black/30 dark:bg-black/50 z-50 items-center justify-center">
         <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full mx-4" style="border-radius: 0;">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Konfirmasi Hapus Banner Promosi</h3>
@@ -358,18 +347,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal Preview Gambar -->
-    <div id="imagePreviewModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md">
-        <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
-            <img id="previewImage" src="" alt="Preview" class="max-w-full max-h-full object-contain pointer-events-none">
-            <button type="button" class="close-banner-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
         </div>
     </div>
 
@@ -498,40 +475,6 @@
                         hideDeletePromosiModal();
                     }
                 });
-            }
-
-            const modal = document.getElementById('imagePreviewModal');
-            const closeBtn = modal?.querySelector('.close-banner-modal-btn');
-
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeImagePreview(e);
-                    return false;
-                }, true);
-            }
-
-            // Background click handler
-            if (modal) {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        closeImagePreview(e);
-                        return false;
-                    }
-                }, true);
-            }
-        });
-
-        // Tutup modal dengan tombol ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('imagePreviewModal');
-                if (modal && modal.classList && !modal.classList.contains('hidden')) {
-                    closeImagePreview(e);
-                }
             }
         });
 
@@ -870,14 +813,30 @@
 
         function showModal(url = null) {
             pendingNavigationUrl = url;
-            if (url) {
-                modalSidebarButtons.classList.remove('hidden');
+            if (modalSidebarButtons) {
+                if (url) {
+                    modalSidebarButtons.classList.remove('hidden');
+                    modalSidebarButtons.classList.add('flex');
+                } else {
+                    modalSidebarButtons.classList.add('hidden');
+                    modalSidebarButtons.classList.remove('flex');
+                }
             }
-            modal.classList.remove('hidden');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
         }
 
         function hideModal() {
-            modal.classList.add('hidden');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            if (modalSidebarButtons) {
+                modalSidebarButtons.classList.add('hidden');
+                modalSidebarButtons.classList.remove('flex');
+            }
             pendingNavigationUrl = null;
         }
 
@@ -1060,7 +1019,9 @@
             }
         });
     </script>
-@endsection
+
+</div>
+</div>
 
 @push('styles')
 <style>

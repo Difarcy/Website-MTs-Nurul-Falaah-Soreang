@@ -138,7 +138,7 @@
                             Pengumuman
                         </h3>
                         <div class="space-y-3 min-h-[300px]">
-                            @if(count($infoTerkini) > 0)
+                            @if(isset($infoTerkini) && count($infoTerkini) > 0)
                                 @foreach($infoTerkini as $item)
                                 <div class="pb-3 last:pb-0">
                                     <a href="#" class="block hover:text-green-700 transition-colors">

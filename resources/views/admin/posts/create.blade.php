@@ -7,17 +7,18 @@
         <div>
             <p class="text-sm text-slate-500 uppercase tracking-wide font-semibold">Konten Baru</p>
             <div class="flex items-center gap-3 mt-1">
-                <a href="{{ route($type === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index') }}" id="back-btn" class="flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
+                <a href="{{ route('admin.publikasi.index', request()->query()) }}" id="back-btn" class="flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                 </a>
-                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Tambah {{ ucfirst($type) }}</h1>
+                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Tambah Konten</h1>
             </div>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Isi formulir berikut untuk mempublikasikan informasi di website utama.</p>
         </div>
 
-        <form action="{{ route($type === 'artikel' ? 'admin.artikel.store' : 'admin.berita.store') }}" method="POST" enctype="multipart/form-data" id="create-form" class="bg-white border border-gray-200 p-6 space-y-6" style="border-radius: 0;">
+        <form action="{{ route('admin.berita.store') }}" method="POST" enctype="multipart/form-data" id="create-form" class="bg-white border border-gray-200 p-6 space-y-6" style="border-radius: 0;">
+            <input type="hidden" name="_redirect_after_save" value="{{ route('admin.publikasi.index', request()->query()) }}">
             @include('admin.posts._form', ['post' => $post, 'type' => $type])
         </form>
     </div>
@@ -27,10 +28,11 @@
         <div class="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full mx-4">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">Ada Perubahan yang Belum Disimpan</h3>
-                <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">Anda memiliki perubahan yang belum disimpan. Apakah Anda ingin membatalkan dan kembali, atau lanjut menambahkan?</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">Anda memiliki perubahan yang belum disimpan. Apakah Anda ingin menyimpan perubahan ini?</p>
                 <div class="flex items-center justify-end gap-3">
-                    <button type="button" id="modal-cancel-btn" class="px-6 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[100px]">Batal</button>
-                    <button type="button" id="modal-continue-btn" class="px-6 py-2 text-sm font-semibold text-white bg-green-700 rounded-lg hover:bg-green-800 transition-colors min-w-[100px]">Lanjut Menambahkan</button>
+                    <button type="button" id="modal-cancel-btn" class="px-6 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[100px]">Tutup</button>
+                    <button type="button" id="modal-discard-btn" class="px-6 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[100px]">Batal</button>
+                    <button type="button" id="modal-save-btn" class="px-6 py-2 text-sm font-semibold text-white bg-green-700 rounded-lg hover:bg-green-800 transition-colors min-w-[100px]"><span id="modal-save-btn-text">Publish</span></button>
                 </div>
             </div>
         </div>
@@ -47,11 +49,24 @@
             const cancelBtn = document.getElementById('cancel-btn');
             const modal = document.getElementById('confirm-modal');
             const modalCancelBtn = document.getElementById('modal-cancel-btn');
-            const modalContinueBtn = document.getElementById('modal-continue-btn');
+            const modalDiscardBtn = document.getElementById('modal-discard-btn');
+            const modalSaveBtn = document.getElementById('modal-save-btn');
+            const modalSaveBtnText = document.getElementById('modal-save-btn-text');
+            const statusSelect = document.getElementById('status-select');
 
-            if (!form || !backBtn || !cancelBtn || !modal || !modalCancelBtn || !modalContinueBtn) {
+            if (!form || !backBtn || !cancelBtn || !modal || !modalCancelBtn || !modalDiscardBtn || !modalSaveBtn || !modalSaveBtnText) {
                 console.error('Required elements not found');
                 return;
+            }
+
+            function updateModalSaveButtonText() {
+                const status = statusSelect ? statusSelect.value : 'published';
+                modalSaveBtnText.textContent = status === 'draft' ? 'Simpan' : 'Publish';
+            }
+
+            updateModalSaveButtonText();
+            if (statusSelect) {
+                statusSelect.addEventListener('change', updateModalSaveButtonText);
             }
 
             // Function to get current form state
@@ -212,7 +227,7 @@
             backBtn.addEventListener('click', (e) => {
                 if (!isSubmitting && hasFormChanged()) {
                     e.preventDefault();
-                    showModal(null); // No specific URL, implies back to index
+                    showModal(backBtn.href);
                 }
             });
 
@@ -220,12 +235,13 @@
             cancelBtn.addEventListener('click', (e) => {
                 if (!isSubmitting && hasFormChanged()) {
                     e.preventDefault();
-                    showModal(null); // No specific URL, implies back to index
+                    showModal(backBtn.href);
                 }
             });
 
-            function showModal(url = null) {
-                pendingNavigationUrl = url;
+            function showModal(url) {
+                pendingNavigationUrl = url || backBtn.href;
+                updateModalSaveButtonText();
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
             }
@@ -238,19 +254,35 @@
 
             // Modal buttons
             modalCancelBtn.addEventListener('click', () => {
+                hideModal();
+                // Stay on current page
+            });
+
+            modalDiscardBtn.addEventListener('click', () => {
                 const url = pendingNavigationUrl;
                 hideModal();
-                // Navigate to the target URL (sidebar menu) or back to index
                 if (url) {
                     window.location.href = url;
-                } else {
-                    window.location.href = backBtn.href;
                 }
             });
 
-            modalContinueBtn.addEventListener('click', () => {
+            modalSaveBtn.addEventListener('click', () => {
+                const url = pendingNavigationUrl || backBtn.href;
+
+                const existingInput = form.querySelector('input[name="_redirect_after_save"]');
+                if (existingInput) {
+                    existingInput.value = url;
+                } else {
+                    const redirectInput = document.createElement('input');
+                    redirectInput.type = 'hidden';
+                    redirectInput.name = '_redirect_after_save';
+                    redirectInput.value = url;
+                    form.appendChild(redirectInput);
+                }
+
                 hideModal();
-                // Stay on current page (continue adding)
+                isSubmitting = true;
+                form.submit();
             });
 
             // Close modal on outside click
@@ -279,7 +311,7 @@
 
                             showModal(targetUrl);
                         }
-                    });
+                    }, true);
                 });
             }
         });

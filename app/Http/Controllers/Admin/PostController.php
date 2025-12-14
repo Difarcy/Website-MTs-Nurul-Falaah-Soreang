@@ -17,7 +17,7 @@ class PostController extends Controller
     {
         // Determine type from route name
         $type = $request->route()->getName() === 'admin.artikel.index' ? 'artikel' : 'berita';
-        
+
         // Handle view preference: save to session if provided, otherwise use session or default to 'table'
         if ($request->has('view')) {
             session(['posts_view' => $request->input('view')]);
@@ -25,7 +25,7 @@ class PostController extends Controller
         $viewPreference = session('posts_view', 'table'); // Default to 'table'
 
         $query = Post::query();
-        
+
         // Filter by type based on route
         $query->ofType($type);
 
@@ -70,7 +70,7 @@ class PostController extends Controller
     {
         // Determine type from route name
         $type = $request->route()->getName() === 'admin.artikel.create' ? 'artikel' : 'berita';
-        
+
         $post = new Post([
             'status' => 'published',
             'type' => $type,
@@ -82,6 +82,9 @@ class PostController extends Controller
 
     public function store(PostRequest $request): RedirectResponse
     {
+        $allRequestData = $request->all();
+        $redirectUrl = $allRequestData['_redirect_after_save'] ?? null;
+
         $data = $this->prepareData($request);
         $data['author_id'] = Auth::id();
 
@@ -89,12 +92,41 @@ class PostController extends Controller
 
         $type = $data['type'];
         $typeLabel = $type === 'artikel' ? 'Artikel' : 'Berita';
-        
+
         $statusMessage = match($data['status']) {
             'published' => $typeLabel . ' berhasil dipublikasikan dan langsung muncul di website.',
             'unpublished' => $typeLabel . ' berhasil dinonaktifkan dan disembunyikan dari website.',
             default => $typeLabel . ' berhasil disimpan sebagai draft.',
         };
+
+        if (!empty($redirectUrl) && is_string($redirectUrl)) {
+            $redirectUrl = trim($redirectUrl);
+
+            if (str_starts_with($redirectUrl, '/')) {
+                return redirect($redirectUrl)
+                    ->with('status', $statusMessage)
+                    ->with('reload', true);
+            }
+
+            if (filter_var($redirectUrl, FILTER_VALIDATE_URL)) {
+                $redirectHost = parse_url($redirectUrl, PHP_URL_HOST);
+                $appHost = parse_url(config('app.url'), PHP_URL_HOST);
+                if ($redirectHost && $appHost && $redirectHost === $appHost) {
+                    return redirect($redirectUrl)
+                        ->with('status', $statusMessage)
+                        ->with('reload', true);
+                }
+            }
+
+            if (str_contains($redirectUrl, '/')) {
+                $parsed = parse_url($redirectUrl);
+                if (isset($parsed['path'])) {
+                    return redirect($parsed['path'])
+                        ->with('status', $statusMessage)
+                        ->with('reload', true);
+                }
+            }
+        }
 
         $viewPreference = session('posts_view', 'table');
         $routeName = $type === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index';
@@ -119,22 +151,22 @@ class PostController extends Controller
     public function update(PostRequest $request, Post $post): RedirectResponse
     {
         $oldStatus = $post->status;
-        
+
         // Get redirect URL from request BEFORE validation
         // Access raw request data to get the value before it might be filtered
         $allRequestData = $request->all();
         $redirectUrl = $allRequestData['_redirect_after_save'] ?? null;
-        
+
         $data = $this->prepareData($request, $post);
-        
+
         // Pastikan updated_at terupdate untuk trigger auto-refresh di website resmi
         $data['updated_at'] = now();
-        
+
         $post->update($data);
 
         $type = $data['type'];
         $typeLabel = $type === 'artikel' ? 'Artikel' : 'Berita';
-        
+
         $statusMessage = match($data['status']) {
             'published' => $typeLabel . ' berhasil dipublikasikan dan langsung muncul di website.',
             'unpublished' => $typeLabel . ' berhasil dinonaktifkan dan disembunyikan dari website.',
@@ -145,14 +177,14 @@ class PostController extends Controller
         if (!empty($redirectUrl) && is_string($redirectUrl)) {
             // Clean and validate URL
             $redirectUrl = trim($redirectUrl);
-            
+
             // If it's a relative path (starts with /), redirect directly
             if (str_starts_with($redirectUrl, '/')) {
                 return redirect($redirectUrl)
                     ->with('status', $statusMessage)
                     ->with('reload', true);
             }
-            
+
             // If it's a full URL, validate it's from same domain
             if (filter_var($redirectUrl, FILTER_VALIDATE_URL)) {
                 $redirectHost = parse_url($redirectUrl, PHP_URL_HOST);
@@ -163,7 +195,7 @@ class PostController extends Controller
                         ->with('reload', true);
                 }
             }
-            
+
             // If URL doesn't match patterns above, extract path from URL
             if (str_contains($redirectUrl, '/')) {
                 $parsed = parse_url($redirectUrl);
@@ -191,7 +223,7 @@ class PostController extends Controller
 
         $type = $post->type;
         $typeLabel = $type === 'artikel' ? 'Artikel' : 'Berita';
-        
+
         $post->delete();
 
         $viewPreference = session('posts_view', 'table');
@@ -205,7 +237,7 @@ class PostController extends Controller
     protected function prepareData(PostRequest $request, ?Post $post = null): array
     {
         $data = $request->validated();
-        
+
         // Pastikan author_name selalu ada (jika tidak ada, gunakan default)
         if (empty($data['author_name'])) {
             $data['author_name'] = 'Admin';
@@ -230,7 +262,7 @@ class PostController extends Controller
         // Handle images upload (file saja, tanpa URL baru)
         $uploadedImages = [];
         $imageMetadata = [];
-        
+
         // Get existing metadata
         $existingMetadata = $post?->image_metadata ?? [];
         $metadataMap = [];
@@ -241,7 +273,7 @@ class PostController extends Controller
                 }
             }
         }
-        
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 if ($image->isValid()) {
@@ -260,7 +292,7 @@ class PostController extends Controller
         // Merge with existing images
         $existingImages = $request->input('existing_images', []);
         $allImages = array_merge($existingImages, $uploadedImages);
-        
+
         // Preserve metadata untuk existing images
         foreach ($existingImages as $existingPath) {
             if (isset($metadataMap[$existingPath])) {
@@ -273,7 +305,7 @@ class PostController extends Controller
                 ];
             }
         }
-        
+
         // Remove deleted images from storage
         if ($post) {
             $oldImages = $post->images ?? [];
@@ -301,7 +333,7 @@ class PostController extends Controller
             // Jika status draft atau unpublished, hapus published_at
             $data['published_at'] = null;
         }
-        
+
         // Hapus published_at_date dari data karena tidak ada di database
         unset($data['published_at_date']);
 
@@ -310,12 +342,12 @@ class PostController extends Controller
             $data['tags'] = array_filter(array_map('trim', $data['tags']));
             $data['tags'] = !empty($data['tags']) ? array_values($data['tags']) : null;
         }
-        
+
         // Pastikan excerpt sinkron dengan body jika excerpt kosong atau tidak sesuai
         if (isset($data['body'])) {
             $bodyText = strip_tags($data['body']);
             $excerptText = isset($data['excerpt']) ? strip_tags($data['excerpt']) : '';
-            
+
             // Jika excerpt kosong atau tidak sesuai dengan awal body, generate dari body
             if (empty($excerptText) || !str_starts_with($bodyText, $excerptText)) {
                 $data['excerpt'] = \Illuminate\Support\Str::limit($bodyText, 200);
@@ -324,7 +356,7 @@ class PostController extends Controller
 
         return $data;
     }
-    
+
     /**
      * Extract source name from URL
      */
@@ -334,14 +366,14 @@ class PostController extends Controller
         if (!$host) {
             return null;
         }
-        
+
         // Extract domain name
         $host = str_replace('www.', '', $host);
         $parts = explode('.', $host);
         if (count($parts) >= 2) {
             return ucfirst($parts[count($parts) - 2]);
         }
-        
+
         return ucfirst($host);
     }
 }

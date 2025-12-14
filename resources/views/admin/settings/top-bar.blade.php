@@ -205,14 +205,18 @@
                     updateCharCount('phone', 20);
                 });
             }
-        });
+        }
 
         // Inisialisasi counter segera setelah script dimuat (jika DOM sudah siap)
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeCounters);
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeCounters();
+                initializeTopBar();
+            });
         } else {
             // DOM sudah siap, langsung inisialisasi
             initializeCounters();
+            initializeTopBar();
         }
 
         // Modal konfirmasi perubahan

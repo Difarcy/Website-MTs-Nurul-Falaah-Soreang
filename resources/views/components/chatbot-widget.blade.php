@@ -6,7 +6,7 @@
         Tanya Informasi dengan Asisten Virtual
         <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 w-2 h-2 bg-gray-900 dark:bg-gray-700 rotate-45"></div>
     </div>
-    
+
     <!-- Chatbot Button -->
     <button id="chatbot-toggle" class="w-16 h-16 bg-green-700 hover:bg-green-800 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 relative" onmouseenter="showChatbotLabel()" onmouseleave="hideChatbotLabel()">
         <svg id="chatbot-icon" class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,7 +35,7 @@
         </div>
 
         <!-- Messages Container -->
-        <div id="chatbot-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+        <div id="chatbot-messages" class="flex-1 overflow-y-auto p-4 space-y-3 chatbot-messages-container">
             <!-- Welcome Message -->
             <div class="flex items-start gap-2">
                 <div class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center flex-shrink-0">
@@ -73,15 +73,15 @@
         <!-- Input Area -->
         <div class="border-t border-gray-200 dark:border-slate-700 p-4">
             <form id="chatbot-form" class="flex gap-2">
-                <input 
-                    type="text" 
-                    id="chatbot-input" 
-                    placeholder="Ketik pertanyaan Anda..." 
+                <input
+                    type="text"
+                    id="chatbot-input"
+                    placeholder="Ketik pertanyaan Anda..."
                     class="flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg px-4 py-2 text-sm text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none"
                     autocomplete="off"
                 >
-                <button 
-                    type="submit" 
+                <button
+                    type="submit"
                     id="chatbot-send"
                     class="bg-green-700 hover:bg-green-800 text-white rounded-lg px-4 py-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -93,23 +93,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    #chatbot-messages {
-        scrollbar-width: thin;
-        scrollbar-color: #10b981 #f3f4f6;
-    }
-    #chatbot-messages::-webkit-scrollbar {
-        width: 6px;
-    }
-    #chatbot-messages::-webkit-scrollbar-track {
-        background: #f3f4f6;
-    }
-    #chatbot-messages::-webkit-scrollbar-thumb {
-        background: #10b981;
-        border-radius: 3px;
-    }
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -148,11 +131,23 @@ document.addEventListener('DOMContentLoaded', function() {
         chatbotCloseIcon.classList.add('hidden');
     });
 
+    // Store active chatbot controller
+    let activeChatbotController = null;
+
     // Send message
     chatbotForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         const message = chatbotInput.value.trim();
         if (!message) return;
+
+        // Cancel previous request if still active
+        if (activeChatbotController) {
+            try {
+                activeChatbotController.abort();
+            } catch (e) {
+                // Ignore errors
+            }
+        }
 
         // Add user message
         addMessage(message, 'user');
@@ -163,6 +158,14 @@ document.addEventListener('DOMContentLoaded', function() {
         chatbotTyping.classList.remove('hidden');
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 
+        // Create AbortController untuk cancel request jika perlu
+        const controller = new AbortController();
+        activeChatbotController = controller;
+        const timeoutId = setTimeout(() => {
+            controller.abort();
+            activeChatbotController = null;
+        }, 30000); // Timeout 30 detik
+
         try {
             // Send to backend
             const response = await fetch('{{ route("chatbot.query") }}', {
@@ -172,37 +175,75 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ message: message }),
+                signal: controller.signal
             });
 
+            clearTimeout(timeoutId);
+            activeChatbotController = null;
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
             const data = await response.json();
-            
+
             // Hide typing indicator
             chatbotTyping.classList.add('hidden');
 
             // Add bot response
             addMessage(data.response || 'Maaf, terjadi kesalahan. Silakan coba lagi.', 'bot');
         } catch (error) {
-            console.error('Chatbot error:', error);
+            clearTimeout(timeoutId);
+            activeChatbotController = null;
             chatbotTyping.classList.add('hidden');
+
+            // Ignore abort errors dan network errors (biasanya dari extension)
+            if (error.name !== 'AbortError' && error.name !== 'TypeError') {
+                console.error('Chatbot error:', error);
+            }
+
             addMessage('Maaf, terjadi kesalahan saat menghubungi server. Silakan coba lagi nanti.', 'bot');
         } finally {
             chatbotSend.disabled = false;
-            chatbotInput.focus();
+            if (chatbotInput) chatbotInput.focus();
+        }
+    });
+
+    // Cleanup saat halaman tidak aktif
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden && activeChatbotController) {
+            try {
+                activeChatbotController.abort();
+                activeChatbotController = null;
+            } catch (e) {
+                // Ignore errors
+            }
+        }
+    });
+
+    window.addEventListener('pagehide', function() {
+        if (activeChatbotController) {
+            try {
+                activeChatbotController.abort();
+                activeChatbotController = null;
+            } catch (e) {
+                // Ignore errors
+            }
         }
     });
 
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex items-start gap-2 ${sender === 'user' ? 'flex-row-reverse' : ''}`;
-        
+
         const avatar = document.createElement('div');
         avatar.className = `w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-            sender === 'user' 
-                ? 'bg-green-700' 
+            sender === 'user'
+                ? 'bg-green-700'
                 : 'bg-green-100 dark:bg-green-900'
         }`;
-        
+
         if (sender === 'user') {
             avatar.innerHTML = `
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,10 +257,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 </svg>
             `;
         }
-        
+
         const content = document.createElement('div');
         content.className = 'flex-1';
-        
+
         const bubble = document.createElement('div');
         bubble.className = `rounded-lg p-3 ${
             sender === 'user'
@@ -227,16 +268,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 : 'bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-200'
         }`;
         bubble.innerHTML = `<p class="text-sm whitespace-pre-wrap">${escapeHtml(text)}</p>`;
-        
+
         const time = document.createElement('p');
         time.className = `text-xs mt-1 ${sender === 'user' ? 'text-right' : ''} text-gray-500 dark:text-slate-400`;
         time.textContent = 'Sekarang';
-        
+
         content.appendChild(bubble);
         content.appendChild(time);
         messageDiv.appendChild(avatar);
         messageDiv.appendChild(content);
-        
+
         chatbotMessages.appendChild(messageDiv);
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
@@ -276,4 +317,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endif
-

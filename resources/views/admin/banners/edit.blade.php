@@ -41,15 +41,15 @@
                         </button>
                     </div>
                 </div>
-                @error('gambar') 
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ $message }}</p> 
+                @error('gambar')
+                    <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Informasi Banner -->
             <div class="space-y-4">
                 <h3 class="text-lg font-semibold text-slate-900">Informasi Banner</h3>
-                
+
                 <div>
                     <label for="tagline" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         Tagline
@@ -166,16 +166,16 @@
             const currentBannerContainer = document.getElementById('current-banner-container');
             const previewContainer = document.getElementById('preview-container');
             const previewImage = document.getElementById('preview-image');
-            
+
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                
+
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     currentBannerContainer.classList.add('hidden');
                     previewContainer.classList.remove('hidden');
                 }
-                
+
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -184,7 +184,7 @@
             const currentBannerContainer = document.getElementById('current-banner-container');
             const previewContainer = document.getElementById('preview-container');
             const fileInput = document.getElementById('gambar');
-            
+
             fileInput.value = '';
             currentBannerContainer.classList.remove('hidden');
             previewContainer.classList.add('hidden');
@@ -195,9 +195,9 @@
             const countElement = document.getElementById(fieldId + '-count');
             const currentLength = field.value.length;
             const remaining = maxLength - currentLength;
-            
+
             countElement.textContent = currentLength;
-            
+
             // Update warna berdasarkan sisa karakter
             if (remaining < 20) {
                 countElement.className = 'text-red-600 font-semibold';
@@ -250,7 +250,7 @@
     <div id="imageZoomModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md" onclick="closeImageZoom()">
         <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
             <img id="zoomImage" src="" alt="Preview" class="max-w-full max-h-full object-contain pointer-events-none">
-            <button type="button" onclick="closeImageZoom()" class="close-banner-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
+            <button type="button" onclick="closeImageZoom()" class="close-banner-modal-btn fixed top-4 right-4 w-10 h-10 flex items-center justify-center text-white hover:text-slate-200 transition-colors z-10">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>

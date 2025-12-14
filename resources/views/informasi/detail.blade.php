@@ -129,7 +129,7 @@
                                 }
                             @endphp
                             <div class="relative">
-                                <div class="overflow-hidden border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity" style="border-radius: 0;" onclick="openImageModal('{{ asset('storage/' . $image) }}')">
+                                <div class="overflow-hidden border border-gray-200" style="border-radius: 0;">
                                     <img src="{{ asset('storage/' . $image) }}" alt="Gambar {{ $loop->iteration }}" class="w-full aspect-video object-cover">
                                 </div>
                                 @if($metadata && ($metadata['source_url'] || $metadata['source_name']))
@@ -149,7 +149,7 @@
                     </div>
                 @endif
 
-                <div class="prose max-w-none prose-slate">
+                <div class="prose max-w-none prose-slate dark:prose-invert">
                     <div class="summernote-content editor-content">
                         {!! $post->body !!}
                     </div>
@@ -170,12 +170,12 @@
                                 @endphp
                                 <article class="bg-white border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300">
                                     <a href="{{ route('informasi.show', ['type' => $item->type, 'slug' => $item->slug]) }}" class="block">
-                                        <div class="w-full cursor-pointer hover:opacity-90 transition-opacity">
+                                        <div class="w-full hover:opacity-90 transition-opacity">
                                             @if($item->thumbnail_path)
                                                 <img src="{{ asset('storage/' . $item->thumbnail_path) }}" alt="{{ $item->title }}" class="w-full h-32 object-cover">
                                             @else
-                                                <div class="w-full h-32 bg-gradient-to-r from-green-700 to-emerald-500 flex items-center justify-center text-white text-lg font-bold">
-                                                    {{ strtoupper(substr($item->title, 0, 1)) }}
+                                                <div class="w-full h-32 bg-gray-200 flex items-center justify-center">
+                                                    <span class="text-gray-500 text-xs">No Image</span>
                                                 </div>
                                             @endif
                                         </div>
@@ -242,12 +242,12 @@
                         @endphp
                         <article class="bg-white border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300">
                             <a href="{{ route('informasi.show', ['type' => $item->type, 'slug' => $item->slug]) }}" class="block">
-                                <div class="w-full cursor-pointer hover:opacity-90 transition-opacity">
+                                <div class="w-full hover:opacity-90 transition-opacity">
                                     @if($item->thumbnail_path)
                                         <img src="{{ asset('storage/' . $item->thumbnail_path) }}" alt="{{ $item->title }}" class="w-full h-32 object-cover">
                                     @else
-                                        <div class="w-full h-32 bg-gradient-to-r from-green-700 to-emerald-500 flex items-center justify-center text-white text-lg font-bold">
-                                            {{ strtoupper(substr($item->title, 0, 1)) }}
+                                        <div class="w-full h-32 bg-gray-200 flex items-center justify-center">
+                                            <span class="text-gray-500 text-xs">No Image</span>
                                         </div>
                                     @endif
                                 </div>
@@ -420,77 +420,5 @@
         </div>
     </div>
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md">
-        <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation()">
-            <img id="modalImage" src="" alt="Zoom" class="max-w-full max-h-full aspect-video object-cover pointer-events-none">
-            <button type="button" class="close-image-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <script>
-        function openImageModal(imageSrc) {
-            const modal = document.getElementById('imageModal');
-            const img = document.getElementById('modalImage');
-            img.src = imageSrc;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeImageModal(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            const modal = document.getElementById('imageModal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            }
-            return false;
-        }
-
-        // Setup event listeners untuk modal
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('imageModal');
-            const closeBtn = modal?.querySelector('.close-image-modal-btn');
-
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeImageModal(e);
-                    return false;
-                }, true);
-            }
-
-            // Background click handler
-            if (modal) {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        closeImageModal(e);
-                        return false;
-                    }
-                }, true);
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('imageModal');
-                if (modal && !modal.classList.contains('hidden')) {
-                    closeImageModal(e);
-                }
-            }
-        });
-    </script>
 @endsection
 

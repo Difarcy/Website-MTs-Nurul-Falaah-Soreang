@@ -1,5 +1,4 @@
-@import 'tailwindcss';
-@import './custom.css';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -7,49 +6,23 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: Arial, 'Helvetica Neue', Helvetica, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: Arial, "Helvetica Neue", Helvetica, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    --font-dosis: "Dosis", sans-serif;
 }
 
-body {
-    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-}
-
-:root {
-    color-scheme: light;
-    --theme-bg-base: #f8fafc;
-    --theme-bg-surface: #ffffff;
-    --theme-text-primary: #0f172a;
-    --theme-text-secondary: #475569;
-    --theme-border-color: rgba(15, 23, 42, 0.12);
-}
-
-body {
-    background-color: var(--theme-bg-base);
-    color: var(--theme-text-primary);
+@utility font-dosis {
+    font-family: var(--font-dosis);
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark;
-        --theme-bg-base: #020617;
-        --theme-bg-surface: #0f172a;
-        --theme-text-primary: #e2e8f0;
-        --theme-text-secondary: #94a3b8;
-        --theme-border-color: rgba(148, 163, 184, 0.35);
-    }
-
-    body {
-        background-color: var(--theme-bg-base);
-        color: var(--theme-text-primary);
-    }
-
     .bg-white,
     .bg-gray-50,
     .bg-gray-100,
     .bg-slate-50,
     .bg-slate-100 {
-        background-color: var(--theme-bg-surface) !important;
+        @apply bg-slate-900;
     }
 
     .text-slate-900,
@@ -58,7 +31,7 @@ body {
     .text-gray-900,
     .text-gray-800,
     .text-gray-700 {
-        color: var(--theme-text-primary) !important;
+        @apply text-slate-100;
     }
 
     .text-gray-600,
@@ -66,14 +39,14 @@ body {
     .text-gray-400,
     .text-slate-600,
     .text-slate-500 {
-        color: var(--theme-text-secondary) !important;
+        @apply text-slate-300;
     }
 
     .border-gray-50,
     .border-gray-100,
     .border-gray-200,
     .border-gray-300 {
-        border-color: var(--theme-border-color) !important;
+        @apply border-slate-700;
     }
 
     .shadow,
@@ -81,19 +54,179 @@ body {
     .shadow-md,
     .shadow-lg,
     .shadow-xl {
-        box-shadow: 0 25px 50px -12px rgba(2, 6, 23, 0.55) !important;
-    }
-
-    /* Sidebar hover text putih di dark mode */
-    aside nav a:hover span {
-        color: white !important;
+        @apply shadow-2xl shadow-slate-950/60;
     }
 }
 
-.admin-main button {
-    padding: 0.45rem 0.85rem;
-    font-size: 0.92rem;
-    border-radius: 0.5rem;
+.editor-content,
+.summernote-content,
+.note-editor .note-editable {
+    @apply leading-relaxed;
+    @apply text-slate-900;
 }
 
+.editor-content > * + *,
+.summernote-content > * + *,
+.note-editor .note-editable > * + * {
+    @apply mt-4;
+}
 
+.editor-content h1,
+.summernote-content h1,
+.note-editor .note-editable h1 {
+    @apply text-3xl font-bold leading-tight mt-6 mb-2;
+}
+
+.editor-content h2,
+.summernote-content h2,
+.note-editor .note-editable h2 {
+    @apply text-2xl font-bold leading-tight mt-6 mb-2;
+}
+
+.editor-content h3,
+.summernote-content h3,
+.note-editor .note-editable h3 {
+    @apply text-xl font-bold leading-tight mt-5 mb-2;
+}
+
+.editor-content h4,
+.summernote-content h4,
+.note-editor .note-editable h4 {
+    @apply text-lg font-semibold leading-tight mt-4 mb-2;
+}
+
+.editor-content p,
+.summernote-content p,
+.note-editor .note-editable p {
+    @apply my-3;
+}
+
+.editor-content a,
+.summernote-content a,
+.note-editor .note-editable a {
+    @apply text-green-700 underline underline-offset-2;
+}
+
+.editor-content a:hover,
+.summernote-content a:hover,
+.note-editor .note-editable a:hover {
+    @apply text-green-800;
+}
+
+.editor-content ul,
+.summernote-content ul,
+.note-editor .note-editable ul {
+    @apply list-disc pl-6 my-3;
+}
+
+.editor-content ol,
+.summernote-content ol,
+.note-editor .note-editable ol {
+    @apply list-decimal pl-6 my-3;
+}
+
+.editor-content li,
+.summernote-content li,
+.note-editor .note-editable li {
+    @apply my-1;
+}
+
+.editor-content blockquote,
+.summernote-content blockquote,
+.note-editor .note-editable blockquote {
+    @apply border-l-4 border-green-700 pl-4 py-1 my-4;
+}
+
+.editor-content img,
+.summernote-content img,
+.note-editor .note-editable img {
+    max-width: 100%;
+    height: auto;
+    cursor: default;
+    @apply rounded-md;
+}
+
+.editor-content table,
+.summernote-content table,
+.note-editor .note-editable table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.editor-content table,
+.editor-content th,
+.editor-content td,
+.summernote-content table,
+.summernote-content th,
+.summernote-content td,
+.note-editor .note-editable table,
+.note-editor .note-editable th,
+.note-editor .note-editable td {
+    border: 1px solid rgb(226 232 240);
+}
+
+.editor-content th,
+.summernote-content th,
+.note-editor .note-editable th {
+    @apply bg-slate-50 font-semibold text-left;
+}
+
+.editor-content th,
+.editor-content td,
+.summernote-content th,
+.summernote-content td,
+.note-editor .note-editable th,
+.note-editor .note-editable td {
+    padding: 0.5rem 0.75rem;
+    vertical-align: top;
+}
+
+@media (prefers-color-scheme: dark) {
+    .editor-content,
+    .summernote-content,
+    .note-editor .note-editable {
+        @apply text-slate-100;
+    }
+
+    .editor-content a,
+    .summernote-content a,
+    .note-editor .note-editable a {
+        @apply text-green-400;
+    }
+
+    .editor-content a:hover,
+    .summernote-content a:hover,
+    .note-editor .note-editable a:hover {
+        @apply text-green-300;
+    }
+
+    .editor-content table,
+    .editor-content th,
+    .editor-content td,
+    .summernote-content table,
+    .summernote-content th,
+    .summernote-content td,
+    .note-editor .note-editable table,
+    .note-editor .note-editable th,
+    .note-editor .note-editable td {
+        border-color: rgb(51 65 85);
+    }
+}
+
+.note-editor.note-frame {
+    @apply border border-gray-200 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-800;
+}
+
+.note-editor.note-frame .note-toolbar {
+    @apply bg-slate-50 dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700;
+}
+
+.note-editor.note-frame .note-statusbar {
+    @apply bg-slate-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700;
+}
+
+.note-editor.note-frame .note-editable {
+    @apply text-slate-900 dark:text-slate-100;
+}

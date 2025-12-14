@@ -7,7 +7,7 @@
     $youtubeUrl = $topBarSettings->youtube_url ?? route('social-media-unavailable');
     $tiktokUrl = $topBarSettings->tiktok_url ?? route('social-media-unavailable');
 @endphp
-<div class="bg-green-700 text-white py-2.5 text-sm" style="font-family: 'Dosis', sans-serif;">
+<div class="bg-green-700 text-white py-2.5 text-sm top-bar-font-dosis">
     <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl">
         <div class="flex items-center justify-between flex-wrap gap-2">
             <!-- Sebelah Kiri: Telepon dan Email -->
@@ -60,4 +60,3 @@
         </div>
     </div>
 </div>
-

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Panel Admin')
+@section('title', 'Control Panel')
 
 @section('content')
     <div class="space-y-6">
@@ -12,7 +12,7 @@
         <!-- Menu Utama -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Berita -->
-            <a href="{{ route('admin.berita.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
+            <a href="{{ route('admin.publikasi.index', ['type' => 'berita']) }}" class="bg-white border-2 border-gray-200 p-6 hover:border-green-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-green-100 rounded-lg p-3 group-hover:bg-green-600 transition">
                         <svg class="w-8 h-8 text-green-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +32,7 @@
             </a>
 
             <!-- Artikel -->
-            <a href="{{ route('admin.artikel.index') }}" class="bg-white border-2 border-gray-200 p-6 hover:border-purple-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
+            <a href="{{ route('admin.publikasi.index', ['type' => 'artikel']) }}" class="bg-white border-2 border-gray-200 p-6 hover:border-purple-600 hover:shadow-lg transition-all group" style="border-radius: 0;">
                 <div class="flex items-start gap-4">
                     <div class="bg-purple-100 rounded-lg p-3 group-hover:bg-purple-600 transition">
                         <svg class="w-8 h-8 text-purple-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

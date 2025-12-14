@@ -121,11 +121,48 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDate();
     updateTime();
 
+    // Store interval IDs untuk cleanup
+    let timeInterval = null;
+    let dateInterval = null;
+
     // Update waktu setiap detik
-    setInterval(updateTime, 1000);
+    timeInterval = setInterval(updateTime, 1000);
     
     // Update tanggal setiap menit (untuk memastikan tanggal berubah jika lewat tengah malam)
-    setInterval(updateDate, 60000);
+    dateInterval = setInterval(updateDate, 60000);
+    
+    // Cleanup saat halaman tidak aktif
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            if (timeInterval) {
+                clearInterval(timeInterval);
+                timeInterval = null;
+            }
+            if (dateInterval) {
+                clearInterval(dateInterval);
+                dateInterval = null;
+            }
+        } else {
+            // Restart intervals saat halaman aktif kembali
+            if (!timeInterval) {
+                timeInterval = setInterval(updateTime, 1000);
+            }
+            if (!dateInterval) {
+                dateInterval = setInterval(updateDate, 60000);
+            }
+        }
+    });
+    
+    window.addEventListener('pagehide', function() {
+        if (timeInterval) {
+            clearInterval(timeInterval);
+            timeInterval = null;
+        }
+        if (dateInterval) {
+            clearInterval(dateInterval);
+            dateInterval = null;
+        }
+    });
 });
 </script>
 

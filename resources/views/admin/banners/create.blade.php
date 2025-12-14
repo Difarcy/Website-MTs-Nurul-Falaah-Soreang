@@ -42,8 +42,8 @@
                         </button>
                     </div>
                 </div>
-                @error('gambar') 
-                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p> 
+                @error('gambar')
+                    <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -52,7 +52,7 @@
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     Informasi Banner (Opsional)
                 </h3>
-                
+
                 <div>
                     <label for="tagline" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         Tagline
@@ -169,16 +169,16 @@
             const uploadArea = document.getElementById('upload-area');
             const previewContainer = document.getElementById('preview-container');
             const previewImage = document.getElementById('preview-image');
-            
+
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                
+
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     uploadArea.classList.add('hidden');
                     previewContainer.classList.remove('hidden');
                 }
-                
+
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -187,7 +187,7 @@
             const uploadArea = document.getElementById('upload-area');
             const previewContainer = document.getElementById('preview-container');
             const fileInput = document.getElementById('gambar');
-            
+
             fileInput.value = '';
             uploadArea.classList.remove('hidden');
             previewContainer.classList.add('hidden');
@@ -198,9 +198,9 @@
             const countElement = document.getElementById(fieldId + '-count');
             const currentLength = field.value.length;
             const remaining = maxLength - currentLength;
-            
+
             countElement.textContent = currentLength;
-            
+
             // Update warna berdasarkan sisa karakter
             if (remaining < 20) {
                 countElement.className = 'text-red-600 font-semibold';

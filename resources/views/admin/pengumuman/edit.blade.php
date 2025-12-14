@@ -164,12 +164,42 @@
                             ['view', ['fullscreen', 'codeview', 'help']],
                             ['history', ['undo', 'redo']]
                         ],
+                        popover: {
+                            image: [
+                                ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                                ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                                ['remove', ['removeMedia']]
+                            ],
+                            link: [
+                                ['link', ['linkDialogShow', 'unlink']]
+                            ],
+                            table: [
+                                ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                                ['delete', ['deleteRow', 'deleteCol', 'deleteTable']]
+                            ]
+                        },
+                        styleTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+                        codeviewFilter: false,
+                        codeviewIframeFilter: true,
                         callbacks: {
                             onImageUpload: function(files) {
                                 uploadImageToServer(files[0], editorEl);
                             },
                             onChange: function(contents) {
-                                checkFormChanges();
+                            checkFormChanges();
+                            },
+                            onInit: function() {
+                                // Fix numbering and bullet lists after init
+                                const editor = $(editorEl).summernote('code');
+                                if (editor) {
+                                    const $editor = $('<div>').html(editor);
+                                    $editor.find('ul, ol').each(function() {
+                                        if (!$(this).attr('style')) {
+                                            $(this).css('padding-left', '2em');
+                                        }
+                                    });
+                                    $(editorEl).summernote('code', $editor.html());
+                                }
                             }
                         }
                     });

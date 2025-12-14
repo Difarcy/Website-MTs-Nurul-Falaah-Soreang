@@ -20,10 +20,14 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset($logoPath) }}@if($logoVersion)?v={{ $logoVersion }}@endif">
 
-    <!-- Google Fonts - Dosis & Lato -->
+    <!-- Google Fonts - Roboto -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;500;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+    </style>
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])

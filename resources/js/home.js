@@ -1,15 +1,15 @@
 /**
  * Banner slider - Auto slide terus menerus
  */
-document.addEventListener('DOMContentLoaded', () => {
-    const slider = document.querySelector('[data-banner-slider]');
+document.addEventListener("DOMContentLoaded", () => {
+    const slider = document.querySelector("[data-banner-slider]");
 
     if (!slider) {
         return;
     }
 
-    const slides = Array.from(slider.querySelectorAll('[data-banner-slide]'));
-    const dots = Array.from(slider.querySelectorAll('[data-banner-dot]'));
+    const slides = Array.from(slider.querySelectorAll("[data-banner-slide]"));
+    const dots = Array.from(slider.querySelectorAll("[data-banner-dot]"));
 
     let currentIndex = 0;
     let autoPlayTimer = null;
@@ -17,25 +17,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const setActiveSlide = (index) => {
         const prevIndex = currentIndex;
-        
-        // Remove all classes first
+
+        // Baseline: semua slide diset ke off-screen kanan & tidak terlihat
         slides.forEach((slide) => {
-            slide.classList.remove('is-active', 'is-prev');
+            slide.classList.remove(
+                "translate-x-0",
+                "-translate-x-full",
+                "translate-x-full",
+                "visible",
+                "invisible",
+                "z-10",
+                "z-0",
+                "opacity-100",
+                "opacity-0"
+            );
+            slide.classList.add(
+                "translate-x-full",
+                "invisible",
+                "z-0",
+                "opacity-0"
+            );
         });
 
-        // Set previous slide (slide yang sedang aktif sebelumnya)
+        // Slide sebelumnya: animasi keluar ke kiri
         if (prevIndex !== index && slides[prevIndex]) {
-            slides[prevIndex].classList.add('is-prev');
+            slides[prevIndex].classList.remove(
+                "translate-x-full",
+                "invisible",
+                "z-0",
+                "opacity-0"
+            );
+            slides[prevIndex].classList.add(
+                "-translate-x-full",
+                "visible",
+                "z-0",
+                "opacity-100"
+            );
         }
 
-        // Set active slide
+        // Slide aktif: posisi tengah dan terlihat
         if (slides[index]) {
-            slides[index].classList.add('is-active');
+            slides[index].classList.remove(
+                "translate-x-full",
+                "invisible",
+                "z-0",
+                "opacity-0"
+            );
+            slides[index].classList.add(
+                "translate-x-0",
+                "visible",
+                "z-10",
+                "opacity-100"
+            );
         }
 
-        // Update dots
+        // Update indikator (dots) dengan utilitas Tailwind
         dots.forEach((dot, idx) => {
-            dot.classList.toggle('is-active', idx === index);
+            const isActive = idx === index;
+            dot.classList.toggle("bg-white", isActive);
+            dot.classList.toggle("w-10", isActive);
+            dot.classList.toggle("bg-white/50", !isActive);
+            dot.classList.toggle("w-8", !isActive);
         });
 
         currentIndex = index;
@@ -48,21 +90,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const startAutoPlay = () => {
         stopAutoPlay();
-        autoPlayTimer = setInterval(nextSlide, AUTO_PLAY_DELAY);
+        if (!document.hidden) {
+            autoPlayTimer = setInterval(nextSlide, AUTO_PLAY_DELAY);
+        }
     };
 
     const stopAutoPlay = () => {
         if (autoPlayTimer) {
             clearInterval(autoPlayTimer);
             autoPlayTimer = null;
-    }
+        }
     };
+
+    // Cleanup saat halaman tidak aktif
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            stopAutoPlay();
+        } else {
+            startAutoPlay();
+        }
+    });
+
+    window.addEventListener("pagehide", function () {
+        stopAutoPlay();
+    });
 
     // Event listeners untuk dots (opsional, untuk manual click)
     dots.forEach((dot) => {
-        dot.addEventListener('click', (e) => {
+        dot.addEventListener("click", (e) => {
             e.stopPropagation();
-            const targetIndex = parseInt(dot.dataset.slideTarget ?? '0', 10);
+            const targetIndex = parseInt(dot.dataset.slideTarget ?? "0", 10);
             setActiveSlide(targetIndex);
             // Reset timer setelah manual click
             stopAutoPlay();
@@ -74,11 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let touchStartX = 0;
     let touchEndX = 0;
 
-    slider.addEventListener('touchstart', (e) => {
+    slider.addEventListener("touchstart", (e) => {
         touchStartX = e.changedTouches[0].screenX;
     });
 
-    slider.addEventListener('touchend', (e) => {
+    slider.addEventListener("touchend", (e) => {
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
     });
@@ -93,7 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 nextSlide();
             } else {
                 // Swipe right - prev slide
-                const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+                const prevIndex =
+                    (currentIndex - 1 + slides.length) % slides.length;
                 setActiveSlide(prevIndex);
             }
             // Reset timer setelah swipe
@@ -103,6 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Start auto-play - akan terus berjalan
+    setActiveSlide(0);
     startAutoPlay();
-    });
-
+});

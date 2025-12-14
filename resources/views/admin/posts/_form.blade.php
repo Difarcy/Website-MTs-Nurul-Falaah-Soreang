@@ -89,10 +89,10 @@
                     <div id="existing-images-list" class="grid grid-cols-2 gap-4">
                         @foreach($existingImages as $index => $image)
                             <div class="image-item relative group draggable-image" draggable="true" data-image="{{ $image }}" data-index="{{ $index }}">
-                                <div class="overflow-hidden border border-gray-200 dark:border-slate-700 cursor-move" onclick="if(!event.target.closest('button')) openImageZoom('{{ asset('storage/' . $image) }}')" style="border-radius: 0;">
+                                <div class="overflow-hidden border border-gray-200 dark:border-slate-700 cursor-move" onclick="if(!event.target.closest('button')) openImagePreview('{{ asset('storage/' . $image) }}', 'Pratinjau')" style="border-radius: 0;">
                                     <img src="{{ asset('storage/' . $image) }}" alt="Gambar {{ $index + 1 }}" class="w-full aspect-video object-cover hover:opacity-90 transition-opacity pointer-events-none">
                                 </div>
-                                <button type="button" onclick="event.stopPropagation(); removeExistingImage(this, '{{ $image }}');" class="absolute top-0 -right-1 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                <button type="button" onclick="event.stopPropagation(); removeExistingImage(this, '{{ $image }}');" class="absolute top-2 right-2 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                                     </svg>
@@ -102,7 +102,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
                                     </svg>
                                 </div>
-                                <input type="hidden" name="existing_images[]" value="{{ $image }}">
+                                <input type="hidden" name="existing_images[]" id="existing-image-{{ $index }}" value="{{ $image }}">
                             </div>
                         @endforeach
                     </div>
@@ -119,12 +119,19 @@
 
     <div class="space-y-6">
         <div class="bg-slate-50 border border-slate-200 p-4 space-y-4" style="border-radius: 0;">
-            <!-- Type hidden field - determined by route -->
-            <input type="hidden" name="type" id="type" value="{{ $type ?? $post->type }}">
+            <div>
+                <label for="type-select" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tipe</label>
+                <select name="type" id="type-select" class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 text-slate-900 dark:text-slate-100 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                    <option value="berita" @selected(old('type', $type ?? $post->type ?? 'berita') === 'berita')>Berita</option>
+                    <option value="artikel" @selected(old('type', $type ?? $post->type ?? 'berita') === 'artikel')>Artikel</option>
+                </select>
+                @error('type') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+                <p class="text-xs text-slate-500 mt-1">Pilih jenis konten yang akan ditampilkan di menu berita atau artikel.</p>
+            </div>
 
             <div>
                 <label for="status-select" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Status</label>
-                <select name="status" id="status-select" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                <select name="status" id="status-select" class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 text-slate-900 dark:text-slate-100 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                     <option value="published" @selected(old('status', $post->status ?? 'published') === 'published')>Publikasi</option>
                     <option value="draft" @selected(old('status', $post->status ?? 'published') === 'draft')>Draft</option>
                     @if($post->id)
@@ -157,13 +164,13 @@
                         $publishedAtDate = now()->format('Y-m-d');
                     }
                 @endphp
-                <input type="date" name="published_at_date" id="published-at-date" value="{{ $publishedAtDate }}" autocomplete="off" class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
+                <input type="date" name="published_at_date" id="published-at-date" value="{{ $publishedAtDate }}" autocomplete="off" class="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 text-slate-900 dark:text-slate-100 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-600 focus:border-green-600">
                 @error('published_at_date') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
                 <p class="text-xs text-slate-500 mt-1">Pilih tanggal publikasi. Waktu otomatis menggunakan waktu saat ini.</p>
             </div>
 
             <div>
-                <label for="tag-input" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tag <span class="text-xs font-normal text-slate-400 normal-case">(opsional)</span></label>
+                <label for="tag-input" class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tag <span class="text-xs font-normal text-slate-400">(opsional)</span></label>
                 <div class="relative">
                     <div id="tags-wrapper" class="border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 min-h-[42px] flex flex-wrap gap-2 items-center focus-within:ring-2 focus-within:ring-green-600 focus-within:border-green-600 bg-white dark:bg-slate-800">
                         <div id="tags-container" class="flex flex-wrap gap-2">
@@ -186,7 +193,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                             </svg>
                                         </button>
-                                        <input type="hidden" name="tags[]" value="{{ $tag }}">
+                                        <input type="hidden" name="tags[]" id="tag-hidden-{{ $index }}" value="{{ $tag }}">
                                     </div>
                                 @endforeach
                             @endif
@@ -233,10 +240,10 @@
                 <div id="thumbnail-preview" class="mt-3 hidden">
                     <p class="text-xs text-slate-500 mb-2">Pratinjau thumbnail baru:</p>
                     <div class="relative group">
-                        <div class="overflow-hidden border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity" style="border-radius: 0;" onclick="openImageZoom(document.getElementById('thumbnail-preview-img').src)">
+                        <div class="overflow-hidden border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity" style="border-radius: 0;" onclick="openImagePreview(document.getElementById('thumbnail-preview-img').src, 'Pratinjau Thumbnail')">
                             <img id="thumbnail-preview-img" src="" alt="Pratinjau Thumbnail" class="w-full aspect-video object-cover">
                         </div>
-                        <button type="button" onclick="event.stopPropagation(); removeThumbnailPreview();" class="absolute top-0 -right-1 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <button type="button" onclick="event.stopPropagation(); removeThumbnailPreview();" class="absolute top-2 right-2 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
@@ -247,7 +254,7 @@
             @if($post->thumbnail_path)
                 <div class="mt-3" id="current-thumbnail-container">
                     <p class="text-xs text-slate-500 mb-2">Thumbnail Saat Ini:</p>
-                    <div class="overflow-hidden border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity" style="border-radius: 0;" onclick="openImageZoom('{{ asset('storage/' . $post->thumbnail_path) }}')">
+                    <div class="overflow-hidden border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity" style="border-radius: 0;" onclick="openImagePreview('{{ asset('storage/' . $post->thumbnail_path) }}', 'Thumbnail')">
                         <img src="{{ asset('storage/' . $post->thumbnail_path) }}" alt="Thumbnail" class="w-full aspect-video object-cover">
                     </div>
                 </div>
@@ -266,7 +273,7 @@
         </div>
 
         <div class="flex items-center justify-end gap-3">
-            <a href="{{ route(($type ?? $post->type ?? 'berita') === 'artikel' ? 'admin.artikel.index' : 'admin.berita.index') }}" id="cancel-btn" class="px-6 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[100px] text-center">Batal</a>
+            <a href="{{ route('admin.publikasi.index', request()->query()) }}" id="cancel-btn" class="px-6 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[100px] text-center">Batal</a>
             <button type="submit" id="submit-btn" @if(!$post->id) disabled @endif class="px-6 py-2 text-sm font-semibold text-white bg-green-700 rounded-lg hover:bg-green-800 transition-colors min-w-[100px] disabled:opacity-50 disabled:cursor-not-allowed">
                 <span id="submit-btn-text">{{ $post->id ? 'Simpan' : 'Publish' }}</span>
             </button>
@@ -360,7 +367,7 @@
 
         // Cek perubahan thumbnail
         const hasThumbnailFile = thumbnailInput && thumbnailInput.files && thumbnailInput.files.length > 0;
-        const hasThumbnailPreview = thumbnailPreview && !thumbnailPreview.classList.contains('hidden');
+        const hasThumbnailPreview = thumbnailPreview && thumbnailPreview.classList && !thumbnailPreview.classList.contains('hidden');
         const hasExistingThumbnail = currentThumbnail !== null;
         const currentHasThumbnail = hasThumbnailFile || hasThumbnailPreview || hasExistingThumbnail;
 
@@ -646,7 +653,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
-            <input type="hidden" name="tags[]" value="${tag}">
+            <input type="hidden" name="tags[]" id="tag-hidden-${Date.now()}-${Math.random().toString(36).substr(2, 9)}" value="${tag}">
         `;
 
         document.getElementById('tags-container').appendChild(tagItem);
@@ -1036,10 +1043,10 @@
                 div.draggable = true;
                 div.dataset.index = index;
                 div.innerHTML = `
-                    <div class="overflow-hidden border border-gray-200 dark:border-slate-700 cursor-move" onclick="if(!event.target.closest('button')) openImageZoom('${e.target.result}')" style="border-radius: 0;">
+                    <div class="overflow-hidden border border-gray-200 dark:border-slate-700 cursor-move" onclick="if(!event.target.closest('button')) openImagePreview('${e.target.result}', 'Pratinjau')" style="border-radius: 0;">
                         <img src="${e.target.result}" alt="Pratinjau ${index + 1}" class="w-full aspect-video object-cover hover:opacity-90 transition-opacity pointer-events-none">
                     </div>
-                    <button type="button" onclick="event.stopPropagation(); removeImage(${index});" class="absolute top-0 -right-1 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <button type="button" onclick="event.stopPropagation(); removeImage(${index});" class="absolute top-2 right-2 text-red-600 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity z-10">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -1334,31 +1341,6 @@
 
 
 
-    function openImageZoom(imageSrc) {
-        const modal = document.getElementById('imagePreviewModal');
-        const img = document.getElementById('previewImage');
-        img.src = imageSrc;
-        img.alt = 'Pratinjau';
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeImagePreview(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-        }
-        const modal = document.getElementById('imagePreviewModal');
-        if (modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = '';
-        }
-        return false;
-    }
-
     // Update karakter counter
     function updateCharCount(inputId, counterId, maxLength) {
         const input = document.getElementById(inputId);
@@ -1610,12 +1592,29 @@
                             ['fontname', ['fontname']],
                             ['fontsize', ['fontsize']],
                             ['color', ['color']],
-                            ['para', ['ul', 'ol', 'paragraph']],
-                            ['table', ['table']],
                             ['insert', ['link', 'picture', 'video']],
+                            ['table', ['table']],
+                            ['para', ['ul', 'ol', 'paragraph']],
                             ['view', ['fullscreen', 'codeview', 'help']],
                             ['history', ['undo', 'redo']]
                         ],
+                        popover: {
+                            image: [
+                                ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                                ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                                ['remove', ['removeMedia']]
+                            ],
+                            link: [
+                                ['link', ['linkDialogShow', 'unlink']]
+                            ],
+                            table: [
+                                ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                                ['delete', ['deleteRow', 'deleteCol', 'deleteTable']]
+                            ]
+                        },
+                        styleTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+                        codeviewFilter: false,
+                        codeviewIframeFilter: true,
                         callbacks: {
                             onImageUpload: function(files) {
                                 uploadImageToServer(files[0], editorEl);
@@ -1624,19 +1623,32 @@
                                 if (typeof validateThumbnailAndUpdateButton === 'function') {
                                     validateThumbnailAndUpdateButton();
                                 }
+                            },
+                            onInit: function() {
+                                // Fix numbering and bullet lists after init
+                                const editor = $(editorEl).summernote('code');
+                                if (editor) {
+                                    const $editor = $('<div>').html(editor);
+                                    $editor.find('ul, ol').each(function() {
+                                        if (!$(this).attr('style')) {
+                                            $(this).css('padding-left', '2em');
+                                        }
+                                    });
+                                    $(editorEl).summernote('code', $editor.html());
+                                }
+                                }
                             }
-                        }
-                            });
+                        });
 
-                    // Initial validation after editor ready
-                    setTimeout(() => {
-                        if (typeof validateThumbnailAndUpdateButton === 'function') {
-                            validateThumbnailAndUpdateButton();
-                        }
-                    }, 200);
+                        // Initial validation after editor ready
+                        setTimeout(() => {
+                            if (typeof validateThumbnailAndUpdateButton === 'function') {
+                                validateThumbnailAndUpdateButton();
+                            }
+                        }, 200);
                 } else {
                     console.error('Summernote not loaded');
-                                            }
+                }
             }
 
             function uploadImageToServer(file, editorEl) {
@@ -1655,7 +1667,7 @@
                 .then(data => {
                     if (data.url) {
                         $(editorEl).summernote('insertImage', data.url);
-                } else {
+                    } else {
                         alert('Gagal mengupload gambar');
                     }
                 })
@@ -1675,31 +1687,6 @@
         if (authorNameInput) {
             authorNameInput.addEventListener('input', validateThumbnailAndUpdateButton);
             authorNameInput.addEventListener('change', validateThumbnailAndUpdateButton);
-        }
-
-        const modal = document.getElementById('imagePreviewModal');
-        const closeBtn = modal?.querySelector('.close-modal-btn');
-
-        if (closeBtn) {
-            closeBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                closeImagePreview(e);
-                return false;
-            }, true); // Use capture phase untuk memastikan event di-handle lebih dulu
-        }
-
-        // Background click handler
-        if (modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeImagePreview(e);
-                    return false;
-                }
-            }, true);
         }
 
         // Setup event listeners untuk modal hapus gambar
@@ -1743,16 +1730,6 @@
                     hideTagLimitModal();
                 }
             });
-        }
-    });
-
-    // Tutup modal dengan tombol ESC
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const modal = document.getElementById('imagePreviewModal');
-            if (modal && modal.classList && !modal.classList.contains('hidden')) {
-                closeImagePreview(e);
-            }
         }
     });
 
@@ -1995,13 +1972,12 @@
 
 <!-- Image Preview Modal (Full Screen seperti Banner) -->
 <div id="imagePreviewModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30 dark:bg-black/50 backdrop-blur-md">
-    <div class="relative w-full h-full flex items-center justify-center p-4" onclick="event.stopPropagation(); return false;">
-        <img id="previewImage" src="" alt="Preview" class="max-w-full max-h-full object-contain pointer-events-none">
-        <button type="button" class="close-modal-btn fixed top-4 right-4 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors z-10 shadow-lg">
+    <div class="relative w-full h-full flex items-center justify-center p-3" onclick="event.stopPropagation(); return false;">
+        <img id="previewImage" src="" alt="Preview" class="max-w-full max-h-[90vh] object-contain pointer-events-none">
+        <button type="button" class="close-modal-btn fixed top-4 right-4 w-10 h-10 flex items-center justify-center text-white hover:text-slate-200 transition-colors z-10">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
     </div>
 </div>
-

@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\InfoSekolahController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TopBarController;
 use App\Http\Controllers\Admin\ImageUploadController;
+use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\ChatbotController;
@@ -141,22 +142,29 @@ Route::post('/api/chatbot/query', [ChatbotController::class, 'query'])->name('ch
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Auth Admin Panel (Yang digunakan sekarang)
-Route::get('/ap/login', [AuthController::class, 'adminLogin'])->name('admin.login');
-Route::post('/ap/login', [AuthController::class, 'adminAuthenticate'])->name('admin.login.attempt');
+Route::get('/cpanel/login', [AuthController::class, 'adminLogin'])->name('admin.login');
+Route::post('/cpanel/login', [AuthController::class, 'adminAuthenticate'])->name('admin.login.attempt');
 
 // Under Construction
 Route::get('/under-construction', [UnderConstructionController::class, 'index'])->name('under-construction');
 Route::get('/social-media-unavailable', [UnderConstructionController::class, 'socialMediaUnavailable'])->name('social-media-unavailable');
 
 // Admin CMS
-Route::middleware('auth')->prefix('ap')->name('admin.')->group(function () {
+Route::middleware('auth')->prefix('cpanel')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
     Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change-password.update');
     Route::get('/change-username', [AuthController::class, 'showChangeUsername'])->name('change-username');
     Route::post('/change-username', [AuthController::class, 'changeUsername'])->name('change-username.update');
-    // Berita
-    Route::get('berita', [PostController::class, 'index'])->name('berita.index');
+    // Publikasi (gabungan Berita dan Artikel)
+    Route::get('publikasi', [\App\Http\Controllers\Admin\PublikasiController::class, 'index'])->name('publikasi.index');
+
+    // Berita (legacy - keep for backward compatibility)
+    Route::get('berita', function (\Illuminate\Http\Request $request) {
+        $params = $request->query();
+        $params['type'] = 'berita';
+        return redirect()->route('admin.publikasi.index', $params);
+    })->name('berita.index');
     Route::get('berita/create', [PostController::class, 'create'])->name('berita.create');
     Route::post('berita', [PostController::class, 'store'])->name('berita.store');
     Route::get('berita/{post}/edit', [PostController::class, 'edit'])->name('berita.edit');
@@ -164,8 +172,12 @@ Route::middleware('auth')->prefix('ap')->name('admin.')->group(function () {
     Route::patch('berita/{post}', [PostController::class, 'update'])->name('berita.update');
     Route::delete('berita/{post}', [PostController::class, 'destroy'])->name('berita.destroy');
 
-    // Artikel
-    Route::get('artikel', [PostController::class, 'index'])->name('artikel.index');
+    // Artikel (legacy - keep for backward compatibility)
+    Route::get('artikel', function (\Illuminate\Http\Request $request) {
+        $params = $request->query();
+        $params['type'] = 'artikel';
+        return redirect()->route('admin.publikasi.index', $params);
+    })->name('artikel.index');
     Route::get('artikel/create', [PostController::class, 'create'])->name('artikel.create');
     Route::post('artikel', [PostController::class, 'store'])->name('artikel.store');
     Route::get('artikel/{post}/edit', [PostController::class, 'edit'])->name('artikel.edit');
@@ -187,7 +199,25 @@ Route::middleware('auth')->prefix('ap')->name('admin.')->group(function () {
     Route::resource('agenda', AgendaController::class);
     Route::resource('kontak', KontakController::class);
     Route::resource('info-sekolah', InfoSekolahController::class);
-    // Site settings
+    // Profil Sekolah (gabungan)
+    Route::get('profil-sekolah', [\App\Http\Controllers\Admin\ProfilSekolahController::class, 'index'])->name('profil-sekolah.index');
+    Route::put('profil-sekolah', [\App\Http\Controllers\Admin\ProfilSekolahController::class, 'update'])->name('profil-sekolah.update');
+    // Profil (legacy - keep for backward compatibility)
+    Route::get('profil/visi-misi', [AdminProfilController::class, 'visiMisi'])->name('profil.visi-misi');
+    Route::put('profil/visi-misi', [AdminProfilController::class, 'updateVisiMisi'])->name('profil.visi-misi.update');
+    Route::get('profil/tujuan', [AdminProfilController::class, 'tujuan'])->name('profil.tujuan');
+    Route::put('profil/tujuan', [AdminProfilController::class, 'updateTujuan'])->name('profil.tujuan.update');
+    Route::get('profil/kepala-madrasah', [AdminProfilController::class, 'kepalaMadrasah'])->name('profil.kepala-madrasah');
+    Route::put('profil/kepala-madrasah', [AdminProfilController::class, 'updateKepalaMadrasah'])->name('profil.kepala-madrasah.update');
+    // Tampilan Web (gabungan Banner, Logo, Top Bar)
+    Route::get('tampilan-web', [\App\Http\Controllers\Admin\TampilanWebController::class, 'index'])->name('tampilan-web.index');
+    Route::put('tampilan-web', [\App\Http\Controllers\Admin\TampilanWebController::class, 'update'])->name('tampilan-web.update');
+
+    // Info Kontak (gabungan Kontak dan Footer)
+    Route::get('info-kontak', [\App\Http\Controllers\Admin\InfoKontakController::class, 'index'])->name('info-kontak.index');
+    Route::put('info-kontak', [\App\Http\Controllers\Admin\InfoKontakController::class, 'update'])->name('info-kontak.update');
+
+    // Site settings (legacy - keep for backward compatibility)
     Route::get('settings/logo', [SettingController::class, 'logo'])->name('settings.logo');
     Route::post('settings/logo', [SettingController::class, 'updateLogo'])->name('settings.logo.update');
     Route::get('settings/top-bar', [TopBarController::class, 'index'])->name('settings.top-bar');

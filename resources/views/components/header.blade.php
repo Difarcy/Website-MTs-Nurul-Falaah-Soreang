@@ -12,7 +12,7 @@
 <header class="bg-white shadow-md sticky top-0 z-50">
     <div class="container mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl">
         <!-- Header Normal -->
-        <div id="header-normal" class="flex items-center justify-between h-28">
+        <div id="header-normal" class="flex flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between md:h-28 md:py-0">
             <!-- Logo dan Nama Sekolah -->
             <div class="flex items-center gap-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
@@ -22,14 +22,14 @@
                         class="h-12 w-12 sm:h-14 sm:w-14 object-contain shrink-0"
                     >
                     <div class="flex flex-col">
-                        <span class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight whitespace-nowrap" style="font-family: 'Dosis', sans-serif;">MTs Nurul Falaah</span>
-                        <span class="text-xl sm:text-2xl font-bold text-gray-900 whitespace-nowrap" style="font-family: 'Dosis', sans-serif;">Soreang</span>
+                        <span class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight whitespace-nowrap font-dosis">MTs Nurul Falaah</span>
+                        <span class="text-xl sm:text-2xl font-bold text-gray-900 whitespace-nowrap font-dosis">Soreang</span>
                     </div>
                 </a>
             </div>
 
             <!-- Menu Navigasi -->
-            <nav class="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-5" style="font-family: 'Dosis', sans-serif;">
+            <nav class="flex w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 sm:gap-x-3 sm:gap-y-2 md:w-auto md:flex-nowrap md:justify-end md:gap-4 lg:gap-5 font-dosis">
                 <a
                     href="{{ route('home') }}"
                     class="text-gray-700 hover:text-green-700 transition-colors duration-200 font-bold px-2 sm:px-3 py-2 text-xs sm:text-sm uppercase {{ request()->routeIs('home') ? 'text-green-700 border-b-2 border-green-700' : 'hover:border-b-2 hover:border-green-700' }}"
@@ -39,7 +39,7 @@
                 <!-- Menu PROFIL dengan Dropdown -->
                 <div class="relative group" id="profil-dropdown">
                     <button
-                        class="text-gray-700 hover:text-green-700 transition-colors duration-200 font-bold px-2 sm:px-3 py-2 text-xs sm:text-sm uppercase flex items-center gap-1 {{ (request()->routeIs('profil.*') || request()->routeIs('profil')) && !request()->routeIs('profil.kepala-sekolah-guru') ? 'text-green-700 border-b-2 border-green-700' : 'hover:border-b-2 hover:border-green-700' }}"
+                        class="text-gray-700 hover:text-green-700 transition-colors duration-200 font-bold px-2 sm:px-3 py-2 text-xs sm:text-sm uppercase flex items-center gap-1 {{ ((request()->routeIs('profil.*') || request()->routeIs('profil')) && !request()->routeIs('profil.kepala-sekolah-guru')) || request()->routeIs('galeri.prestasi-siswa') ? 'text-green-700 border-b-2 border-green-700' : 'hover:border-b-2 hover:border-green-700' }}"
                         id="profil-toggle"
                     >
                         PROFIL
@@ -48,7 +48,7 @@
                         </svg>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div id="profil-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50" style="border-radius: 0;">
+                    <div id="profil-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50 rounded-md overflow-hidden">
                         <div class="py-2">
                             <a href="{{ route('profil') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('profil') && !request()->routeIs('profil.*') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Tentang Sekolah
@@ -59,7 +59,7 @@
                             <a href="{{ route('profil.struktur-organisasi') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('profil.struktur-organisasi') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Struktur Organisasi
                             </a>
-                            <a href="{{ route('profil.prestasi') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('profil.prestasi') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
+                            <a href="{{ route('galeri.prestasi-siswa') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('galeri.prestasi-siswa') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Prestasi Siswa
                             </a>
                         </div>
@@ -77,7 +77,7 @@
                         </svg>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div id="informasi-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50" style="border-radius: 0;">
+                    <div id="informasi-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50 rounded-md overflow-hidden">
                         <div class="py-2">
                             <a href="{{ route('informasi.berita') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('informasi.berita') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Berita
@@ -97,7 +97,7 @@
                 <!-- Menu GALERI dengan Dropdown -->
                 <div class="relative group" id="galeri-dropdown">
                     <button
-                        class="text-gray-700 hover:text-green-700 transition-colors duration-200 font-bold px-2 sm:px-3 py-2 text-xs sm:text-sm uppercase flex items-center gap-1 {{ request()->routeIs('galeri.*') || request()->routeIs('galeri') ? 'text-green-700 border-b-2 border-green-700' : 'hover:border-b-2 hover:border-green-700' }}"
+                        class="text-gray-700 hover:text-green-700 transition-colors duration-200 font-bold px-2 sm:px-3 py-2 text-xs sm:text-sm uppercase flex items-center gap-1 {{ (request()->routeIs('galeri.*') || request()->routeIs('galeri')) && !request()->routeIs('galeri.prestasi-siswa') ? 'text-green-700 border-b-2 border-green-700' : 'hover:border-b-2 hover:border-green-700' }}"
                         id="galeri-toggle"
                     >
                         GALERI
@@ -106,13 +106,10 @@
                         </svg>
                     </button>
                     <!-- Dropdown Menu -->
-                    <div id="galeri-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50" style="border-radius: 0;">
+                    <div id="galeri-dropdown-menu" class="absolute top-full left-0 mt-2 w-56 md:w-64 bg-white dark:bg-slate-800 shadow-lg border border-gray-200 dark:border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible md:group-hover:opacity-100 md:group-hover:visible transition-all duration-200 z-50 rounded-md overflow-hidden">
                         <div class="py-2">
                             <a href="{{ route('galeri.foto-kegiatan') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('galeri.foto-kegiatan') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
                                 Foto Kegiatan
-                            </a>
-                            <a href="{{ route('galeri.prestasi-siswa') }}" class="block px-4 py-2 text-sm font-bold text-slate-900 dark:text-white hover:bg-green-700 hover:text-white dark:hover:bg-green-700 dark:hover:text-white transition-colors duration-150 {{ request()->routeIs('galeri.prestasi-siswa') ? 'bg-green-700 text-white dark:bg-green-700 dark:text-white' : '' }}">
-                                Prestasi Siswa
                             </a>
                         </div>
                     </div>
@@ -137,7 +134,7 @@
         </div>
 
         <!-- Header Search Mode -->
-        <div id="header-search" class="hidden flex items-center justify-between h-28">
+        <div id="header-search" class="hidden flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between md:h-28 md:py-0">
             <!-- Logo dan Nama Sekolah -->
             <div class="flex items-center gap-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
@@ -147,29 +144,28 @@
                         class="h-12 w-12 sm:h-14 sm:w-14 object-contain shrink-0"
                     >
                     <div class="flex flex-col">
-                        <span class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight whitespace-nowrap" style="font-family: 'Dosis', sans-serif;">MTs Nurul Falaah</span>
-                        <span class="text-xl sm:text-2xl font-bold text-gray-900 whitespace-nowrap" style="font-family: 'Dosis', sans-serif;">Soreang</span>
+                        <span class="text-xl sm:text-2xl font-bold text-gray-900 leading-tight whitespace-nowrap font-dosis">MTs Nurul Falaah</span>
+                        <span class="text-xl sm:text-2xl font-bold text-gray-900 whitespace-nowrap font-dosis">Soreang</span>
                     </div>
                 </a>
             </div>
 
             <!-- Form Pencarian -->
-            <div class="flex items-center">
+            <div class="flex w-full items-center md:w-auto">
                 <div class="relative">
-                    <div class="flex items-center gap-1" style="width: 600px; max-width: 90vw;">
+                    <div class="flex w-full items-center gap-1 md:w-[600px] md:max-w-[600px]">
                         <div class="flex-1 relative">
                             <input
                                 type="text"
                                 id="search-input"
                                 name="q"
                                 placeholder="Cari artikel, berita, atau informasi..."
-                                class="w-full px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-green-700 focus:outline-none text-sm sm:text-base"
-                                style="font-family: 'Dosis', sans-serif;"
+                                class="w-full px-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg focus:border-green-700 focus:outline-none text-sm sm:text-base font-dosis"
                                 autofocus
                                 autocomplete="off"
                             >
                             <!-- Dropdown Hasil Pencarian -->
-                            <div id="search-results" class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg max-h-96 overflow-y-auto hidden" style="border-radius: 0;">
+                            <div id="search-results" class="absolute z-50 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-md shadow-lg max-h-96 overflow-y-auto hidden overflow-hidden">
                                 <div id="search-results-list" class="py-1"></div>
                             </div>
                         </div>
@@ -199,67 +195,110 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-input');
 
     // Toggle ke mode search
-    searchToggle.addEventListener('click', function() {
-        headerNormal.classList.add('hidden');
-        headerSearch.classList.remove('hidden');
-        // Focus ke input setelah transisi
-        setTimeout(function() {
-            searchInput.focus();
-        }, 100);
-    });
+    if (searchToggle && headerNormal && headerSearch && searchInput) {
+        searchToggle.addEventListener('click', function() {
+            headerNormal.classList.add('hidden');
+            headerSearch.classList.remove('hidden');
+            headerSearch.classList.add('flex');
+            // Focus ke input setelah transisi
+            setTimeout(function() {
+                searchInput.focus();
+            }, 100);
+        });
+    }
 
     // Kembali ke header normal
-    searchClose.addEventListener('click', function() {
-        headerSearch.classList.add('hidden');
-        headerNormal.classList.remove('hidden');
-        searchInput.value = '';
-        if (searchResults) {
-            searchResults.classList.add('hidden');
-        }
-        if (searchResultsList) {
-            searchResultsList.innerHTML = '';
-        }
-    });
+    if (searchClose && headerNormal && headerSearch && searchInput) {
+        searchClose.addEventListener('click', function() {
+            headerSearch.classList.add('hidden');
+            headerSearch.classList.remove('flex');
+            headerNormal.classList.remove('hidden');
+            searchInput.value = '';
+            if (searchResults) {
+                searchResults.classList.add('hidden');
+            }
+            if (searchResultsList) {
+                searchResultsList.innerHTML = '';
+            }
+        });
+    }
 
     // ESC key untuk menutup search
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !headerSearch.classList.contains('hidden')) {
-            searchClose.click();
+        if (e.key === 'Escape' && headerSearch && !headerSearch.classList.contains('hidden')) {
+            if (searchClose) {
+                searchClose.click();
+            }
         }
     });
 
     // Auto-search dengan debounce
     let searchTimeout = null;
     let isSearching = false;
+    let activeSearchController = null; // Store active search controller
     const searchResults = document.getElementById('search-results');
     const searchResultsList = document.getElementById('search-results-list');
 
     function performSearch(query) {
         if (!query || query.trim() === '') {
-            searchResults.classList.add('hidden');
-            searchResultsList.innerHTML = '';
+            if (searchResults) searchResults.classList.add('hidden');
+            if (searchResultsList) searchResultsList.innerHTML = '';
             return;
         }
 
-        if (isSearching) return;
+        if (isSearching) {
+            // Cancel previous request if still active
+            if (activeSearchController) {
+                try {
+                    activeSearchController.abort();
+                } catch (e) {
+                    // Ignore errors
+                }
+            }
+        }
         isSearching = true;
+
+        // Create AbortController untuk cancel request jika perlu
+        const controller = new AbortController();
+        activeSearchController = controller;
+        const timeoutId = setTimeout(() => {
+            controller.abort();
+            activeSearchController = null;
+        }, 5000); // Timeout 5 detik
 
         fetch('{{ route('api.search') }}?q=' + encodeURIComponent(query), {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Accept': 'application/json'
-            }
+            },
+            signal: controller.signal
         })
-        .then(response => response.json())
+        .then(response => {
+            clearTimeout(timeoutId);
+            activeSearchController = null;
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             isSearching = false;
+            if (data && Array.isArray(data)) {
             displaySearchResults(data, query);
+            } else {
+                displaySearchResults([], query);
+            }
         })
         .catch(error => {
-            console.error('Search error:', error);
+            clearTimeout(timeoutId);
+            activeSearchController = null;
             isSearching = false;
-            searchResults.classList.add('hidden');
+            // Ignore abort errors dan network errors (biasanya dari extension)
+            if (error.name !== 'AbortError' && error.name !== 'TypeError') {
+                console.error('Search error:', error);
+            }
+            if (searchResults) searchResults.classList.add('hidden');
         });
     }
 
@@ -276,22 +315,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const typeColor = item.type === 'berita' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300';
             const url = '{{ url('/informasi') }}/' + item.type + '/' + item.slug;
             const thumbnail = item.thumbnail_path ? '{{ asset('storage') }}/' + item.thumbnail_path : '{{ asset('img/banner1.jpg') }}';
-            
+
             html += `
                 <a href="${url}" class="block px-4 py-3 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors border-b border-gray-100 dark:border-slate-700 last:border-b-0">
                     <div class="flex items-start gap-3">
-                        <div class="w-16 h-16 flex-shrink-0 overflow-hidden" style="border-radius: 0;">
+                        <div class="w-16 h-16 flex-shrink-0 overflow-hidden rounded-md">
                             <img src="${thumbnail}" alt="${item.title}" class="w-full h-full object-cover">
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded ${typeColor}" style="border-radius: 0;">
+                                <span class="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-md ${typeColor}">
                                     ${typeLabel}
                                 </span>
                                 <span class="text-xs text-gray-500">${item.published_at || ''}</span>
                             </div>
                             <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-100 mb-1 line-clamp-1">${item.title}</h4>
-                            ${item.excerpt ? `<p class="text-xs text-gray-600 dark:text-slate-400 line-clamp-2">${item.excerpt}</p>` : ''}
+                            ${item.excerpt ? '<p class="text-xs text-gray-600 dark:text-slate-400 line-clamp-2">' + item.excerpt + '</p>' : ''}
                         </div>
                     </div>
                 </a>
@@ -306,12 +345,24 @@ document.addEventListener('DOMContentLoaded', function() {
         if (searchInput) {
             searchInput.addEventListener('input', function() {
                 const query = this.value.trim();
-                
+
                 // Clear timeout sebelumnya
                 if (searchTimeout) {
                     clearTimeout(searchTimeout);
+                    searchTimeout = null;
                 }
-                
+
+                // Cancel active search if any
+                if (activeSearchController) {
+                    try {
+                        activeSearchController.abort();
+                        activeSearchController = null;
+                        isSearching = false;
+                    } catch (e) {
+                        // Ignore errors
+                    }
+                }
+
                 // Jika query kosong, tutup dropdown
                 if (query === '') {
                     if (searchResults) {
@@ -322,11 +373,46 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     return;
                 }
-                
+
                 // Set timeout baru (500ms setelah user berhenti mengetik)
                 searchTimeout = setTimeout(function() {
                     performSearch(query);
                 }, 500);
+            });
+
+            // Cleanup saat halaman tidak aktif
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    if (searchTimeout) {
+                        clearTimeout(searchTimeout);
+                        searchTimeout = null;
+                    }
+                    if (activeSearchController) {
+                        try {
+                            activeSearchController.abort();
+                            activeSearchController = null;
+                            isSearching = false;
+                        } catch (e) {
+                            // Ignore errors
+                        }
+                    }
+                }
+            });
+
+            window.addEventListener('pagehide', function() {
+                if (searchTimeout) {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = null;
+                }
+                if (activeSearchController) {
+                    try {
+                        activeSearchController.abort();
+                        activeSearchController = null;
+                        isSearching = false;
+                    } catch (e) {
+                        // Ignore errors
+                    }
+                }
             });
 
         // Tutup dropdown saat klik di luar
@@ -351,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const profilDropdown = document.getElementById('profil-dropdown');
     const profilToggle = document.getElementById('profil-toggle');
     const profilDropdownMenu = document.getElementById('profil-dropdown-menu');
-    
+
     // Toggle dropdown untuk mobile
     if (profilToggle && profilDropdownMenu) {
         profilToggle.addEventListener('click', function(e) {
@@ -385,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const programDropdown = document.getElementById('program-dropdown');
     const programToggle = document.getElementById('program-toggle');
     const programDropdownMenu = document.getElementById('program-dropdown-menu');
-    
+
     // Toggle dropdown untuk mobile
     if (programToggle && programDropdownMenu) {
         programToggle.addEventListener('click', function(e) {
@@ -419,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const galeriDropdown = document.getElementById('galeri-dropdown');
     const galeriToggle = document.getElementById('galeri-toggle');
     const galeriDropdownMenu = document.getElementById('galeri-dropdown-menu');
-    
+
     // Toggle dropdown untuk mobile
     if (galeriToggle && galeriDropdownMenu) {
         galeriToggle.addEventListener('click', function(e) {
@@ -453,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const informasiDropdown = document.getElementById('informasi-dropdown');
     const informasiToggle = document.getElementById('informasi-toggle');
     const informasiDropdownMenu = document.getElementById('informasi-dropdown-menu');
-    
+
     // Toggle dropdown untuk mobile
     if (informasiToggle && informasiDropdownMenu) {
         informasiToggle.addEventListener('click', function(e) {
@@ -484,4 +570,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
